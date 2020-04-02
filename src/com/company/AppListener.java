@@ -16,13 +16,13 @@ public class AppListener implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         switch (event.getActionCommand()){
             case "Preorder":
-                System.out.println("pre");
+                System.out.println("preorder");
                 break;
             case "Inorder":
-                System.out.println("in");
+                System.out.println("inorder");
                 break;
             case "Postorder":
-                System.out.println("post");
+                System.out.println("postorder");
                 break;
         }
 
