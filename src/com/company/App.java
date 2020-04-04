@@ -1,5 +1,6 @@
 package com.company;
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 
@@ -14,23 +15,47 @@ public class App {
 
     // region 1. Init Widgets
 
+    private JFrame frame;
     private JPanel mainPanel;
+
+    private JPanel buttonPanel;
     private JButton btnPreorder;
     private JButton btnInorder;
     private JButton btnPostorder;
 
     private AppListener listener;
 
+    private DrawArea drawArea;
+
     // endregion
 
     // region 2. Constructor
 
     public App() {
-        this.listener = new AppListener();
+        this.mainPanel.setLayout(new BorderLayout());
 
+        this.drawArea = new DrawArea();
+        this.mainPanel.add(this.drawArea, BorderLayout.CENTER);
+
+        this.buttonPanel = new JPanel();
+
+        this.listener = new AppListener();
         this.btnPreorder.addActionListener(this.listener);
         this.btnInorder.addActionListener(this.listener);
         this.btnPostorder.addActionListener(this.listener);
+
+        this.buttonPanel.add(this.btnPreorder);
+        this.buttonPanel.add(this.btnInorder);
+        this.buttonPanel.add(this.btnPostorder);
+
+        this.mainPanel.add(this.buttonPanel, BorderLayout.NORTH);
+
+        this.frame = new JFrame("App");
+        this.frame.setContentPane(this.mainPanel);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setSize(new Dimension(WIDTH, HEIGHT));
+        this.frame.setVisible(true);
+
     }
 
     // endregion
@@ -38,13 +63,7 @@ public class App {
     // region 3. Main method
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("App");
-        frame.setContentPane(new App().mainPanel);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(new Dimension(WIDTH, HEIGHT));
-
-        frame.setVisible(true);
-
+        new App();
     }
 
     // endregion
