@@ -2,9 +2,11 @@ package com.company;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
-public class App {
+public class App implements ActionListener {
 
     // region 0. Constants
 
@@ -23,8 +25,6 @@ public class App {
     private JButton btnInorder;
     private JButton btnPostorder;
 
-    private AppListener listener;
-
     private DrawArea drawArea;
 
     // endregion
@@ -32,17 +32,24 @@ public class App {
     // region 2. Constructor
 
     public App() {
+        this.mainPanel = new JPanel();
         this.mainPanel.setLayout(new BorderLayout());
 
         this.drawArea = new DrawArea();
+
         this.mainPanel.add(this.drawArea, BorderLayout.CENTER);
 
         this.buttonPanel = new JPanel();
 
-        this.listener = new AppListener();
-        this.btnPreorder.addActionListener(this.listener);
-        this.btnInorder.addActionListener(this.listener);
-        this.btnPostorder.addActionListener(this.listener);
+
+
+        this.btnPreorder = new JButton("Preorder");
+        this.btnInorder = new JButton("Inorder");
+        this.btnPostorder = new JButton("Postorder");
+
+        this.btnPreorder.addActionListener(this);
+        this.btnInorder.addActionListener(this);
+        this.btnPostorder.addActionListener(this);
 
         this.buttonPanel.add(this.btnPreorder);
         this.buttonPanel.add(this.btnInorder);
@@ -54,6 +61,8 @@ public class App {
         this.frame.setContentPane(this.mainPanel);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(new Dimension(WIDTH, HEIGHT));
+        this.frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        this.frame.setMaximumSize(new Dimension(WIDTH, HEIGHT));
         this.frame.setVisible(true);
 
     }
@@ -68,8 +77,20 @@ public class App {
 
     // endregion
 
-    // region 4. Getters and Setters
+    // region 4. Listener
 
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        Object source = event.getSource();
+        if (btnPreorder.equals(source)) {
+            System.out.println("preorder");
+        } else if (btnInorder.equals(source)) {
+            System.out.println("inorder");
+        } else if (btnPostorder.equals(source)) {
+            System.out.println("postorder");
+        }
+
+    }
     // endregion
 
 
