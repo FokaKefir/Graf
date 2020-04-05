@@ -1,10 +1,7 @@
 package com.company;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 
 public class App implements ActionListener {
 
@@ -24,37 +21,36 @@ public class App implements ActionListener {
     private JButton btnPreorder;
     private JButton btnInorder;
     private JButton btnPostorder;
+    private JButton btnAddPoint;
 
-    private DrawArea drawArea;
+    private Graph graph;
 
     // endregion
 
     // region 2. Constructor
 
     public App() {
-        this.mainPanel = new JPanel();
-        this.mainPanel.setLayout(new BorderLayout());
-
-        this.drawArea = new DrawArea();
-
-        this.mainPanel.add(this.drawArea, BorderLayout.CENTER);
-
-        this.buttonPanel = new JPanel();
-
-
+        this.graph = new Graph();
 
         this.btnPreorder = new JButton("Preorder");
         this.btnInorder = new JButton("Inorder");
         this.btnPostorder = new JButton("Postorder");
+        this.btnAddPoint = new JButton("Add new point");
 
         this.btnPreorder.addActionListener(this);
         this.btnInorder.addActionListener(this);
         this.btnPostorder.addActionListener(this);
+        this.btnAddPoint.addActionListener(this);
 
+        this.buttonPanel = new JPanel();
         this.buttonPanel.add(this.btnPreorder);
         this.buttonPanel.add(this.btnInorder);
         this.buttonPanel.add(this.btnPostorder);
+        this.buttonPanel.add(this.btnAddPoint);
 
+        this.mainPanel = new JPanel();
+        this.mainPanel.setLayout(new BorderLayout());
+        this.mainPanel.add(this.graph, BorderLayout.CENTER);
         this.mainPanel.add(this.buttonPanel, BorderLayout.NORTH);
 
         this.frame = new JFrame("App");
@@ -88,10 +84,11 @@ public class App implements ActionListener {
             System.out.println("inorder");
         } else if (btnPostorder.equals(source)) {
             System.out.println("postorder");
+        } else if (btnAddPoint.equals(source)) {
+            this.graph.setBlnCanDraw(true);
         }
 
     }
     // endregion
-
 
 }
