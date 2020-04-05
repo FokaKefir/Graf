@@ -1,4 +1,5 @@
 package com.company;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -22,6 +23,8 @@ public class App implements ActionListener {
     private JButton btnInorder;
     private JButton btnPostorder;
     private JButton btnAddPoint;
+    private JTextField txtInfo;
+
 
     private Graph graph;
 
@@ -48,10 +51,14 @@ public class App implements ActionListener {
         this.buttonPanel.add(this.btnPostorder);
         this.buttonPanel.add(this.btnAddPoint);
 
+        this.txtInfo = new JTextField("Info");
+        this.txtInfo.setEnabled(false);
+
         this.mainPanel = new JPanel();
         this.mainPanel.setLayout(new BorderLayout());
         this.mainPanel.add(this.graph, BorderLayout.CENTER);
         this.mainPanel.add(this.buttonPanel, BorderLayout.NORTH);
+        this.mainPanel.add(this.txtInfo, BorderLayout.SOUTH);
 
         this.frame = new JFrame("App");
         this.frame.setContentPane(this.mainPanel);

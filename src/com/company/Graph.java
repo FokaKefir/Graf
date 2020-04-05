@@ -4,11 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Graph extends JComponent {
 
     // region 0. Constants
+
+    private static final int EMPTY = -1;
 
     // endregion
 
@@ -20,8 +24,10 @@ public class Graph extends JComponent {
     private int radius;
     private int numberPoints;
     private boolean blnCanDraw;
+    private boolean blnCanConnect;
 
     private int[][] mat;
+    private List<GraphPoint> points;
 
     // endregion
 
@@ -33,26 +39,47 @@ public class Graph extends JComponent {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
-                drawPoint(event.getX(), event.getY());
+                if(blnCanDraw)
+                    setNewPoint(event.getX(), event.getY());
+                else if(blnCanConnect)
+                    setNewConnection(event.getX(), event.getY());
+
             }
         });
 
         this.numberPoints = 0;
         this.radius = 50;
         this.blnCanDraw = false;
+        this.blnCanConnect = false;
+
+        this.points = new ArrayList<GraphPoint>();
 
     }
 
     // endregion
 
-    // region 3. Setup the Image
+    // region 3.  Main functions
+
+    private void setNewPoint(int x, int y){
+        drawPoint(x, y);
+    }
+
+    private void setNewConnection(int x, int y){
+        if(mat[x][y] != EMPTY){
+            drawConnection(x, y);
+        }
+    }
+
+    // endregion
+
+    // region 4. Setup the Image
 
     @Override
     protected void paintComponent(Graphics g) {
 
         if(this.image == null){
             this.image = this.createImage(this.getSize().width, this.getSize().height);
-            this.mat = new int[this.getSize().width][this.getSize().height];
+            createMatrix();
 
             this.graphics = (Graphics2D) this.image.getGraphics();
             this.graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -65,7 +92,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 4. Clear the paint
+    // region 5. Clear the paint
 
     public void clear(){
         this.graphics.setPaint(Color.white);
@@ -81,18 +108,21 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 5. Draw
+    // region 6. Draw Point
 
     private void drawPoint(int x, int y){
         if(this.graphics != null && this.blnCanDraw){
             this.graphics.setPaint(Color.CYAN);
             this.graphics.fillOval(x - radius/2, y - radius/2, radius, radius);
 
-            setMatrixNewElement();
-
+            setNewElement(x, y);
             drawCircle(x, y, Color.BLACK);
 
             this.blnCanDraw = false;
+
+            if(this.numberPoints >= 1){
+                this.blnCanConnect = true;
+            }
         }
     }
 
@@ -108,11 +138,37 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 6. Matrix functions and methods
+    // region 7. Draw Connection
 
-    private void setMatrixNewElement(){
+    private void drawConnection(int x, int y){
+        int indexFrom = this.numberPoints - 1;
+        int indexTo = mat[x][y];
+
+        GraphPoint pointFrom = points.get(indexFrom);
+        GraphPoint pointTo = points.get(indexTo);
+
+        this.graphics.setPaint(Color.black);
+        this.graphics.drawLine(
+                pointFrom.getPosition().width, pointFrom.getPosition().height, pointTo.getPosition().width, pointTo.getPosition().height);
+
+        this.repaint();
+    }
+
+    // endregion
+
+    // region 8. Matrix functions and methods
+
+    private void createMatrix(){
+        this.mat = new int[this.getSize().width][this.getSize().height];
+        for (int x = 0; x < this.getSize().width; x++) {
+            for (int y = 0; y < getSize().height; y++) {
+                mat[x][y] = EMPTY;
+            }
+        }
+    }
+
+    private void setNewElement(int pointX, int pointY){
         BufferedImage bufferedImage = (BufferedImage) this.image;
-        this.numberPoints++;
 
         for(int x = 0; x < this.getSize().width; x++){
             for (int y = 0; y < this.getSize().height; y++) {
@@ -122,6 +178,11 @@ public class Graph extends JComponent {
                 }
             }
         }
+
+        GraphPoint point = new GraphPoint(numberPoints, new Dimension(pointX, pointY));
+        points.add(point);
+
+        this.numberPoints++;
     }
 
     private void printMatrix(){
@@ -135,7 +196,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 7. Getters and Setters
+    // region 9. Getters and Setters
 
     public boolean isBlnCanDraw() {
         return blnCanDraw;
