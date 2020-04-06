@@ -2,14 +2,15 @@ package com.company;
 
 import java.awt.*;
 
-public class GraphPoint {
+public class PointPosition {
     // region 0. Constants
 
     // endregion
 
     // region 1. Init widgets
 
-    private Dimension position;
+    private int x;
+    private int y;
 
     private int name;
 
@@ -17,25 +18,35 @@ public class GraphPoint {
 
     // region 2. Constructor
 
-    public GraphPoint(int  name, Dimension position){
+    public PointPosition(int  name, int x, int y){
         this.name = name;
-        this.position = position;
+        this.x = x;
+        this.y = y;
     }
 
     // endregion
 
     // region 3. Getters and Setters
 
-    public Dimension getPosition() {
-        return position;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public int getName() {
         return name;
     }
 
-    public void setPosition(Dimension position) {
-        this.position = position;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 
     public void setName(int name) {

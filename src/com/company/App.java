@@ -23,6 +23,7 @@ public class App implements ActionListener {
     private JButton btnInorder;
     private JButton btnPostorder;
     private JButton btnAddPoint;
+    private JButton btnAddConnection;
     private JTextField txtInfo;
 
 
@@ -39,17 +40,20 @@ public class App implements ActionListener {
         this.btnInorder = new JButton("Inorder");
         this.btnPostorder = new JButton("Postorder");
         this.btnAddPoint = new JButton("Add new point");
+        this.btnAddConnection = new JButton("Add new connection");
 
         this.btnPreorder.addActionListener(this);
         this.btnInorder.addActionListener(this);
         this.btnPostorder.addActionListener(this);
         this.btnAddPoint.addActionListener(this);
+        this.btnAddConnection.addActionListener(this);
 
         this.buttonPanel = new JPanel();
         this.buttonPanel.add(this.btnPreorder);
         this.buttonPanel.add(this.btnInorder);
         this.buttonPanel.add(this.btnPostorder);
         this.buttonPanel.add(this.btnAddPoint);
+        this.buttonPanel.add(this.btnAddConnection);
 
         this.txtInfo = new JTextField("Info");
         this.txtInfo.setEnabled(false);
@@ -63,9 +67,8 @@ public class App implements ActionListener {
         this.frame = new JFrame("App");
         this.frame.setContentPane(this.mainPanel);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setResizable(false);
         this.frame.setSize(new Dimension(WIDTH, HEIGHT));
-        this.frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
-        this.frame.setMaximumSize(new Dimension(WIDTH, HEIGHT));
         this.frame.setVisible(true);
 
     }
@@ -93,6 +96,8 @@ public class App implements ActionListener {
             System.out.println("postorder");
         } else if (btnAddPoint.equals(source)) {
             this.graph.setBlnCanDraw(true);
+        } else if (btnAddConnection.equals(source)) {
+            this.graph.setBlnCanConnect(true);
         }
 
     }

@@ -14,6 +14,8 @@ public class Graph extends JComponent {
 
     private static final int EMPTY = -1;
 
+    private static final int NOT_DEFINED = -1;
+
     // endregion
 
     // region 1. Init widgets
@@ -23,11 +25,13 @@ public class Graph extends JComponent {
 
     private int radius;
     private int numberPoints;
+    private int indexFromPoint;
+    private int indexToPoint;
     private boolean blnCanDraw;
     private boolean blnCanConnect;
 
     private int[][] mat;
-    private List<GraphPoint> points;
+    private List<PointPosition> pointPositionList;
 
     // endregion
 
@@ -52,7 +56,10 @@ public class Graph extends JComponent {
         this.blnCanDraw = false;
         this.blnCanConnect = false;
 
-        this.points = new ArrayList<GraphPoint>();
+        this.indexFromPoint = NOT_DEFINED;
+        this.indexToPoint = NOT_DEFINED;
+
+        this.pointPositionList = new ArrayList<>();
 
     }
 
@@ -66,7 +73,16 @@ public class Graph extends JComponent {
 
     private void setNewConnection(int x, int y){
         if(mat[x][y] != EMPTY){
-            drawConnection(x, y);
+            if(this.indexFromPoint == NOT_DEFINED){
+                this.indexFromPoint = mat[x][y];
+            } else if(this.indexToPoint == NOT_DEFINED && mat[x][y] != this.indexFromPoint){
+                this.indexToPoint = mat[x][y];
+                
+                this.drawConnection();
+
+                this.indexFromPoint = NOT_DEFINED;
+                this.indexToPoint = NOT_DEFINED;
+            }
         }
     }
 
@@ -119,10 +135,6 @@ public class Graph extends JComponent {
             drawCircle(x, y, Color.BLACK);
 
             this.blnCanDraw = false;
-
-            if(this.numberPoints >= 1){
-                this.blnCanConnect = true;
-            }
         }
     }
 
@@ -140,18 +152,18 @@ public class Graph extends JComponent {
 
     // region 7. Draw Connection
 
-    private void drawConnection(int x, int y){
-        int indexFrom = this.numberPoints - 1;
-        int indexTo = mat[x][y];
+    private void drawConnection(){
 
-        GraphPoint pointFrom = points.get(indexFrom);
-        GraphPoint pointTo = points.get(indexTo);
+        PointPosition pointFrom = pointPositionList.get(this.indexFromPoint);
+        PointPosition pointTo = pointPositionList.get(this.indexToPoint);
 
         this.graphics.setPaint(Color.black);
         this.graphics.drawLine(
-                pointFrom.getPosition().width, pointFrom.getPosition().height, pointTo.getPosition().width, pointTo.getPosition().height);
+                pointFrom.getX(), pointFrom.getY(), pointTo.getX(), pointTo.getY());
 
         this.repaint();
+
+        this.blnCanConnect = false;
     }
 
     // endregion
@@ -179,8 +191,8 @@ public class Graph extends JComponent {
             }
         }
 
-        GraphPoint point = new GraphPoint(numberPoints, new Dimension(pointX, pointY));
-        points.add(point);
+        PointPosition point = new PointPosition(numberPoints, pointX, pointY);
+        this.pointPositionList.add(point);
 
         this.numberPoints++;
     }
@@ -198,8 +210,17 @@ public class Graph extends JComponent {
 
     // region 9. Getters and Setters
 
-    public boolean isBlnCanDraw() {
+
+    public boolean getBlnCanConnect() {
+        return blnCanConnect;
+    }
+
+    public boolean getBlnCanDraw() {
         return blnCanDraw;
+    }
+
+    public void setBlnCanConnect(boolean blnCanConnect) {
+        this.blnCanConnect = blnCanConnect;
     }
 
     public void setBlnCanDraw(boolean blnCanDraw) {
