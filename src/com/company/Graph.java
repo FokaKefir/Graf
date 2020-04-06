@@ -32,6 +32,7 @@ public class Graph extends JComponent {
 
     private int[][] mat;
     private List<PointPosition> pointPositionList;
+    private List<Connection> connectionList;
 
     // endregion
 
@@ -60,6 +61,7 @@ public class Graph extends JComponent {
         this.indexToPoint = NOT_DEFINED;
 
         this.pointPositionList = new ArrayList<>();
+        this.connectionList = new ArrayList<>();
 
     }
 
@@ -80,8 +82,11 @@ public class Graph extends JComponent {
                 
                 this.drawConnection();
 
-                this.indexFromPoint = NOT_DEFINED;
-                this.indexToPoint = NOT_DEFINED;
+                this.connectionList.add(
+                        new Connection(this.indexFromPoint, this.indexToPoint, 0)
+                );
+
+                this.clearIndexes();
             }
         }
     }
@@ -100,7 +105,7 @@ public class Graph extends JComponent {
             this.graphics = (Graphics2D) this.image.getGraphics();
             this.graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            this.clear();
+            this.clearImage();
         }
         g.drawImage(this.image, 0, 0, null);
 
@@ -110,7 +115,7 @@ public class Graph extends JComponent {
 
     // region 5. Clear the paint
 
-    public void clear(){
+    public void clearImage(){
         this.graphics.setPaint(Color.white);
 
         this.graphics.fillRect(0, 0, getSize().width, getSize().height);
@@ -166,6 +171,10 @@ public class Graph extends JComponent {
         this.blnCanConnect = false;
     }
 
+    public void clearIndexes(){
+        this.indexFromPoint = this.indexToPoint = NOT_DEFINED;
+    }
+
     // endregion
 
     // region 8. Matrix functions and methods
@@ -210,6 +219,13 @@ public class Graph extends JComponent {
 
     // region 9. Getters and Setters
 
+    public int getIndexFromPoint() {
+        return indexFromPoint;
+    }
+
+    public int getIndexToPoint() {
+        return indexToPoint;
+    }
 
     public boolean getBlnCanConnect() {
         return blnCanConnect;
@@ -217,6 +233,14 @@ public class Graph extends JComponent {
 
     public boolean getBlnCanDraw() {
         return blnCanDraw;
+    }
+
+    public void setIndexFromPoint(int indexFromPoint) {
+        this.indexFromPoint = indexFromPoint;
+    }
+
+    public void setIndexToPoint(int indexToPoint) {
+        this.indexToPoint = indexToPoint;
     }
 
     public void setBlnCanConnect(boolean blnCanConnect) {

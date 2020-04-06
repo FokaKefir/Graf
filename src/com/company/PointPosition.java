@@ -3,6 +3,7 @@ package com.company;
 import java.awt.*;
 
 public class PointPosition {
+
     // region 0. Constants
 
     // endregion
