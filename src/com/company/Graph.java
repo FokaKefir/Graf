@@ -84,6 +84,8 @@ public class Graph extends JComponent {
                 double weight = openWindow();
 
                 if (weight != NULL_MESSAGE) {
+                    System.out.println(weight);
+
                     this.drawConnection();
 
                     this.connectionList.add(
@@ -100,13 +102,18 @@ public class Graph extends JComponent {
 
         String string = JOptionPane.showInputDialog(this, "What's the weight?");
 
+        double weight;
+
         if(string == null)
-            return NULL_MESSAGE;
-
-        if(string.isEmpty())
-            string = "0";
-
-        return Double.parseDouble(string);
+            weight = NULL_MESSAGE;
+        else {
+            try {
+                weight = Double.parseDouble(string);
+            } catch (Exception error) {
+                weight = 0.0;
+            }
+        }
+        return weight;
 
     }
 
