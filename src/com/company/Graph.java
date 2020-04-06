@@ -16,6 +16,8 @@ public class Graph extends JComponent {
 
     private static final int NOT_DEFINED = -1;
 
+    private static final double NULL_MESSAGE = -1;
+
     // endregion
 
     // region 1. Init widgets
@@ -79,16 +81,33 @@ public class Graph extends JComponent {
                 this.indexFromPoint = mat[x][y];
             } else if(this.indexToPoint == NOT_DEFINED && mat[x][y] != this.indexFromPoint){
                 this.indexToPoint = mat[x][y];
-                
-                this.drawConnection();
+                double weight = openWindow();
 
-                this.connectionList.add(
-                        new Connection(this.indexFromPoint, this.indexToPoint, 0)
-                );
+                if (weight != NULL_MESSAGE) {
+                    this.drawConnection();
+
+                    this.connectionList.add(
+                            new Connection(this.indexFromPoint, this.indexToPoint, weight)
+                    );
+                }
 
                 this.clearIndexes();
             }
         }
+    }
+
+    private double openWindow(){
+
+        String string = JOptionPane.showInputDialog(this, "What's the weight?");
+
+        if(string == null)
+            return NULL_MESSAGE;
+
+        if(string.isEmpty())
+            string = "0";
+
+        return Double.parseDouble(string);
+
     }
 
     // endregion

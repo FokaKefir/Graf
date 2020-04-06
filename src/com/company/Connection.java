@@ -11,13 +11,13 @@ public class Connection {
     private int fromPoint;
     private int toPoint;
 
-    private int weight;
+    private double weight;
 
     // endregion
 
     // region 2. Constructor
 
-    public Connection(int from, int to, int weight){
+    public Connection(int from, int to, double weight){
         this.fromPoint = from;
         this.toPoint = to;
 
@@ -36,7 +36,7 @@ public class Connection {
         return toPoint;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 
