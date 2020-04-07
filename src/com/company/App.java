@@ -24,7 +24,6 @@ public class App implements ActionListener {
     private JButton btnPostorder;
     private JButton btnAddPoint;
     private JButton btnAddConnection;
-    private JTextField txtInfo;
 
 
     private Graph graph;
@@ -55,14 +54,11 @@ public class App implements ActionListener {
         this.buttonPanel.add(this.btnAddPoint);
         this.buttonPanel.add(this.btnAddConnection);
 
-        this.txtInfo = new JTextField("Info");
-        this.txtInfo.setEnabled(false);
 
         this.mainPanel = new JPanel();
         this.mainPanel.setLayout(new BorderLayout());
         this.mainPanel.add(this.graph, BorderLayout.CENTER);
         this.mainPanel.add(this.buttonPanel, BorderLayout.NORTH);
-        this.mainPanel.add(this.txtInfo, BorderLayout.SOUTH);
 
         this.frame = new JFrame("App");
         this.frame.setContentPane(this.mainPanel);

@@ -18,6 +18,8 @@ public class Graph extends JComponent {
 
     private static final double NULL_MESSAGE = -1;
 
+    private static final int RADIUS = 50;
+
     // endregion
 
     // region 1. Init widgets
@@ -25,7 +27,6 @@ public class Graph extends JComponent {
     private Image image;
     private Graphics2D graphics;
 
-    private int radius;
     private int numberPoints;
     private int indexFromPoint;
     private int indexToPoint;
@@ -42,7 +43,6 @@ public class Graph extends JComponent {
 
     public Graph() {
         this.numberPoints = 0;
-        this.radius = 50;
         this.blnCanDrawPoint = false;
         this.blnCanConnect = false;
 
@@ -193,7 +193,7 @@ public class Graph extends JComponent {
     private void drawPoint(int x, int y){
         if(this.graphics != null && this.blnCanDrawPoint){
             this.graphics.setPaint(Color.CYAN);
-            this.graphics.fillOval(x - radius/2, y - radius/2, radius, radius);
+            this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
             setNewElement(x, y);
             drawCircle(x, y, Color.BLACK);
@@ -204,7 +204,7 @@ public class Graph extends JComponent {
         if(this.graphics != null){
 
             this.graphics.setPaint(color);
-            this.graphics.fillOval(x - radius/2, y - radius/2, radius, radius);
+            this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
             this.repaint();
         }
