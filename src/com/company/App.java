@@ -95,9 +95,11 @@ public class App implements ActionListener {
         } else if (btnPostorder.equals(source)) {
             System.out.println("postorder");
         } else if (btnAddPoint.equals(source)) {
+            this.graph.redrawImage();
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(true);
         } else if (btnAddConnection.equals(source)) {
+            this.graph.redrawImage();
             this.graph.clearIndexes();
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setBlnCanConnect(true);

@@ -74,6 +74,17 @@ public class Graph extends JComponent {
                 if(blnCanDrawPoint){
                     redrawImage();
                     drawCircle(event.getX(), event.getY(), Color.GRAY);
+                } else if(blnCanConnect) {
+                    if(indexFromPoint != NOT_DEFINED && indexToPoint == NOT_DEFINED){
+                        redrawImage();
+                        if(mat[event.getX()][event.getY()] == EMPTY) {
+                            drawConnection(
+                                    pointPositionList.get(indexFromPoint).getX(), pointPositionList.get(indexFromPoint).getY(), event.getX(), event.getY(), Color.GRAY
+                            );
+                        }else{
+                            drawConnection(indexFromPoint, mat[event.getX()][event.getY()], Color.GRAY);
+                        }
+                    }
                 }
             }
         });
@@ -87,6 +98,7 @@ public class Graph extends JComponent {
     private void setNewPoint(int x, int y){
         drawPoint(x, y);
         this.blnCanDrawPoint = false;
+        redrawPoints();
     }
 
     private void setNewConnection(int x, int y){
@@ -98,7 +110,7 @@ public class Graph extends JComponent {
                 double weight = openWindow();
 
                 if (weight != NULL_MESSAGE) {
-                    drawConnection(this.indexFromPoint, this.indexToPoint);
+                    drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK);
 
                     this.connectionList.add(
                             new Connection(this.indexFromPoint, this.indexToPoint, weight)
@@ -107,6 +119,7 @@ public class Graph extends JComponent {
 
                 this.clearIndexes();
                 this.blnCanConnect = false;
+                redrawImage();
             }
         }
     }
@@ -128,6 +141,10 @@ public class Graph extends JComponent {
         }
         return weight;
 
+    }
+
+    public void clearIndexes(){
+        this.indexFromPoint = this.indexToPoint = NOT_DEFINED;
     }
 
     // endregion
@@ -197,20 +214,24 @@ public class Graph extends JComponent {
 
     // region 7. Draw Connection
 
-    private void drawConnection(int indexFromPoint, int indexToPoint){
+    private void drawConnection(int indexFromPoint, int indexToPoint, Color color){
 
         PointPosition pointFrom = pointPositionList.get(indexFromPoint);
         PointPosition pointTo = pointPositionList.get(indexToPoint);
 
-        this.graphics.setPaint(Color.black);
+        this.graphics.setPaint(color);
         this.graphics.drawLine(
                 pointFrom.getX(), pointFrom.getY(), pointTo.getX(), pointTo.getY());
 
         this.repaint();
     }
 
-    public void clearIndexes(){
-        this.indexFromPoint = this.indexToPoint = NOT_DEFINED;
+    private void drawConnection(int x1, int y1, int x2, int y2, Color color){
+        this.graphics.setPaint(color);
+        this.graphics.drawLine(
+                x1, y1, x2, y2);
+
+        this.repaint();
     }
 
     // endregion
@@ -257,7 +278,7 @@ public class Graph extends JComponent {
 
     // region 9. Redraw image
 
-    private void redrawImage(){
+    public void redrawImage(){
         clearImage();
         redrawPoints();
         redrawConnections();
@@ -265,7 +286,7 @@ public class Graph extends JComponent {
 
     private void redrawConnections() {
         for (Connection connection : this.connectionList){
-            drawConnection(connection.getFromPoint(), connection.getToPoint());
+            drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.BLACK);
         }
     }
 
