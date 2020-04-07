@@ -2,10 +2,6 @@ package com.company;
 
 public class Connection {
 
-    // region 0. Constants
-
-    // endregion
-
     // region 1. Init widgets
 
     private int fromPoint;

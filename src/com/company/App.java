@@ -96,10 +96,10 @@ public class App implements ActionListener {
             System.out.println("postorder");
         } else if (btnAddPoint.equals(source)) {
             this.graph.setBlnCanConnect(false);
-            this.graph.setBlnCanDraw(true);
+            this.graph.setBlnCanDrawPoint(true);
         } else if (btnAddConnection.equals(source)) {
             this.graph.clearIndexes();
-            this.graph.setBlnCanDraw(false);
+            this.graph.setBlnCanDrawPoint(false);
             this.graph.setBlnCanConnect(true);
         }
 

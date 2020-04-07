@@ -29,7 +29,7 @@ public class Graph extends JComponent {
     private int numberPoints;
     private int indexFromPoint;
     private int indexToPoint;
-    private boolean blnCanDraw;
+    private boolean blnCanDrawPoint;
     private boolean blnCanConnect;
 
     private int[][] mat;
@@ -41,22 +41,9 @@ public class Graph extends JComponent {
     // region 2. Constructor
 
     public Graph() {
-        this.setDoubleBuffered(false);
-
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent event) {
-                if(blnCanDraw)
-                    setNewPoint(event.getX(), event.getY());
-                else if(blnCanConnect)
-                    setNewConnection(event.getX(), event.getY());
-
-            }
-        });
-
         this.numberPoints = 0;
         this.radius = 50;
-        this.blnCanDraw = false;
+        this.blnCanDrawPoint = false;
         this.blnCanConnect = false;
 
         this.indexFromPoint = NOT_DEFINED;
@@ -65,14 +52,41 @@ public class Graph extends JComponent {
         this.pointPositionList = new ArrayList<>();
         this.connectionList = new ArrayList<>();
 
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                if(blnCanDrawPoint) {
+                    setNewPoint(event.getX(), event.getY());
+
+                } else if(blnCanConnect) {
+                    setNewConnection(event.getX(), event.getY());
+                }
+
+            }
+        });
+
+        this.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent event) {}
+
+            @Override
+            public void mouseMoved(MouseEvent event) {
+                if(blnCanDrawPoint){
+                    redrawImage();
+                    drawCircle(event.getX(), event.getY(), Color.GRAY);
+                }
+            }
+        });
+
     }
 
     // endregion
 
-    // region 3.  Main functions
+    // region 3. Main functions
 
     private void setNewPoint(int x, int y){
         drawPoint(x, y);
+        this.blnCanDrawPoint = false;
     }
 
     private void setNewConnection(int x, int y){
@@ -84,9 +98,7 @@ public class Graph extends JComponent {
                 double weight = openWindow();
 
                 if (weight != NULL_MESSAGE) {
-                    System.out.println(weight);
-
-                    this.drawConnection();
+                    drawConnection(this.indexFromPoint, this.indexToPoint);
 
                     this.connectionList.add(
                             new Connection(this.indexFromPoint, this.indexToPoint, weight)
@@ -94,6 +106,7 @@ public class Graph extends JComponent {
                 }
 
                 this.clearIndexes();
+                this.blnCanConnect = false;
             }
         }
     }
@@ -119,7 +132,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 4. Setup the Image
+    // region 4. Painting
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -128,12 +141,15 @@ public class Graph extends JComponent {
             this.image = this.createImage(this.getSize().width, this.getSize().height);
             createMatrix();
 
+
             this.graphics = (Graphics2D) this.image.getGraphics();
             this.graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             this.clearImage();
         }
         g.drawImage(this.image, 0, 0, null);
+
+
 
     }
 
@@ -158,14 +174,12 @@ public class Graph extends JComponent {
     // region 6. Draw Point
 
     private void drawPoint(int x, int y){
-        if(this.graphics != null && this.blnCanDraw){
+        if(this.graphics != null && this.blnCanDrawPoint){
             this.graphics.setPaint(Color.CYAN);
             this.graphics.fillOval(x - radius/2, y - radius/2, radius, radius);
 
             setNewElement(x, y);
             drawCircle(x, y, Color.BLACK);
-
-            this.blnCanDraw = false;
         }
     }
 
@@ -183,18 +197,16 @@ public class Graph extends JComponent {
 
     // region 7. Draw Connection
 
-    private void drawConnection(){
+    private void drawConnection(int indexFromPoint, int indexToPoint){
 
-        PointPosition pointFrom = pointPositionList.get(this.indexFromPoint);
-        PointPosition pointTo = pointPositionList.get(this.indexToPoint);
+        PointPosition pointFrom = pointPositionList.get(indexFromPoint);
+        PointPosition pointTo = pointPositionList.get(indexToPoint);
 
         this.graphics.setPaint(Color.black);
         this.graphics.drawLine(
                 pointFrom.getX(), pointFrom.getY(), pointTo.getX(), pointTo.getY());
 
         this.repaint();
-
-        this.blnCanConnect = false;
     }
 
     public void clearIndexes(){
@@ -243,38 +255,36 @@ public class Graph extends JComponent {
 
     // endregion
 
+    // region 9. Redraw image
+
+    private void redrawImage(){
+        clearImage();
+        redrawPoints();
+        redrawConnections();
+    }
+
+    private void redrawConnections() {
+        for (Connection connection : this.connectionList){
+            drawConnection(connection.getFromPoint(), connection.getToPoint());
+        }
+    }
+
+    private void redrawPoints(){
+        for(PointPosition point : this.pointPositionList){
+            drawCircle(point.getX(), point.getY(), Color.BLACK);
+        }
+    }
+
+    // endregion
+
     // region 9. Getters and Setters
-
-    public int getIndexFromPoint() {
-        return indexFromPoint;
-    }
-
-    public int getIndexToPoint() {
-        return indexToPoint;
-    }
-
-    public boolean getBlnCanConnect() {
-        return blnCanConnect;
-    }
-
-    public boolean getBlnCanDraw() {
-        return blnCanDraw;
-    }
-
-    public void setIndexFromPoint(int indexFromPoint) {
-        this.indexFromPoint = indexFromPoint;
-    }
-
-    public void setIndexToPoint(int indexToPoint) {
-        this.indexToPoint = indexToPoint;
-    }
 
     public void setBlnCanConnect(boolean blnCanConnect) {
         this.blnCanConnect = blnCanConnect;
     }
 
-    public void setBlnCanDraw(boolean blnCanDraw) {
-        this.blnCanDraw = blnCanDraw;
+    public void setBlnCanDrawPoint(boolean blnCanDrawPoint) {
+        this.blnCanDrawPoint = blnCanDrawPoint;
     }
 
     // endregion
