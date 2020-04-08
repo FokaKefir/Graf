@@ -19,9 +19,7 @@ public class App implements ActionListener {
     private JPanel mainPanel;
 
     private JPanel buttonPanel;
-    private JButton btnPreorder;
-    private JButton btnInorder;
-    private JButton btnPostorder;
+
     private JButton btnAddPoint;
     private JButton btnAddConnection;
 
@@ -35,22 +33,16 @@ public class App implements ActionListener {
     public App() {
         this.graph = new Graph();
 
-        this.btnPreorder = new JButton("Preorder");
-        this.btnInorder = new JButton("Inorder");
-        this.btnPostorder = new JButton("Postorder");
+
         this.btnAddPoint = new JButton("Add new point");
         this.btnAddConnection = new JButton("Add new connection");
 
-        this.btnPreorder.addActionListener(this);
-        this.btnInorder.addActionListener(this);
-        this.btnPostorder.addActionListener(this);
+
         this.btnAddPoint.addActionListener(this);
         this.btnAddConnection.addActionListener(this);
 
         this.buttonPanel = new JPanel();
-        this.buttonPanel.add(this.btnPreorder);
-        this.buttonPanel.add(this.btnInorder);
-        this.buttonPanel.add(this.btnPostorder);
+
         this.buttonPanel.add(this.btnAddPoint);
         this.buttonPanel.add(this.btnAddConnection);
 
@@ -84,13 +76,8 @@ public class App implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
-        if (btnPreorder.equals(source)) {
-            System.out.println("preorder");
-        } else if (btnInorder.equals(source)) {
-            System.out.println("inorder");
-        } else if (btnPostorder.equals(source)) {
-            System.out.println("postorder");
-        } else if (btnAddPoint.equals(source)) {
+
+        if (btnAddPoint.equals(source)) {
             this.graph.redrawImage();
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(true);

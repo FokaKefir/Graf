@@ -298,7 +298,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 9. Getters and Setters
+    // region 10. Getters and Setters
 
     public void setBlnCanConnect(boolean blnCanConnect) {
         this.blnCanConnect = blnCanConnect;
@@ -309,5 +309,7 @@ public class Graph extends JComponent {
     }
 
     // endregion
+
+
 
 }
