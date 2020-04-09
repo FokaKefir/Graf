@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 
 public class Graph extends JComponent {
@@ -38,6 +39,7 @@ public class Graph extends JComponent {
     private int[][] mat;
     private List<PointPosition> pointPositionList;
     private ArrayList<Connection> connectionList;
+    private Vector<ArrayList<Integer>> adjacencyList;
 
     // endregion
 
@@ -54,6 +56,7 @@ public class Graph extends JComponent {
 
         this.pointPositionList = new ArrayList<>();
         this.connectionList = new ArrayList<>();
+        this.adjacencyList = new Vector<>();
 
         this.addMouseListener(new MouseAdapter() {
             @Override
@@ -178,15 +181,12 @@ public class Graph extends JComponent {
             this.image = this.createImage(this.getSize().width, this.getSize().height);
             createMatrix();
 
-
             this.graphics = (Graphics2D) this.image.getGraphics();
             this.graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             this.clearImage();
         }
         g.drawImage(this.image, 0, 0, null);
-
-
 
     }
 
@@ -334,21 +334,54 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 11. Algorithms
+    //region 11. Adjacency list functions
+
+    private void addToAdjacencyList(int from, int to){
+        ArrayList<Integer> arrayList = adjacencyList.get(from);
+        arrayList.add(to);
+        adjacencyList.set(from, arrayList);
+    }
+
+    private void createAdjacencyList(){
+        this.adjacencyList.clear();
+        this.adjacencyList.setSize(this.numberPoints);
+        for (int i = 0; i < this.numberPoints; i++) {
+            ArrayList<Integer> list = new ArrayList<>();
+            adjacencyList.set(i, list);
+        }
+
+        for (Connection connection : connectionList){
+            int from = connection.getFromPoint();
+            int to = connection.getToPoint();
+            double weight = connection.getWeight();
+            addToAdjacencyList(from, to);
+            addToAdjacencyList(to, from);
+        }
+    }
+
+    // endregion
+
+    // region 12. Algorithms
 
     private void breadthFirstSearch(int index){
         this.algorithmType = NOT_TYPE;
-        System.out.println("szelessegi bejaras");
+        createAdjacencyList();
+
+        ArrayList<Integer> neighbors = adjacencyList.get(index);
+
+        for(Integer neighbor : neighbors){
+            System.out.println(neighbor);
+        }
     }
 
     private void depthFirstSearch(int index){
         this.algorithmType = NOT_TYPE;
-        System.out.println("melysegi bejaras");
+        createAdjacencyList();
     }
 
     private void dijkstra(int index){
         this.algorithmType = NOT_TYPE;
-        System.out.println("dijkstra");
+        createAdjacencyList();
     }
 
     public void kruskal(){
