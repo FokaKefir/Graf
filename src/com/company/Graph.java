@@ -13,12 +13,13 @@ public class Graph extends JComponent {
     // region 0. Constants
 
     private static final int EMPTY = -1;
-
     private static final int NOT_DEFINED = -1;
-
     private static final double NULL_MESSAGE = -1;
-
     private static final int RADIUS = 50;
+    public static final int NOT_TYPE = 0;
+    public static final int BREADTH_FIRST_SEARCH = 1;
+    public static final int DEPTH_FIRST_SEARCH = 2;
+    public static final int DIJKSTRA = 3;
 
     // endregion
 
@@ -27,6 +28,7 @@ public class Graph extends JComponent {
     private Image image;
     private Graphics2D graphics;
 
+    private int algorithmType;
     private int numberPoints;
     private int indexFromPoint;
     private int indexToPoint;
@@ -35,13 +37,14 @@ public class Graph extends JComponent {
 
     private int[][] mat;
     private List<PointPosition> pointPositionList;
-    private List<Connection> connectionList;
+    private ArrayList<Connection> connectionList;
 
     // endregion
 
     // region 2. Constructor
 
     public Graph() {
+        this.algorithmType = NOT_TYPE;
         this.numberPoints = 0;
         this.blnCanDrawPoint = false;
         this.blnCanConnect = false;
@@ -55,11 +58,28 @@ public class Graph extends JComponent {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
-                if(blnCanDrawPoint) {
-                    setNewPoint(event.getX(), event.getY());
+                int x = event.getX();
+                int y = event.getY();
 
+                if(blnCanDrawPoint) {
+                    setNewPoint(x, y);
                 } else if(blnCanConnect) {
-                    setNewConnection(event.getX(), event.getY());
+                    setNewConnection(x, y);
+                } else if(algorithmType != NOT_TYPE && mat[x][y] != EMPTY) {
+
+                    switch (algorithmType){
+                        case BREADTH_FIRST_SEARCH:
+                            breadthFirstSearch(mat[x][y]);
+                            break;
+
+                        case DEPTH_FIRST_SEARCH:
+                            depthFirstSearch(mat[x][y]);
+                            break;
+
+                        case DIJKSTRA:
+                            dijkstra(mat[x][y]);
+                            break;
+                    }
                 }
 
             }
@@ -300,6 +320,10 @@ public class Graph extends JComponent {
 
     // region 10. Getters and Setters
 
+    public void setAlgorithmType(int algorithmType) {
+        this.algorithmType = algorithmType;
+    }
+
     public void setBlnCanConnect(boolean blnCanConnect) {
         this.blnCanConnect = blnCanConnect;
     }
@@ -310,6 +334,28 @@ public class Graph extends JComponent {
 
     // endregion
 
+    // region 11. Algorithms
 
+    private void breadthFirstSearch(int index){
+        this.algorithmType = NOT_TYPE;
+        System.out.println("szelessegi bejaras");
+    }
+
+    private void depthFirstSearch(int index){
+        this.algorithmType = NOT_TYPE;
+        System.out.println("melysegi bejaras");
+    }
+
+    private void dijkstra(int index){
+        this.algorithmType = NOT_TYPE;
+        System.out.println("dijkstra");
+    }
+
+    public void kruskal(){
+        this.algorithmType = NOT_TYPE;
+        System.out.println("kruskal");
+    }
+
+    // endregion
 
 }
