@@ -8,8 +8,8 @@ public class App implements ActionListener {
 
     // region 0. Constants
 
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final int WIDTH = 1200;
+    private static final int HEIGHT = 800;
 
     // endregion
 
@@ -120,6 +120,7 @@ public class App implements ActionListener {
         }
 
     }
+
     // endregion
 
 }
