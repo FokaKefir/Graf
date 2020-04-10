@@ -4,9 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 
 public class Graph extends JComponent {
@@ -16,6 +15,7 @@ public class Graph extends JComponent {
     private static final int EMPTY = -1;
     private static final int NOT_DEFINED = -1;
     private static final double NULL_MESSAGE = -1;
+    private static final boolean IT_WAS = true;
     private static final int RADIUS = 50;
     public static final int NOT_TYPE = 0;
     public static final int BREADTH_FIRST_SEARCH = 1;
@@ -391,14 +391,29 @@ public class Graph extends JComponent {
 
     // region 12. Breadth-First Search
 
-    private void breadthFirstSearch(int index){
-        this.algorithmType = NOT_TYPE;
-        createAdjacencyList();
-
+    private void watchNeighbor(int index, boolean[] b, Queue<Integer> queue){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
 
         for(Integer neighbor : neighbors){
-            System.out.println(neighbor);
+            if(b[neighbor] != IT_WAS){
+                queue.add(neighbor);
+                b[neighbor] = IT_WAS;
+            }
+        }
+    }
+
+    private void breadthFirstSearch(int first){
+        this.algorithmType = NOT_TYPE;
+        createAdjacencyList();
+
+        Queue<Integer> queue = new LinkedList<>();
+        boolean[] b = new boolean[this.numberPoints];
+        queue.add(first);
+        b[first] = IT_WAS;
+
+        while(!queue.isEmpty()){
+            int index = queue.remove();
+            watchNeighbor(index, b, queue);
         }
     }
 
