@@ -119,7 +119,7 @@ public class Graph extends JComponent {
     // region 3. Main functions
 
     private void setNewPoint(int x, int y){
-        drawPoint(x, y);
+        drawAndSetPoint(x, y);
         this.blnCanDrawPoint = false;
         redrawPoints();
     }
@@ -133,7 +133,7 @@ public class Graph extends JComponent {
                 double weight = openWindow();
 
                 if (weight != NULL_MESSAGE) {
-                    drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK);
+                    drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK, weight);
 
                     this.connectionList.add(
                             new Connection(this.indexFromPoint, this.indexToPoint, weight)
@@ -210,13 +210,23 @@ public class Graph extends JComponent {
 
     // region 6. Draw Point
 
-    private void drawPoint(int x, int y){
+    private void drawAndSetPoint(int x, int y){
         if(this.graphics != null && this.blnCanDrawPoint){
             this.graphics.setPaint(Color.CYAN);
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
             setNewElement(x, y);
             drawCircle(x, y, Color.BLACK);
+        }
+    }
+
+    private void drawPoint(PointPosition pointPosition, Color color){
+        if(this.graphics != null){
+
+            this.graphics.setPaint(color);
+            this.graphics.fillOval(pointPosition.getX() - RADIUS /2, pointPosition.getY() - RADIUS /2, RADIUS, RADIUS);
+
+            this.repaint();
         }
     }
 
@@ -242,6 +252,24 @@ public class Graph extends JComponent {
         this.graphics.setPaint(color);
         this.graphics.drawLine(
                 pointFrom.getX(), pointFrom.getY(), pointTo.getX(), pointTo.getY());
+
+        this.repaint();
+    }
+
+    private void drawConnection(int indexFromPoint, int indexToPoint, Color color, double weight){
+
+        PointPosition pointFrom = pointPositionList.get(indexFromPoint);
+        PointPosition pointTo = pointPositionList.get(indexToPoint);
+
+        int x1 = pointFrom.getX();
+        int y1 = pointFrom.getY();
+        int x2 = pointTo.getX();
+        int y2 = pointTo.getY();
+
+        this.graphics.setPaint(color);
+        this.graphics.drawLine(x1, y1, x2, y2);
+
+        this.graphics.drawString(String.valueOf(weight), (x1 + x2)/2, (y1 + y2)/2);
 
         this.repaint();
     }
@@ -306,7 +334,7 @@ public class Graph extends JComponent {
 
     private void redrawConnections() {
         for (Connection connection : this.connectionList){
-            drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.BLACK);
+            drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.BLACK, connection.getWeight());
         }
     }
 
@@ -334,7 +362,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    //region 11. Adjacency list functions
+    //region 11. Adjacency list methods
 
     private void addToAdjacencyList(int from, int to){
         ArrayList<Integer> arrayList = adjacencyList.get(from);
@@ -361,7 +389,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 12. Algorithms
+    // region 12. Breadth-First Search
 
     private void breadthFirstSearch(int index){
         this.algorithmType = NOT_TYPE;
@@ -374,19 +402,80 @@ public class Graph extends JComponent {
         }
     }
 
+    // endregion
+
+    // region 13. Depth-First Search
+
     private void depthFirstSearch(int index){
         this.algorithmType = NOT_TYPE;
         createAdjacencyList();
     }
+
+    // endregion
+
+    // region 14. Dijkstra
 
     private void dijkstra(int index){
         this.algorithmType = NOT_TYPE;
         createAdjacencyList();
     }
 
+    // endregion
+
+    // region 15. Kruskal
+
+    private void sortingConnectionList(){
+        boolean ok = true;
+        int len = connectionList.size();
+
+        while(ok){
+            ok = false;
+            for (int i = 0; i < len - 1; i++) {
+                if(connectionList.get(i).getWeight() > connectionList.get(i+1).getWeight()){
+                    Connection tmp = connectionList.get(i);
+                    connectionList.set(i, connectionList.get(i+1));
+                    connectionList.set(i+1, tmp);
+
+                    ok = true;
+                }
+            }
+
+            len--;
+        }
+    }
+
+    private void connectTwoComponent(int from, int to, int[] comp){
+        int number = comp[to];
+        for (int i = 0; i < this.numberPoints; i++) {
+            if(comp[i] == number){
+                comp[i] = comp[from];
+            }
+        }
+    }
+
     public void kruskal(){
         this.algorithmType = NOT_TYPE;
-        System.out.println("kruskal");
+
+        sortingConnectionList();
+
+        int[] comp = new int[this.numberPoints];
+        for (int i = 0; i < this.numberPoints; i++) {
+            comp[i] = i;
+        }
+
+        for(Connection connection : connectionList){
+            int from = connection.getFromPoint();
+            int to = connection.getToPoint();
+
+            if(comp[from] != comp[to]){
+                connectTwoComponent(from, to, comp);
+
+                drawPoint(pointPositionList.get(from), Color.RED);
+                drawPoint(pointPositionList.get(to), Color.RED);
+                drawConnection(from, to, Color.RED, connection.getWeight());
+
+            }
+        }
     }
 
     // endregion
