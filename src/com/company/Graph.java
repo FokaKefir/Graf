@@ -21,6 +21,7 @@ public class Graph extends JComponent {
     public static final int BREADTH_FIRST_SEARCH = 1;
     public static final int DEPTH_FIRST_SEARCH = 2;
     public static final int DIJKSTRA = 3;
+    public static final int KRUSKAL = 4;
 
     // endregion
 
@@ -40,6 +41,11 @@ public class Graph extends JComponent {
     private List<PointPosition> pointPositionList;
     private ArrayList<Connection> connectionList;
     private Vector<ArrayList<Integer>> adjacencyList;
+
+
+    private boolean algorithmRunning;
+    private int index;
+    private int[] comp;
 
     // endregion
 
@@ -168,6 +174,26 @@ public class Graph extends JComponent {
 
     public void clearIndexes(){
         this.indexFromPoint = this.indexToPoint = NOT_DEFINED;
+    }
+
+    public void nextStep(){
+        switch (algorithmType){
+            case BREADTH_FIRST_SEARCH:
+
+                break;
+
+            case DEPTH_FIRST_SEARCH:
+
+                break;
+
+            case DIJKSTRA:
+
+                break;
+
+            case KRUSKAL:
+                kruskalNext();
+                break;
+        }
     }
 
     // endregion
@@ -360,6 +386,10 @@ public class Graph extends JComponent {
         this.blnCanDrawPoint = blnCanDrawPoint;
     }
 
+    public boolean getAlgorithmRunning() {
+        return algorithmRunning;
+    }
+
     // endregion
 
     //region 11. Adjacency list methods
@@ -403,18 +433,8 @@ public class Graph extends JComponent {
     }
 
     private void breadthFirstSearch(int first){
-        this.algorithmType = NOT_TYPE;
         createAdjacencyList();
 
-        Queue<Integer> queue = new LinkedList<>();
-        boolean[] b = new boolean[this.numberPoints];
-        queue.add(first);
-        b[first] = IT_WAS;
-
-        while(!queue.isEmpty()){
-            int index = queue.remove();
-            watchNeighbor(index, b, queue);
-        }
     }
 
     // endregion
@@ -422,7 +442,6 @@ public class Graph extends JComponent {
     // region 13. Depth-First Search
 
     private void depthFirstSearch(int index){
-        this.algorithmType = NOT_TYPE;
         createAdjacencyList();
     }
 
@@ -431,7 +450,6 @@ public class Graph extends JComponent {
     // region 14. Dijkstra
 
     private void dijkstra(int index){
-        this.algorithmType = NOT_TYPE;
         createAdjacencyList();
     }
 
@@ -459,38 +477,44 @@ public class Graph extends JComponent {
         }
     }
 
-    private void connectTwoComponent(int from, int to, int[] comp){
-        int number = comp[to];
+    private void connectTwoComponent(int from, int to){
+        int number = this.comp[to];
         for (int i = 0; i < this.numberPoints; i++) {
-            if(comp[i] == number){
-                comp[i] = comp[from];
+            if(this.comp[i] == number){
+                this.comp[i] = this.comp[from];
             }
         }
     }
 
     public void kruskal(){
-        this.algorithmType = NOT_TYPE;
-
         sortingConnectionList();
 
-        int[] comp = new int[this.numberPoints];
+        this.comp = new int[this.numberPoints];
         for (int i = 0; i < this.numberPoints; i++) {
-            comp[i] = i;
+            this.comp[i] = i;
         }
 
-        for(Connection connection : connectionList){
-            int from = connection.getFromPoint();
-            int to = connection.getToPoint();
+        this.index = 0;
+        this.algorithmRunning = true;
+    }
 
+    private void kruskalNext(){
+        if(this.index < connectionList.size()){
+            int from = connectionList.get(this.index).getFromPoint();
+            int to = connectionList.get(this.index).getToPoint();
+            double weight = connectionList.get(this.index).getWeight();
             if(comp[from] != comp[to]){
-                connectTwoComponent(from, to, comp);
+                connectTwoComponent(from, to);
 
                 drawPoint(pointPositionList.get(from), Color.RED);
                 drawPoint(pointPositionList.get(to), Color.RED);
-                drawConnection(from, to, Color.RED, connection.getWeight());
-
+                drawConnection(from, to, Color.RED, weight);
             }
+
+            this.index++;
         }
+        if(this.index == connectionList.size())
+            this.algorithmRunning = false;
     }
 
     // endregion

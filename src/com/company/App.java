@@ -26,6 +26,7 @@ public class App implements ActionListener {
     private JButton btnKruskal;
     private JButton btnAddPoint;
     private JButton btnAddConnection;
+    private JButton btnNextStep;
 
     private Graph graph;
 
@@ -42,6 +43,7 @@ public class App implements ActionListener {
         this.btnKruskal = new JButton("Kruskal");
         this.btnAddPoint = new JButton("Add new point");
         this.btnAddConnection = new JButton("Add new connection");
+        this.btnNextStep = new JButton("Next");
 
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
@@ -49,6 +51,9 @@ public class App implements ActionListener {
         this.btnKruskal.addActionListener(this);
         this.btnAddPoint.addActionListener(this);
         this.btnAddConnection.addActionListener(this);
+        this.btnNextStep.addActionListener(this);
+
+        setVisibleButtons(true);
 
         this.buttonPanel = new JPanel();
 
@@ -58,6 +63,7 @@ public class App implements ActionListener {
         this.buttonPanel.add(this.btnKruskal);
         this.buttonPanel.add(this.btnAddPoint);
         this.buttonPanel.add(this.btnAddConnection);
+        this.buttonPanel.add(this.btnNextStep);
 
 
         this.mainPanel = new JPanel();
@@ -94,18 +100,23 @@ public class App implements ActionListener {
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.BREADTH_FIRST_SEARCH);
+            setVisibleButtons(false);
         }else if(btnDepthFirstSearch.equals(source)){
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.DEPTH_FIRST_SEARCH);
+            setVisibleButtons(false);
         }else if(btnDijkstra.equals(source)){
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.DIJKSTRA);
+            setVisibleButtons(false);
         }else if(btnKruskal.equals(source)){
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
+            this.graph.setAlgorithmType(Graph.KRUSKAL);
             this.graph.kruskal();
+            setVisibleButtons(false);
         }else if (btnAddPoint.equals(source)) {
             this.graph.redrawImage();
             this.graph.setBlnCanConnect(false);
@@ -117,7 +128,29 @@ public class App implements ActionListener {
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setBlnCanConnect(true);
             this.graph.setAlgorithmType(Graph.NOT_TYPE);
+        } else if (btnNextStep.equals(source)){
+            if(this.graph.getAlgorithmRunning()) {
+                this.graph.nextStep();
+            } else {
+                setVisibleButtons(true);
+                this.graph.redrawImage();
+            }
         }
+
+    }
+
+    // endregion
+
+    // region 5. Functions and methods
+
+    private void setVisibleButtons(boolean cond){
+        this.btnBreadthFirstSearch.setVisible(cond);
+        this.btnDepthFirstSearch.setVisible(cond);
+        this.btnDijkstra.setVisible(cond);
+        this.btnKruskal.setVisible(cond);
+        this.btnAddPoint.setVisible(cond);
+        this.btnAddConnection.setVisible(cond);
+        this.btnNextStep.setVisible(!cond);
 
     }
 
