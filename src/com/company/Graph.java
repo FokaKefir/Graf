@@ -179,15 +179,15 @@ public class Graph extends JComponent {
     public void nextStep(){
         switch (algorithmType){
             case BREADTH_FIRST_SEARCH:
-
+                breadthFirstSearchNext();
                 break;
 
             case DEPTH_FIRST_SEARCH:
-
+                depthFirstSearchNext();
                 break;
 
             case DIJKSTRA:
-
+                dijkstraNext();
                 break;
 
             case KRUSKAL:
@@ -432,6 +432,10 @@ public class Graph extends JComponent {
         }
     }
 
+    private void breadthFirstSearchNext(){
+
+    }
+
     private void breadthFirstSearch(int first){
         createAdjacencyList();
 
@@ -441,6 +445,10 @@ public class Graph extends JComponent {
 
     // region 13. Depth-First Search
 
+    private void depthFirstSearchNext(){
+
+    }
+
     private void depthFirstSearch(int index){
         createAdjacencyList();
     }
@@ -448,6 +456,10 @@ public class Graph extends JComponent {
     // endregion
 
     // region 14. Dijkstra
+
+    private void dijkstraNext(){
+
+    }
 
     private void dijkstra(int index){
         createAdjacencyList();
