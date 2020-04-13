@@ -1,4 +1,4 @@
-package com.company;
+package com.company.MainObjects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +11,8 @@ public class App implements ActionListener {
     private static final int WIDTH = 1200;
     private static final int HEIGHT = 800;
 
+    private static final String MAIN_INFO = "Add the points and the connections, then choose the algorithm type!";
+
     // endregion
 
     // region 1. Init Widgets
@@ -19,6 +21,8 @@ public class App implements ActionListener {
     private JPanel mainPanel;
 
     private JPanel buttonPanel;
+
+    private JTextField txtField;
 
     private JButton btnBreadthFirstSearch;
     private JButton btnDepthFirstSearch;
@@ -65,11 +69,21 @@ public class App implements ActionListener {
         this.buttonPanel.add(this.btnAddConnection);
         this.buttonPanel.add(this.btnNextStep);
 
+        this.txtField = new JTextField(5);
+        this.txtField.setFont(new Font("Arial", Font.BOLD, 20));
+        this.txtField.setText(MAIN_INFO);
+        this.txtField.setHorizontalAlignment(JTextField.CENTER);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(this.buttonPanel, BorderLayout.NORTH);
+        panel.add(this.txtField, BorderLayout.SOUTH);
+
 
         this.mainPanel = new JPanel();
         this.mainPanel.setLayout(new BorderLayout());
         this.mainPanel.add(this.graph, BorderLayout.CENTER);
-        this.mainPanel.add(this.buttonPanel, BorderLayout.NORTH);
+        this.mainPanel.add(panel, BorderLayout.NORTH);
 
         this.frame = new JFrame("App");
         this.frame.setContentPane(this.mainPanel);
@@ -100,22 +114,26 @@ public class App implements ActionListener {
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.BREADTH_FIRST_SEARCH);
+            this.txtField.setText("Choose the first point!");
             setVisibleButtons(false);
         }else if(btnDepthFirstSearch.equals(source)){
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.DEPTH_FIRST_SEARCH);
+            this.txtField.setText("Choose the first point!");
             setVisibleButtons(false);
         }else if(btnDijkstra.equals(source)){
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.DIJKSTRA);
+            this.txtField.setText("Choose the first point!");
             setVisibleButtons(false);
         }else if(btnKruskal.equals(source)){
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.KRUSKAL);
             this.graph.kruskal();
+            this.txtField.setText("Sorting the connection list!");
             setVisibleButtons(false);
         }else if (btnAddPoint.equals(source)) {
             this.graph.redrawImage();
@@ -134,6 +152,7 @@ public class App implements ActionListener {
             } else {
                 setVisibleButtons(true);
                 this.graph.redrawImage();
+                this.txtField.setText(MAIN_INFO);
             }
         }
 

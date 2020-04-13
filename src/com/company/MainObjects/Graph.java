@@ -1,4 +1,7 @@
-package com.company;
+package com.company.MainObjects;
+
+import com.company.Model.Connection;
+import com.company.Model.PointPosition;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,6 +46,7 @@ public class Graph extends JComponent {
     private Vector<ArrayList<Integer>> adjacencyList;
 
 
+    private String strText;
     private boolean algorithmRunning;
     private int index;
     private int[] comp;
@@ -402,6 +406,10 @@ public class Graph extends JComponent {
 
     public boolean getAlgorithmRunning() {
         return algorithmRunning;
+    }
+
+    public String getStrText() {
+        return strText;
     }
 
     // endregion
