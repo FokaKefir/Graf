@@ -46,6 +46,8 @@ public class Graph extends JComponent {
     private boolean algorithmRunning;
     private int index;
     private int[] comp;
+    private Queue<Integer> queue;
+    private boolean[] b;
 
     // endregion
 
@@ -177,7 +179,8 @@ public class Graph extends JComponent {
     }
 
     public void nextStep(){
-        switch (algorithmType){
+        if (this.algorithmRunning)
+        { switch (algorithmType){
             case BREADTH_FIRST_SEARCH:
                 breadthFirstSearchNext();
                 break;
@@ -193,6 +196,7 @@ public class Graph extends JComponent {
             case KRUSKAL:
                 kruskalNext();
                 break;
+          }
         }
     }
 
@@ -433,12 +437,23 @@ public class Graph extends JComponent {
     }
 
     private void breadthFirstSearchNext(){
-        createAdjacencyList();
+        if(!queue.isEmpty()){
+            int index = queue.remove();
+            watchNeighbor(index, b, queue);
+        }
+        if(queue.isEmpty()){
+            this.algorithmRunning = false;
+        }
+
     }
 
     private void breadthFirstSearch(int first){
         createAdjacencyList();
-
+        queue = new LinkedList<>();
+        b=new boolean[numberPoints];
+        queue.add(first);
+        b[first]=IT_WAS;
+        this.algorithmRunning = true;
     }
 
     // endregion
