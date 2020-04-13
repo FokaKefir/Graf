@@ -179,24 +179,24 @@ public class Graph extends JComponent {
     }
 
     public void nextStep(){
-        if (this.algorithmRunning)
-        { switch (algorithmType){
-            case BREADTH_FIRST_SEARCH:
-                breadthFirstSearchNext();
-                break;
+        if(this.algorithmRunning) {
+            switch (algorithmType) {
+                case BREADTH_FIRST_SEARCH:
+                    breadthFirstSearchNext();
+                    break;
 
-            case DEPTH_FIRST_SEARCH:
-                depthFirstSearchNext();
-                break;
+                case DEPTH_FIRST_SEARCH:
+                    depthFirstSearchNext();
+                    break;
 
-            case DIJKSTRA:
-                dijkstraNext();
-                break;
+                case DIJKSTRA:
+                    dijkstraNext();
+                    break;
 
-            case KRUSKAL:
-                kruskalNext();
-                break;
-          }
+                case KRUSKAL:
+                    kruskalNext();
+                    break;
+            }
         }
     }
 
@@ -265,6 +265,16 @@ public class Graph extends JComponent {
 
             this.graphics.setPaint(color);
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
+
+            this.repaint();
+        }
+    }
+
+    private void drawRing(int x, int y, Color color){
+        if(this.graphics != null){
+
+            this.graphics.setPaint(color);
+            this.graphics.drawOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
             this.repaint();
         }
@@ -430,6 +440,8 @@ public class Graph extends JComponent {
 
         for(Integer neighbor : neighbors){
             if(b[neighbor] != IT_WAS){
+                drawConnection(index, neighbor, Color.RED);
+                drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
                 queue.add(neighbor);
                 b[neighbor] = IT_WAS;
             }
@@ -439,6 +451,7 @@ public class Graph extends JComponent {
     private void breadthFirstSearchNext(){
         if(!queue.isEmpty()){
             int index = queue.remove();
+            drawCircle(pointPositionList.get(index).getX(), pointPositionList.get(index).getY(), Color.RED);
             watchNeighbor(index, b, queue);
         }
         if(queue.isEmpty()){
@@ -449,11 +462,12 @@ public class Graph extends JComponent {
 
     private void breadthFirstSearch(int first){
         createAdjacencyList();
-        queue = new LinkedList<>();
-        b=new boolean[numberPoints];
-        queue.add(first);
-        b[first]=IT_WAS;
+        this.queue = new LinkedList<>();
+        this.b = new boolean[numberPoints];
+        this.queue.add(first);
+        this.b[first] = IT_WAS;
         this.algorithmRunning = true;
+        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), Color.RED);
     }
 
     // endregion
