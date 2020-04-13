@@ -433,7 +433,7 @@ public class Graph extends JComponent {
     }
 
     private void breadthFirstSearchNext(){
-
+        createAdjacencyList();
     }
 
     private void breadthFirstSearch(int first){
@@ -458,7 +458,7 @@ public class Graph extends JComponent {
     // region 14. Dijkstra
 
     private void dijkstraNext(){
-
+        
     }
 
     private void dijkstra(int index){
