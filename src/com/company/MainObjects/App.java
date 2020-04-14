@@ -1,6 +1,7 @@
 package com.company.MainObjects;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -72,11 +73,15 @@ public class App implements ActionListener {
         this.txtField = new JTextField(5);
         this.txtField.setFont(new Font("Arial", Font.BOLD, 20));
         this.txtField.setText(MAIN_INFO);
+        this.txtField.setEnabled(false);
+        this.txtField.setBorder(new LineBorder(Color.WHITE));
+        this.txtField.setDisabledTextColor(Color.BLACK);
         this.txtField.setHorizontalAlignment(JTextField.CENTER);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(this.buttonPanel, BorderLayout.NORTH);
+        panel.add(Box.createVerticalStrut(15), BorderLayout.CENTER);
         panel.add(this.txtField, BorderLayout.SOUTH);
 
 
@@ -149,6 +154,7 @@ public class App implements ActionListener {
         } else if (btnNextStep.equals(source)){
             if(this.graph.getAlgorithmRunning()) {
                 this.graph.nextStep();
+                this.txtField.setText(this.graph.getStrText());
             } else {
                 setVisibleButtons(true);
                 this.graph.redrawImage();

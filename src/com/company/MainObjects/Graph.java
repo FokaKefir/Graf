@@ -425,6 +425,21 @@ public class Graph extends JComponent {
         }
     }
 
+    public void redrawImage(boolean[] b){
+        clearImage();
+        redrawPoints();
+        redrawConnections(b);
+    }
+
+    private void redrawConnections(boolean[] b) {
+        int index = 0;
+        for (Connection connection : this.connectionList){
+            if(b[index])
+                drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.BLACK, connection.getWeight());
+            index++;
+        }
+    }
+
     // endregion
 
     // region 10. Getters and Setters
@@ -488,8 +503,10 @@ public class Graph extends JComponent {
 
     // region 12. Breadth-First Search
 
-    private void watchNeighborBFS(int index, boolean[] b, Queue<Integer> queue){
+    private int watchNeighborBFS(int index, boolean[] b, Queue<Integer> queue){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
+
+        int numberOfNeighbours = 0;
 
         for(Integer neighbor : neighbors){
             if(b[neighbor] != IT_WAS){
@@ -497,15 +514,18 @@ public class Graph extends JComponent {
                 drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
                 queue.add(neighbor);
                 b[neighbor] = IT_WAS;
+                numberOfNeighbours++;
             }
         }
+        return numberOfNeighbours;
     }
 
     private void breadthFirstSearchNext(){
         if(!queue.isEmpty()){
             int index = queue.remove();
             drawCircle(pointPositionList.get(index).getX(), pointPositionList.get(index).getY(), Color.RED);
-            watchNeighborBFS(index, b, queue);
+            int number = watchNeighborBFS(index, b, queue);
+            this.strText = "Watching the neighbor(s) of the " + String.valueOf(index) + " point and finding " + String.valueOf(number) + " new neighbor(s).";
         }
         if(queue.isEmpty()){
             this.algorithmRunning = false;
@@ -520,6 +540,7 @@ public class Graph extends JComponent {
         this.queue.add(first);
         this.b[first] = IT_WAS;
         this.algorithmRunning = true;
+        redrawImage();
         drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), Color.RED);
     }
 
@@ -537,6 +558,8 @@ public class Graph extends JComponent {
 
                 drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
                 drawConnection(index, neighbor, Color.RED, this.getWeightFromConnectionList(index, neighbor));
+
+                this.strText = "Watching the neighbor(s) of the " + String.valueOf(index) + " point and finding the " + String.valueOf(neighbor) + " point.";
                 return FIND_NEW_NEIGHBOR;
             }
         }
@@ -551,6 +574,7 @@ public class Graph extends JComponent {
             drawCircle(pointPositionList.get(index), Color.RED);
             if(cond != FIND_NEW_NEIGHBOR){
                 stack.pop();
+                this.strText = "Watching the neighbor(s) of the " + String.valueOf(index) + " point and there is no neighbor.";
             }
         }
         if(stack.isEmpty()){
@@ -565,6 +589,7 @@ public class Graph extends JComponent {
         this.stack.push(first);
         this.b[first] = IT_WAS;
         this.algorithmRunning = true;
+        redrawImage();
         drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), Color.RED);
     }
 
@@ -617,6 +642,7 @@ public class Graph extends JComponent {
         sortingConnectionList();
 
         this.comp = new int[this.numberPoints];
+        this.b = new boolean[this.connectionList.size()];
         for (int i = 0; i < this.numberPoints; i++) {
             this.comp[i] = i;
         }
@@ -631,17 +657,25 @@ public class Graph extends JComponent {
             int to = connectionList.get(this.index).getToPoint();
             double weight = connectionList.get(this.index).getWeight();
             if(comp[from] != comp[to]){
+                this.b[this.index] = true;
                 connectTwoComponent(from, to);
 
                 drawCircle(pointPositionList.get(from), Color.RED);
                 drawCircle(pointPositionList.get(to), Color.RED);
                 drawConnection(from, to, Color.RED, weight);
+
+                this.strText = "Watching the " + String.valueOf(from) + " and the " + String.valueOf(to) + " points and connect them.";
+            } else{
+                this.strText = "Watching the " + String.valueOf(from) + " and the " + String.valueOf(to) + " points and don't connect them.";
             }
 
             this.index++;
         }
-        if(this.index == connectionList.size())
+        else if(this.index == connectionList.size()) {
+            redrawImage(this.b);
+            this.strText = "Get the optimal tree graph.";
             this.algorithmRunning = false;
+        }
     }
 
     // endregion
