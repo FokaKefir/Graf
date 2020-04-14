@@ -19,6 +19,7 @@ public class Graph extends JComponent {
     private static final int NOT_DEFINED = -1;
     private static final double NULL_MESSAGE = -1;
     private static final boolean IT_WAS = true;
+    private static final boolean FIND_NEW_NEIGHBOR = true;
     private static final int RADIUS = 50;
     public static final int NOT_TYPE = 0;
     public static final int BREADTH_FIRST_SEARCH = 1;
@@ -52,6 +53,7 @@ public class Graph extends JComponent {
     private int[] comp;
     private Queue<Integer> queue;
     private boolean[] b;
+    private Deque<Integer> stack;
 
     // endregion
 
@@ -218,6 +220,8 @@ public class Graph extends JComponent {
             this.graphics = (Graphics2D) this.image.getGraphics();
             this.graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+            this.graphics.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+
             this.clearImage();
         }
         g.drawImage(this.image, 0, 0, null);
@@ -254,11 +258,21 @@ public class Graph extends JComponent {
         }
     }
 
-    private void drawPoint(PointPosition pointPosition, Color color){
+    private void drawCircle(PointPosition pointPosition, Color color){
         if(this.graphics != null){
 
+            int x = pointPosition.getX();
+            int y = pointPosition.getY();
+
             this.graphics.setPaint(color);
-            this.graphics.fillOval(pointPosition.getX() - RADIUS /2, pointPosition.getY() - RADIUS /2, RADIUS, RADIUS);
+            this.graphics.fillOval(
+                    x - RADIUS /2,y - RADIUS /2, RADIUS, RADIUS
+            );
+
+            if(color != Color.GRAY) {
+                this.graphics.setPaint(Color.WHITE);
+                this.graphics.drawString(String.valueOf(mat[x][y]), x - 5, y + 7);
+            }
 
             this.repaint();
         }
@@ -269,6 +283,11 @@ public class Graph extends JComponent {
 
             this.graphics.setPaint(color);
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
+
+            if(color != Color.GRAY) {
+                this.graphics.setPaint(Color.WHITE);
+                this.graphics.drawString(String.valueOf(mat[x][y]), x - 5, y + 7);
+            }
 
             this.repaint();
         }
@@ -297,6 +316,8 @@ public class Graph extends JComponent {
         this.graphics.drawLine(
                 pointFrom.getX(), pointFrom.getY(), pointTo.getX(), pointTo.getY());
 
+        redrawNumbers();
+
         this.repaint();
     }
 
@@ -313,7 +334,9 @@ public class Graph extends JComponent {
         this.graphics.setPaint(color);
         this.graphics.drawLine(x1, y1, x2, y2);
 
-        this.graphics.drawString(String.valueOf(weight), (x1 + x2)/2, (y1 + y2)/2);
+        this.graphics.drawString(String.valueOf(weight), (x1 + x2)/2 + 1, (y1 + y2)/2 - 5);
+
+        redrawNumbers();
 
         this.repaint();
     }
@@ -322,6 +345,8 @@ public class Graph extends JComponent {
         this.graphics.setPaint(color);
         this.graphics.drawLine(
                 x1, y1, x2, y2);
+
+        redrawNumbers();
 
         this.repaint();
     }
@@ -368,7 +393,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 9. Redraw image
+    // region 9. Redraw functions
 
     public void redrawImage(){
         clearImage();
@@ -385,6 +410,18 @@ public class Graph extends JComponent {
     private void redrawPoints(){
         for(PointPosition point : this.pointPositionList){
             drawCircle(point.getX(), point.getY(), Color.BLACK);
+        }
+    }
+
+    private void redrawNumbers(){
+        for(PointPosition point : this.pointPositionList){
+
+            int x = point.getX();
+            int y = point.getY();
+
+            this.graphics.setPaint(Color.WHITE);
+            this.graphics.drawString(String.valueOf(mat[x][y]), x - 5, y + 7);
+
         }
     }
 
@@ -410,6 +447,14 @@ public class Graph extends JComponent {
 
     public String getStrText() {
         return strText;
+    }
+
+    private double getWeightFromConnectionList(int a, int b){
+        for (Connection connection : connectionList){
+            if((connection.getFromPoint() == a && connection.getToPoint() == b) || (connection.getFromPoint() == b && connection.getToPoint() == a))
+                return connection.getWeight();
+        }
+        return 0.0;
     }
 
     // endregion
@@ -443,12 +488,12 @@ public class Graph extends JComponent {
 
     // region 12. Breadth-First Search
 
-    private void watchNeighbor(int index, boolean[] b, Queue<Integer> queue){
+    private void watchNeighborBFS(int index, boolean[] b, Queue<Integer> queue){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
 
         for(Integer neighbor : neighbors){
             if(b[neighbor] != IT_WAS){
-                drawConnection(index, neighbor, Color.RED);
+                drawConnection(index, neighbor, Color.RED, this.getWeightFromConnectionList(index, neighbor));
                 drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
                 queue.add(neighbor);
                 b[neighbor] = IT_WAS;
@@ -460,7 +505,7 @@ public class Graph extends JComponent {
         if(!queue.isEmpty()){
             int index = queue.remove();
             drawCircle(pointPositionList.get(index).getX(), pointPositionList.get(index).getY(), Color.RED);
-            watchNeighbor(index, b, queue);
+            watchNeighborBFS(index, b, queue);
         }
         if(queue.isEmpty()){
             this.algorithmRunning = false;
@@ -482,12 +527,45 @@ public class Graph extends JComponent {
 
     // region 13. Depth-First Search
 
-    private void depthFirstSearchNext(){
+    private boolean watchNeighborDFS(int index, boolean[] b, Deque<Integer> stack){
+        ArrayList<Integer> neighbors = adjacencyList.get(index);
 
+        for(Integer neighbor : neighbors){
+            if(b[neighbor] != IT_WAS){
+                stack.push(neighbor);
+                b[neighbor] = IT_WAS;
+
+                drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
+                drawConnection(index, neighbor, Color.RED, this.getWeightFromConnectionList(index, neighbor));
+                return FIND_NEW_NEIGHBOR;
+            }
+        }
+
+        return !FIND_NEW_NEIGHBOR;
     }
 
-    private void depthFirstSearch(int index){
+    private void depthFirstSearchNext(){
+        if(!stack.isEmpty()){
+            int index = this.stack.getFirst();
+            boolean cond = watchNeighborDFS(index, this.b, this.stack);
+            drawCircle(pointPositionList.get(index), Color.RED);
+            if(cond != FIND_NEW_NEIGHBOR){
+                stack.pop();
+            }
+        }
+        if(stack.isEmpty()){
+            this.algorithmRunning = false;
+        }
+    }
+
+    private void depthFirstSearch(int first){
         createAdjacencyList();
+        this.stack = new ArrayDeque<>();
+        this.b = new boolean[this.numberPoints + 1];
+        this.stack.push(first);
+        this.b[first] = IT_WAS;
+        this.algorithmRunning = true;
+        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), Color.RED);
     }
 
     // endregion
@@ -555,8 +633,8 @@ public class Graph extends JComponent {
             if(comp[from] != comp[to]){
                 connectTwoComponent(from, to);
 
-                drawPoint(pointPositionList.get(from), Color.RED);
-                drawPoint(pointPositionList.get(to), Color.RED);
+                drawCircle(pointPositionList.get(from), Color.RED);
+                drawCircle(pointPositionList.get(to), Color.RED);
                 drawConnection(from, to, Color.RED, weight);
             }
 
