@@ -18,6 +18,7 @@ public class Graph extends JComponent {
     private static final int EMPTY = -1;
     private static final int NOT_DEFINED = -1;
     private static final double NULL_MESSAGE = -1;
+    private static final int INFINITY = -1;
     private static final boolean IT_WAS = true;
     private static final boolean FIND_NEW_NEIGHBOR = true;
     private static final int RADIUS = 50;
@@ -51,8 +52,9 @@ public class Graph extends JComponent {
     private boolean algorithmRunning;
     private int index;
     private int[] comp;
-    private Queue<Integer> queue;
+    private double[] distance;
     private boolean[] b;
+    private Queue<Integer> queue;
     private Deque<Integer> stack;
 
     // endregion
@@ -536,7 +538,7 @@ public class Graph extends JComponent {
     private void breadthFirstSearch(int first){
         createAdjacencyList();
         this.queue = new LinkedList<>();
-        this.b = new boolean[numberPoints];
+        this.b = new boolean[this.numberPoints];
         this.queue.add(first);
         this.b[first] = IT_WAS;
         this.algorithmRunning = true;
@@ -597,12 +599,50 @@ public class Graph extends JComponent {
 
     // region 14. Dijkstra
 
-    private void dijkstraNext(){
-        
+    private int findMinimalDistanceIndex(){
+        int ind = -1;
+        for (int i = 0; i < this.numberPoints; i++) {
+            if(this.distance[i] != INFINITY){
+                if((ind == -1 || this.distance[i] < this.distance[ind]) && this.b[i] != IT_WAS){
+                    ind = i;
+                }
+            }
+        }
+        return ind;
     }
 
-    private void dijkstra(int index){
+    private void watchNeighbourDij(int index, boolean[] b, double[] dis){
+        ArrayList<Integer> neighbors = adjacencyList.get(index);
+
+        for(Integer neighbor : neighbors){
+            double newDis = dis[index] + getWeightFromConnectionList(index, neighbor);
+            if(dis[neighbor] == INFINITY || newDis < dis[neighbor]){
+                dis[neighbor] = newDis;
+            }
+        }
+    }
+
+    private void dijkstraNext(){
+        int ind = findMinimalDistanceIndex();
+        if(ind != -1){
+            watchNeighbourDij(ind, this.b, this.distance);
+            this.b[ind] = IT_WAS;
+        }else{
+            this.algorithmRunning = false;
+        }
+    }
+
+    private void dijkstra(int first){
         createAdjacencyList();
+        this.distance = new double[this.numberPoints];
+        this.b = new boolean[this.numberPoints];
+        for (int i = 0; i < this.numberPoints; i++) {
+            this.distance[i] = INFINITY;
+        }
+        this.distance[first] = 0;
+        this.algorithmRunning = true;
+        redrawImage();
+        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), Color.RED);
     }
 
     // endregion
@@ -638,19 +678,6 @@ public class Graph extends JComponent {
         }
     }
 
-    public void kruskal(){
-        sortingConnectionList();
-
-        this.comp = new int[this.numberPoints];
-        this.b = new boolean[this.connectionList.size()];
-        for (int i = 0; i < this.numberPoints; i++) {
-            this.comp[i] = i;
-        }
-
-        this.index = 0;
-        this.algorithmRunning = true;
-    }
-
     private void kruskalNext(){
         if(this.index < connectionList.size()){
             int from = connectionList.get(this.index).getFromPoint();
@@ -676,6 +703,19 @@ public class Graph extends JComponent {
             this.strText = "Get the optimal tree graph.";
             this.algorithmRunning = false;
         }
+    }
+
+    public void kruskal(){
+        sortingConnectionList();
+
+        this.comp = new int[this.numberPoints];
+        this.b = new boolean[this.connectionList.size()];
+        for (int i = 0; i < this.numberPoints; i++) {
+            this.comp[i] = i;
+        }
+
+        this.index = 0;
+        this.algorithmRunning = true;
     }
 
     // endregion
