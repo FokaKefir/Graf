@@ -611,23 +611,54 @@ public class Graph extends JComponent {
         return ind;
     }
 
-    private void watchNeighbourDij(int index, boolean[] b, double[] dis){
+    private String watchNeighbourDij(int index, boolean[] b, double[] dis){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
+        String message = "";
 
         for(Integer neighbor : neighbors){
             double newDis = dis[index] + getWeightFromConnectionList(index, neighbor);
             if(dis[neighbor] == INFINITY || newDis < dis[neighbor]){
                 dis[neighbor] = newDis;
+                if(message == ""){
+                    message = String.valueOf(neighbor);
+                }else {
+                    message = message + ", " + String.valueOf(neighbor);
+                }
             }
         }
+        return message;
+    }
+
+    private String getMessage(){
+        String mess = "";
+
+        int first = 0;
+        for (int i = 0; i < this.numberPoints; i++) {
+            if(this.distance[i] == 0) {
+                first = i;
+                break;
+            }
+        }
+
+        for (int i = 0; i < this.numberPoints; i++) {
+            mess += "From the " + String.valueOf(first) + " point to the " + String.valueOf(i) + " point the weight of the shortest way is " + String.valueOf(this.distance[i]) + ".\n";
+        }
+        return mess;
     }
 
     private void dijkstraNext(){
         int ind = findMinimalDistanceIndex();
         if(ind != -1){
-            watchNeighbourDij(ind, this.b, this.distance);
+            String message = watchNeighbourDij(ind, this.b, this.distance);
             this.b[ind] = IT_WAS;
-        }else{
+            if(message != "") {
+                this.strText = "From the " + String.valueOf(ind) + " to " + message + " point(s) the actual shortest way(s).";
+            }else{
+                this.strText = "From the " + String.valueOf(ind) + " point doesn't exist more way.";
+            }
+        }
+        if(ind == -1){
+            JOptionPane.showMessageDialog(this, getMessage());
             this.algorithmRunning = false;
         }
     }
