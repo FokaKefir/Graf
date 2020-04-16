@@ -1,6 +1,4 @@
-package com.company.Model;
-
-import java.awt.*;
+package com.company.model;
 
 public class PointPosition {
 

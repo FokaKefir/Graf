@@ -1,7 +1,7 @@
-package com.company.MainObjects;
+package com.company.graphs;
 
-import com.company.Model.Connection;
-import com.company.Model.PointPosition;
+import com.company.model.Connection;
+import com.company.model.PointPosition;
 
 import javax.swing.*;
 import java.awt.*;

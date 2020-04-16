@@ -1,11 +1,13 @@
-package com.company.MainObjects;
+package com.company.gui;
+
+import com.company.graphs.Graph;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
-public class App implements ActionListener {
+public class GraphFrame implements ActionListener {
 
     // region 0. Constants
 
@@ -39,7 +41,7 @@ public class App implements ActionListener {
 
     // region 2. Constructor
 
-    public App() {
+    public GraphFrame() {
         this.graph = new Graph();
 
         this.btnBreadthFirstSearch = new JButton("Breadth-First Search");
@@ -104,7 +106,7 @@ public class App implements ActionListener {
     // region 3. Main method
 
     public static void main(String[] args) {
-        new App() ;
+        new GraphFrame() ;
     }
 
     // endregion
