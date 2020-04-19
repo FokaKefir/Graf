@@ -50,12 +50,13 @@ public class Graph extends JComponent {
 
     private String strText;
     private boolean algorithmRunning;
-    private int index;
+    private int indexKruskal;
     private int[] comp;
     private double[] distance;
     private boolean[] b;
     private Queue<Integer> queue;
     private Deque<Integer> stack;
+    private Vector<ArrayList<Integer>> wayFromInitialPoint;
 
     // endregion
 
@@ -307,7 +308,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 7. Draw Connection
+    // region 7. Draw Connections
 
     private void drawConnection(int indexFromPoint, int indexToPoint, Color color){
 
@@ -351,6 +352,18 @@ public class Graph extends JComponent {
         redrawNumbers();
 
         this.repaint();
+    }
+
+    private void drawWay(int index){
+        ArrayList<Integer> way = this.wayFromInitialPoint.get(index);
+        for (int i = 0; i < way.size() - 1; i++) {
+            int from = way.get(i);
+            int to = way.get(i+1);
+            drawCircle(this.pointPositionList.get(from), Color.RED);
+            drawCircle(this.pointPositionList.get(to), Color.RED);
+            drawConnection(from, to, Color.RED, getWeightFromConnectionList(from, to));
+        }
+        drawCircle(this.pointPositionList.get(way.get(0)), Color.RED);
     }
 
     // endregion
@@ -495,7 +508,6 @@ public class Graph extends JComponent {
         for (Connection connection : connectionList){
             int from = connection.getFromPoint();
             int to = connection.getToPoint();
-            double weight = connection.getWeight();
             addToAdjacencyList(from, to);
             addToAdjacencyList(to, from);
         }
@@ -611,26 +623,32 @@ public class Graph extends JComponent {
         return ind;
     }
 
-    private String watchNeighbourDij(int index, boolean[] b, double[] dis){
+    private String watchNeighbourDij(int index, double[] dis){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
-        String message = "";
+        StringBuilder message = new StringBuilder();
 
         for(Integer neighbor : neighbors){
             double newDis = dis[index] + getWeightFromConnectionList(index, neighbor);
             if(dis[neighbor] == INFINITY || newDis < dis[neighbor]){
                 dis[neighbor] = newDis;
-                if(message == ""){
-                    message = String.valueOf(neighbor);
+                ArrayList<Integer> way = (ArrayList<Integer>) this.wayFromInitialPoint.get(index).clone();
+                way.add(neighbor);
+                this.wayFromInitialPoint.set(neighbor, way);
+                if(message.toString().equals("")){
+                    message = new StringBuilder(String.valueOf(neighbor));
                 }else {
-                    message = message + ", " + String.valueOf(neighbor);
+                    message.append(", ").append(String.valueOf(neighbor));
                 }
+                drawConnection(index, neighbor, Color.RED);
+                drawCircle(this.pointPositionList.get(neighbor), Color.RED);
+
             }
         }
-        return message;
+        return message.toString();
     }
 
     private String getMessage(){
-        String mess = "";
+        StringBuilder mess = new StringBuilder();
 
         int first = 0;
         for (int i = 0; i < this.numberPoints; i++) {
@@ -641,18 +659,23 @@ public class Graph extends JComponent {
         }
 
         for (int i = 0; i < this.numberPoints; i++) {
-            mess += "From the " + String.valueOf(first) + " point to the " + String.valueOf(i) + " point the weight of the shortest way is " + String.valueOf(this.distance[i]) + ".\n";
+            if(this.distance[i] != INFINITY)
+                mess.append("From the ").append(String.valueOf(first)).append(" point to the ").append(String.valueOf(i)).append(" point the weight of the shortest way is ").append(String.valueOf(this.distance[i])).append(".\n");
+            else
+                mess.append("Between the ").append(String.valueOf(first)).append(" and the ").append(String.valueOf(i)).append(" points isn't way");
         }
-        return mess;
+        return mess.toString();
     }
 
     private void dijkstraNext(){
+        redrawImage();
         int ind = findMinimalDistanceIndex();
         if(ind != -1){
-            String message = watchNeighbourDij(ind, this.b, this.distance);
+            String message = watchNeighbourDij(ind, this.distance);
             this.b[ind] = IT_WAS;
-            if(message != "") {
+            if(!message.equals("")) {
                 this.strText = "From the " + String.valueOf(ind) + " to " + message + " point(s) the actual shortest way(s).";
+                drawWay(ind);
             }else{
                 this.strText = "From the " + String.valueOf(ind) + " point doesn't exist more way.";
             }
@@ -667,8 +690,14 @@ public class Graph extends JComponent {
         createAdjacencyList();
         this.distance = new double[this.numberPoints];
         this.b = new boolean[this.numberPoints];
+        this.wayFromInitialPoint = new Vector<>();
+        this.wayFromInitialPoint.setSize(this.numberPoints);
         for (int i = 0; i < this.numberPoints; i++) {
             this.distance[i] = INFINITY;
+            ArrayList<Integer> list = new ArrayList<>();
+            if(i == first)
+                list.add(first);
+            this.wayFromInitialPoint.set(i, list);
         }
         this.distance[first] = 0;
         this.algorithmRunning = true;
@@ -710,12 +739,12 @@ public class Graph extends JComponent {
     }
 
     private void kruskalNext(){
-        if(this.index < connectionList.size()){
-            int from = connectionList.get(this.index).getFromPoint();
-            int to = connectionList.get(this.index).getToPoint();
-            double weight = connectionList.get(this.index).getWeight();
+        if(this.indexKruskal < connectionList.size()){
+            int from = connectionList.get(this.indexKruskal).getFromPoint();
+            int to = connectionList.get(this.indexKruskal).getToPoint();
+            double weight = connectionList.get(this.indexKruskal).getWeight();
             if(comp[from] != comp[to]){
-                this.b[this.index] = true;
+                this.b[this.indexKruskal] = true;
                 connectTwoComponent(from, to);
 
                 drawCircle(pointPositionList.get(from), Color.RED);
@@ -727,9 +756,9 @@ public class Graph extends JComponent {
                 this.strText = "Watching the " + String.valueOf(from) + " and the " + String.valueOf(to) + " points and don't connect them.";
             }
 
-            this.index++;
+            this.indexKruskal++;
         }
-        else if(this.index == connectionList.size()) {
+        else if(this.indexKruskal == connectionList.size()) {
             redrawImage(this.b);
             this.strText = "Get the optimal tree graph.";
             this.algorithmRunning = false;
@@ -745,7 +774,7 @@ public class Graph extends JComponent {
             this.comp[i] = i;
         }
 
-        this.index = 0;
+        this.indexKruskal = 0;
         this.algorithmRunning = true;
     }
 
