@@ -7,7 +7,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
-public class GraphFrame implements ActionListener {
+public class App implements ActionListener {
 
     // region 0. Constants
 
@@ -21,12 +21,14 @@ public class GraphFrame implements ActionListener {
     // region 1. Init Widgets
 
     private JFrame frame;
-    private JPanel mainPanel;
+    private JPanel contentPane;
 
-    private JPanel buttonPanel;
+    private JPanel mainPanelMenu;
+    private JButton btnGraph;
+    private JButton btnBinaryTree;
 
+    private JPanel mainPanelGraph;
     private JTextField txtField;
-
     private JButton btnBreadthFirstSearch;
     private JButton btnDepthFirstSearch;
     private JButton btnDijkstra;
@@ -34,14 +36,36 @@ public class GraphFrame implements ActionListener {
     private JButton btnAddPoint;
     private JButton btnAddConnection;
     private JButton btnNextStep;
-
     private Graph graph;
+
+    private JPanel mainPanelBinaryTree;
 
     // endregion
 
     // region 2. Constructor
 
-    public GraphFrame() {
+    private void initMenu(){
+        this.btnGraph = new JButton("Graph");
+        this.btnBinaryTree = new JButton("Binary Tree");
+
+        this.btnGraph.addActionListener(this);
+        this.btnBinaryTree.addActionListener(this);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.add(this.btnGraph);
+        buttonPanel.add(this.btnBinaryTree);
+
+        ImageIcon image = new ImageIcon(getClass().getResource("images/graph.png"));
+
+        this.mainPanelMenu = new JPanel();
+        this.mainPanelMenu.setLayout(new BorderLayout());
+        this.mainPanelMenu.setBackground(Color.WHITE);
+        this.mainPanelMenu.add(new JLabel(image), BorderLayout.CENTER);
+        this.mainPanelMenu.add(buttonPanel, BorderLayout.SOUTH);
+    }
+
+    private void initGraph(){
         this.graph = new Graph();
 
         this.btnBreadthFirstSearch = new JButton("Breadth-First Search");
@@ -62,15 +86,14 @@ public class GraphFrame implements ActionListener {
 
         setVisibleButtons(true);
 
-        this.buttonPanel = new JPanel();
-
-        this.buttonPanel.add(this.btnBreadthFirstSearch);
-        this.buttonPanel.add(this.btnDepthFirstSearch);
-        this.buttonPanel.add(this.btnDijkstra);
-        this.buttonPanel.add(this.btnKruskal);
-        this.buttonPanel.add(this.btnAddPoint);
-        this.buttonPanel.add(this.btnAddConnection);
-        this.buttonPanel.add(this.btnNextStep);
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(this.btnBreadthFirstSearch);
+        buttonPanel.add(this.btnDepthFirstSearch);
+        buttonPanel.add(this.btnDijkstra);
+        buttonPanel.add(this.btnKruskal);
+        buttonPanel.add(this.btnAddPoint);
+        buttonPanel.add(this.btnAddConnection);
+        buttonPanel.add(this.btnNextStep);
 
         this.txtField = new JTextField(5);
         this.txtField.setFont(new Font("Arial", Font.BOLD, 20));
@@ -82,22 +105,33 @@ public class GraphFrame implements ActionListener {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.add(this.buttonPanel, BorderLayout.NORTH);
+        panel.add(buttonPanel, BorderLayout.NORTH);
         panel.add(Box.createVerticalStrut(15), BorderLayout.CENTER);
         panel.add(this.txtField, BorderLayout.SOUTH);
 
+        this.mainPanelGraph = new JPanel();
+        this.mainPanelGraph.setLayout(new BorderLayout());
+        this.mainPanelGraph.add(this.graph, BorderLayout.CENTER);
+        this.mainPanelGraph.add(panel, BorderLayout.NORTH);
+    }
 
-        this.mainPanel = new JPanel();
-        this.mainPanel.setLayout(new BorderLayout());
-        this.mainPanel.add(this.graph, BorderLayout.CENTER);
-        this.mainPanel.add(panel, BorderLayout.NORTH);
+    private void initBinaryTree(){
+
+    }
+
+    public App() {
+        initMenu();
+        initGraph();
+        initBinaryTree();
 
         this.frame = new JFrame("App");
-        this.frame.setContentPane(this.mainPanel);
+        this.frame.setContentPane(this.mainPanelMenu);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setResizable(false);
         this.frame.setSize(new Dimension(WIDTH, HEIGHT));
         this.frame.setVisible(true);
+
+        this.contentPane = (JPanel) this.frame.getContentPane();
 
     }
 
@@ -106,7 +140,7 @@ public class GraphFrame implements ActionListener {
     // region 3. Main method
 
     public static void main(String[] args) {
-        new GraphFrame() ;
+        new App() ;
     }
 
     // endregion
@@ -116,6 +150,12 @@ public class GraphFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
+
+        if (btnGraph.equals(source)){
+            switchPane(this.mainPanelGraph);
+        }else if(btnBinaryTree.equals(source)){
+            switchPane(this.mainPanelBinaryTree);
+        }
 
         if(btnBreadthFirstSearch.equals(source)){
             this.graph.setBlnCanConnect(false);
@@ -169,6 +209,13 @@ public class GraphFrame implements ActionListener {
     // endregion
 
     // region 5. Functions and methods
+
+    private void switchPane(JPanel newPanel){
+        this.contentPane.removeAll();
+        this.contentPane.add(newPanel);
+        this.contentPane.revalidate();
+        this.contentPane.repaint();
+    }
 
     private void setVisibleButtons(boolean cond){
         this.btnBreadthFirstSearch.setVisible(cond);
