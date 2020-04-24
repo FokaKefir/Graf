@@ -43,9 +43,11 @@ public class Graph extends JComponent {
     private boolean blnCanConnect;
     private boolean blnCanDelete;
 
-    private int[][] mat;
+    private int[][] matPoint;
+    private int[][] matConnection;
     private List<PointPosition> pointPositionList;
     private ArrayList<Connection> connectionList;
+    private ArrayList<Connection> connectionListAll;
     private Vector<ArrayList<Integer>> adjacencyList;
 
 
@@ -75,6 +77,7 @@ public class Graph extends JComponent {
 
         this.pointPositionList = new ArrayList<>();
         this.connectionList = new ArrayList<>();
+        this.connectionListAll = new ArrayList<>();
         this.adjacencyList = new Vector<>();
 
         this.addMouseListener(new MouseAdapter() {
@@ -89,18 +92,18 @@ public class Graph extends JComponent {
                     setNewConnection(x, y);
                 } else if(blnCanDelete) {
                     switchDelete(x, y);
-                } else if(algorithmType != NOT_TYPE && mat[x][y] != EMPTY) {
+                } else if(algorithmType != NOT_TYPE && matPoint[x][y] != EMPTY) {
                     switch (algorithmType){
                         case BREADTH_FIRST_SEARCH:
-                            breadthFirstSearch(mat[x][y]);
+                            breadthFirstSearch(matPoint[x][y]);
                             break;
 
                         case DEPTH_FIRST_SEARCH:
-                            depthFirstSearch(mat[x][y]);
+                            depthFirstSearch(matPoint[x][y]);
                             break;
 
                         case DIJKSTRA:
-                            dijkstra(mat[x][y]);
+                            dijkstra(matPoint[x][y]);
                             break;
                     }
                 }
@@ -120,12 +123,12 @@ public class Graph extends JComponent {
                 } else if(blnCanConnect) {
                     if(indexFromPoint != NOT_DEFINED && indexToPoint == NOT_DEFINED){
                         redrawImage();
-                        if(mat[event.getX()][event.getY()] == EMPTY) {
+                        if(matPoint[event.getX()][event.getY()] == EMPTY) {
                             drawConnection(
                                     pointPositionList.get(indexFromPoint).getX(), pointPositionList.get(indexFromPoint).getY(), event.getX(), event.getY(), Color.GRAY
                             );
                         }else{
-                            drawConnection(indexFromPoint, mat[event.getX()][event.getY()], Color.GRAY);
+                            drawConnection(indexFromPoint, matPoint[event.getX()][event.getY()], Color.GRAY);
                         }
                     }
                 }
@@ -145,19 +148,16 @@ public class Graph extends JComponent {
     }
 
     private void setNewConnection(int x, int y){
-        if(mat[x][y] != EMPTY){
+        if(matPoint[x][y] != EMPTY){
             if(this.indexFromPoint == NOT_DEFINED){
-                this.indexFromPoint = mat[x][y];
-            } else if(this.indexToPoint == NOT_DEFINED && mat[x][y] != this.indexFromPoint){
-                this.indexToPoint = mat[x][y];
+                this.indexFromPoint = matPoint[x][y];
+            } else if(this.indexToPoint == NOT_DEFINED && matPoint[x][y] != this.indexFromPoint){
+                this.indexToPoint = matPoint[x][y];
                 double weight = openWindow();
 
                 if (weight != NULL_MESSAGE) {
-                    drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK, weight);
+                    drawAndSetConnection(weight);
 
-                    this.connectionList.add(
-                            new Connection(this.indexFromPoint, this.indexToPoint, weight)
-                    );
                 }
 
                 this.clearIndexes();
@@ -168,10 +168,10 @@ public class Graph extends JComponent {
     }
 
     private void switchDelete(int x, int y){
-        if(this.mat[x][y] != EMPTY){
+        if(this.matPoint[x][y] != EMPTY){
             deletePoint(x, y);
             this.blnCanDelete = false;
-        } else if(((BufferedImage) this.image).getRGB(x, y) == Color.BLACK.getRGB()){
+        } else if(this.matConnection[x][y] != EMPTY){
             deleteConnection(x, y);
             this.blnCanDelete = false;
         }
@@ -269,7 +269,7 @@ public class Graph extends JComponent {
             this.graphics.setPaint(Color.CYAN);
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
-            setNewElement(x, y);
+            setNewElementPoint(x, y);
             drawCircle(x, y, Color.BLACK);
         }
     }
@@ -287,7 +287,7 @@ public class Graph extends JComponent {
 
             if(color != Color.GRAY) {
                 this.graphics.setPaint(Color.WHITE);
-                this.graphics.drawString(String.valueOf(mat[x][y]), x - 5, y + 7);
+                this.graphics.drawString(String.valueOf(matPoint[x][y]), x - 5, y + 7);
             }
 
             this.repaint();
@@ -302,7 +302,7 @@ public class Graph extends JComponent {
 
             if(color != Color.GRAY) {
                 this.graphics.setPaint(Color.WHITE);
-                this.graphics.drawString(String.valueOf(mat[x][y]), x - 5, y + 7);
+                this.graphics.drawString(String.valueOf(matPoint[x][y]), x - 5, y + 7);
             }
 
             this.repaint();
@@ -322,6 +322,12 @@ public class Graph extends JComponent {
     // endregion
 
     // region 7. Draw Connections
+
+    private void drawAndSetConnection(double weight){
+        drawConnection(this.indexFromPoint, this.indexToPoint, Color.CYAN);
+        setNewElementConn(weight);
+        drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK, weight);
+    }
 
     private void drawConnection(int indexFromPoint, int indexToPoint, Color color){
 
@@ -396,22 +402,24 @@ public class Graph extends JComponent {
     // region 8. Matrix functions and methods
 
     private void createMatrix(){
-        this.mat = new int[this.getSize().width][this.getSize().height];
+        this.matPoint = new int[this.getSize().width][this.getSize().height];
+        this.matConnection = new int[this.getSize().width][this.getSize().height];
         for (int x = 0; x < this.getSize().width; x++) {
             for (int y = 0; y < getSize().height; y++) {
-                mat[x][y] = EMPTY;
+                matPoint[x][y] = EMPTY;
+                matConnection[x][y] = EMPTY;
             }
         }
     }
 
-    private void setNewElement(int pointX, int pointY){
+    private void setNewElementPoint(int pointX, int pointY){
         BufferedImage bufferedImage = (BufferedImage) this.image;
 
         for(int x = 0; x < this.getSize().width; x++){
             for (int y = 0; y < this.getSize().height; y++) {
                 int rgb = bufferedImage.getRGB(x, y);
                 if(rgb == Color.CYAN.getRGB()){
-                    this.mat[x][y] = this.numberPoints;
+                    this.matPoint[x][y] = this.numberPoints;
                 }
             }
         }
@@ -422,13 +430,26 @@ public class Graph extends JComponent {
         this.numberPoints++;
     }
 
-    private void printMatrix(){
-        for (int i = 0; i < this.getSize().width; i++) {
-            for (int j = 0; j < this.getSize().height; j++) {
-                System.out.print(mat[i][j]);
+    private void setNewElementConn(double weight){
+        BufferedImage bufferedImage = (BufferedImage) this.image;
+
+        for(int x = 0; x < this.getSize().width; x++){
+            for (int y = 0; y < this.getSize().height; y++) {
+                int rgb = bufferedImage.getRGB(x, y);
+                if(rgb == Color.CYAN.getRGB()){
+                    this.matConnection[x][y] = this.connectionListAll.size();
+                }
             }
-            System.out.println();
         }
+
+
+        this.connectionList.add(
+                new Connection(this.indexFromPoint, this.indexToPoint, weight)
+        );
+        this.connectionListAll.add(
+                new Connection(this.indexFromPoint, this.indexToPoint, weight)
+        );
+
     }
 
     // endregion
@@ -451,7 +472,7 @@ public class Graph extends JComponent {
         for(PointPosition point : this.pointPositionList){
             int x = point.getX();
             int y = point.getY();
-            if(this.mat[x][y] != EMPTY) {
+            if(this.matPoint[x][y] != EMPTY) {
                 drawCircle(x, y, Color.BLACK);
             }
         }
@@ -463,12 +484,12 @@ public class Graph extends JComponent {
             int x = point.getX();
             int y = point.getY();
 
-            if(this.mat[x][y] == EMPTY){
+            if(this.matPoint[x][y] == EMPTY){
                 continue;
             }
 
             this.graphics.setPaint(Color.WHITE);
-            this.graphics.drawString(String.valueOf(mat[x][y]), x - 5, y + 7);
+            this.graphics.drawString(String.valueOf(matPoint[x][y]), x - 5, y + 7);
 
         }
     }
@@ -495,8 +516,8 @@ public class Graph extends JComponent {
     private void deleteFromMatrix(int num){
         for (int x = 0; x < this.getSize().width; x++) {
             for (int y = 0; y < getSize().height; y++) {
-                if(this.mat[x][y] == num){
-                    this.mat[x][y] = EMPTY;
+                if(this.matPoint[x][y] == num){
+                    this.matPoint[x][y] = EMPTY;
                 }
             }
         }
@@ -509,7 +530,7 @@ public class Graph extends JComponent {
             int to = this.connectionList.get(i).getToPoint();
 
             if (from == num || to == num) {
-                this.connectionList.remove(i);
+                deleteConnectionByIndex(i);
             }else{
                 i++;
             }
@@ -517,13 +538,34 @@ public class Graph extends JComponent {
     }
 
     private void deletePoint(int x, int y){
-        int num = this.mat[x][y];
+        int num = this.matPoint[x][y];
         deleteFromMatrix(num);
         deleteConnectionsNumber(num);
         redrawImage();
     }
 
+    private void deleteConnectionByIndex(int ind){
+        Connection con = this.connectionListAll.get(ind);
+
+        for (int i = 0; i < this.connectionList.size(); i++) {
+            if(this.connectionList.get(i).equals(con)){
+                this.connectionList.remove(i);
+                break;
+            }
+        }
+
+        for(int x = 0; x < this.getSize().width; x++){
+            for (int y = 0; y < this.getSize().height; y++) {
+                if(this.matConnection[x][y] == ind){
+                    this.matConnection[x][y] = EMPTY;
+                }
+            }
+        }
+    }
+
     private void deleteConnection(int x, int y){
+        deleteConnectionByIndex(matConnection[x][y]);
+        redrawImage();
     }
 
     // endregion
@@ -614,7 +656,7 @@ public class Graph extends JComponent {
             int index = queue.remove();
             drawCircle(pointPositionList.get(index).getX(), pointPositionList.get(index).getY(), Color.RED);
             int number = watchNeighborBFS(index, b, queue);
-            this.strText = "Watching the neighbor(s) of the " + String.valueOf(index) + " point and finding " + String.valueOf(number) + " new neighbor(s).";
+            this.strText = "Watching the neighbor(s) of the " + String.valueOf(index) + " point and finding " + number + " new neighbor(s).";
         }
         if(queue.isEmpty()){
             this.algorithmRunning = false;
@@ -648,7 +690,7 @@ public class Graph extends JComponent {
                 drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
                 drawConnection(index, neighbor, Color.RED, this.getWeightFromConnectionList(index, neighbor));
 
-                this.strText = "Watching the neighbor(s) of the " + String.valueOf(index) + " point and finding the " + String.valueOf(neighbor) + " point.";
+                this.strText = "Watching the neighbor(s) of the " + index + " point and finding the " + neighbor + " point.";
                 return FIND_NEW_NEIGHBOR;
             }
         }
@@ -663,7 +705,7 @@ public class Graph extends JComponent {
             drawCircle(pointPositionList.get(index), Color.RED);
             if(cond != FIND_NEW_NEIGHBOR){
                 stack.pop();
-                this.strText = "Watching the neighbor(s) of the " + String.valueOf(index) + " point and there is no neighbor.";
+                this.strText = "Watching the neighbor(s) of the " + index + " point and there is no neighbor.";
             }
         }
         if(stack.isEmpty()){
@@ -712,7 +754,7 @@ public class Graph extends JComponent {
                 if(message.toString().equals("")){
                     message = new StringBuilder(String.valueOf(neighbor));
                 }else {
-                    message.append(", ").append(String.valueOf(neighbor));
+                    message.append(", ").append(neighbor);
                 }
                 drawConnection(index, neighbor, Color.RED);
                 drawCircle(this.pointPositionList.get(neighbor), Color.RED);
@@ -735,9 +777,9 @@ public class Graph extends JComponent {
 
         for (int i = 0; i < this.numberPoints; i++) {
             if(this.distance[i] != INFINITY)
-                mess.append("From the ").append(String.valueOf(first)).append(" point to the ").append(String.valueOf(i)).append(" point the weight of the shortest way is ").append(String.valueOf(this.distance[i])).append(".\n");
+                mess.append("From the ").append(first).append(" point to the ").append(i).append(" point the weight of the shortest way is ").append(this.distance[i]).append(".\n");
             else
-                mess.append("Between the ").append(String.valueOf(first)).append(" and the ").append(String.valueOf(i)).append(" points isn't way");
+                mess.append("Between the ").append(first).append(" and the ").append(i).append(" points isn't way");
         }
         return mess.toString();
     }
@@ -749,10 +791,10 @@ public class Graph extends JComponent {
             String message = watchNeighbourDij(ind, this.distance);
             this.b[ind] = IT_WAS;
             if(!message.equals("")) {
-                this.strText = "From the " + String.valueOf(ind) + " to " + message + " point(s) the actual shortest way(s).";
+                this.strText = "From the " + ind + " to " + message + " point(s) the actual shortest way(s).";
                 drawWay(ind);
             }else{
-                this.strText = "From the " + String.valueOf(ind) + " point doesn't exist more way.";
+                this.strText = "From the " + ind + " point doesn't exist more way.";
             }
         }
         if(ind == -1){

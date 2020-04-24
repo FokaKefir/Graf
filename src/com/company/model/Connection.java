@@ -1,5 +1,7 @@
 package com.company.model;
 
+import java.util.Objects;
+
 public class Connection {
 
     // region 1. Init widgets
@@ -46,6 +48,25 @@ public class Connection {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    // endregion
+
+    // region 4. Equal and Hash code
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Connection that = (Connection) o;
+        return fromPoint == that.fromPoint &&
+                toPoint == that.toPoint &&
+                Double.compare(that.weight, weight) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fromPoint, toPoint, weight);
     }
 
     // endregion
