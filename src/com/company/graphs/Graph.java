@@ -41,6 +41,7 @@ public class Graph extends JComponent {
     private int indexToPoint;
     private boolean blnCanDrawPoint;
     private boolean blnCanConnect;
+    private boolean blnCanDelete;
 
     private int[][] mat;
     private List<PointPosition> pointPositionList;
@@ -67,6 +68,7 @@ public class Graph extends JComponent {
         this.numberPoints = 0;
         this.blnCanDrawPoint = false;
         this.blnCanConnect = false;
+        this.blnCanDelete = false;
 
         this.indexFromPoint = NOT_DEFINED;
         this.indexToPoint = NOT_DEFINED;
@@ -85,8 +87,9 @@ public class Graph extends JComponent {
                     setNewPoint(x, y);
                 } else if(blnCanConnect) {
                     setNewConnection(x, y);
+                } else if(blnCanDelete) {
+                    switchDelete(x, y);
                 } else if(algorithmType != NOT_TYPE && mat[x][y] != EMPTY) {
-
                     switch (algorithmType){
                         case BREADTH_FIRST_SEARCH:
                             breadthFirstSearch(mat[x][y]);
@@ -161,6 +164,16 @@ public class Graph extends JComponent {
                 this.blnCanConnect = false;
                 redrawImage();
             }
+        }
+    }
+
+    private void switchDelete(int x, int y){
+        if(this.mat[x][y] != EMPTY){
+            deletePoint(x, y);
+            this.blnCanDelete = false;
+        } else if(((BufferedImage) this.image).getRGB(x, y) == Color.BLACK.getRGB()){
+            deleteConnection(x, y);
+            this.blnCanDelete = false;
         }
     }
 
@@ -316,9 +329,11 @@ public class Graph extends JComponent {
         PointPosition pointTo = pointPositionList.get(indexToPoint);
 
         this.graphics.setPaint(color);
+        this.graphics.setStroke(new BasicStroke(5));
         this.graphics.drawLine(
                 pointFrom.getX(), pointFrom.getY(), pointTo.getX(), pointTo.getY());
 
+        this.graphics.setStroke(new BasicStroke(1));
         redrawNumbers();
 
         this.repaint();
@@ -335,9 +350,18 @@ public class Graph extends JComponent {
         int y2 = pointTo.getY();
 
         this.graphics.setPaint(color);
+        this.graphics.setStroke(new BasicStroke(5));
         this.graphics.drawLine(x1, y1, x2, y2);
+        this.graphics.setStroke(new BasicStroke(1));
 
-        this.graphics.drawString(String.valueOf(weight), (x1 + x2)/2 + 1, (y1 + y2)/2 - 5);
+        int strX = (x1 + x2)/2;
+        int strY = (y1 + y2)/2;
+
+        if((x1 <= x2 && y1 <= y2) || (x2 <= x1 && y2 <= y1)){
+            this.graphics.drawString(String.valueOf(weight), strX + 5, strY - 6);
+        }else {
+            this.graphics.drawString(String.valueOf(weight), strX + 6, strY + 16);
+        }
 
         redrawNumbers();
 
@@ -346,9 +370,10 @@ public class Graph extends JComponent {
 
     private void drawConnection(int x1, int y1, int x2, int y2, Color color){
         this.graphics.setPaint(color);
+        this.graphics.setStroke(new BasicStroke(5));
         this.graphics.drawLine(
                 x1, y1, x2, y2);
-
+        this.graphics.setStroke(new BasicStroke(1));
         redrawNumbers();
 
         this.repaint();
@@ -424,7 +449,11 @@ public class Graph extends JComponent {
 
     private void redrawPoints(){
         for(PointPosition point : this.pointPositionList){
-            drawCircle(point.getX(), point.getY(), Color.BLACK);
+            int x = point.getX();
+            int y = point.getY();
+            if(this.mat[x][y] != EMPTY) {
+                drawCircle(x, y, Color.BLACK);
+            }
         }
     }
 
@@ -433,6 +462,10 @@ public class Graph extends JComponent {
 
             int x = point.getX();
             int y = point.getY();
+
+            if(this.mat[x][y] == EMPTY){
+                continue;
+            }
 
             this.graphics.setPaint(Color.WHITE);
             this.graphics.drawString(String.valueOf(mat[x][y]), x - 5, y + 7);
@@ -457,7 +490,49 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 10. Getters and Setters
+    // region 10. Delete methods
+
+    private void deleteFromMatrix(int num){
+        for (int x = 0; x < this.getSize().width; x++) {
+            for (int y = 0; y < getSize().height; y++) {
+                if(this.mat[x][y] == num){
+                    this.mat[x][y] = EMPTY;
+                }
+            }
+        }
+    }
+
+    private void deleteConnectionsNumber(int num){
+        int i = 0;
+        while(i < this.connectionList.size()) {
+            int from = this.connectionList.get(i).getFromPoint();
+            int to = this.connectionList.get(i).getToPoint();
+
+            if (from == num || to == num) {
+                this.connectionList.remove(i);
+            }else{
+                i++;
+            }
+        }
+    }
+
+    private void deletePoint(int x, int y){
+        int num = this.mat[x][y];
+        deleteFromMatrix(num);
+        deleteConnectionsNumber(num);
+        redrawImage();
+    }
+
+    private void deleteConnection(int x, int y){
+    }
+
+    // endregion
+
+    // region 11. Getters and Setters
+
+    public void setBlnCanDelete(boolean blnCanDelete) {
+        this.blnCanDelete = blnCanDelete;
+    }
 
     public void setAlgorithmType(int algorithmType) {
         this.algorithmType = algorithmType;
@@ -489,7 +564,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    //region 11. Adjacency list methods
+    //region 12. Adjacency list methods
 
     private void addToAdjacencyList(int from, int to){
         ArrayList<Integer> arrayList = adjacencyList.get(from);
@@ -515,7 +590,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 12. Breadth-First Search
+    // region 13. Breadth-First Search
 
     private int watchNeighborBFS(int index, boolean[] b, Queue<Integer> queue){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
@@ -560,7 +635,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 13. Depth-First Search
+    // region 14. Depth-First Search
 
     private boolean watchNeighborDFS(int index, boolean[] b, Deque<Integer> stack){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
@@ -609,7 +684,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 14. Dijkstra
+    // region 15. Dijkstra
 
     private int findMinimalDistanceIndex(){
         int ind = -1;
@@ -707,7 +782,7 @@ public class Graph extends JComponent {
 
     // endregion
 
-    // region 15. Kruskal
+    // region 16. Kruskal
 
     private void sortingConnectionList(){
         boolean ok = true;

@@ -36,6 +36,7 @@ public class App implements ActionListener {
     private JButton btnAddPoint;
     private JButton btnAddConnection;
     private JButton btnNextStep;
+    private JButton btnDelete;
     private Graph graph;
 
     private JPanel mainPanelBinaryTree;
@@ -75,6 +76,7 @@ public class App implements ActionListener {
         this.btnAddPoint = new JButton("Add new point");
         this.btnAddConnection = new JButton("Add new connection");
         this.btnNextStep = new JButton("Next");
+        this.btnDelete = new JButton("Delete");
 
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
@@ -83,6 +85,7 @@ public class App implements ActionListener {
         this.btnAddPoint.addActionListener(this);
         this.btnAddConnection.addActionListener(this);
         this.btnNextStep.addActionListener(this);
+        this.btnDelete.addActionListener(this);
 
         setVisibleButtons(true);
 
@@ -94,6 +97,7 @@ public class App implements ActionListener {
         buttonPanel.add(this.btnAddPoint);
         buttonPanel.add(this.btnAddConnection);
         buttonPanel.add(this.btnNextStep);
+        buttonPanel.add(this.btnDelete);
 
         this.txtField = new JTextField(5);
         this.txtField.setFont(new Font("Arial", Font.BOLD, 20));
@@ -186,12 +190,14 @@ public class App implements ActionListener {
             this.graph.redrawImage();
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(true);
+            this.graph.setBlnCanDelete(false);
             this.graph.setAlgorithmType(Graph.NOT_TYPE);
         } else if (btnAddConnection.equals(source)) {
             this.graph.redrawImage();
             this.graph.clearIndexes();
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setBlnCanConnect(true);
+            this.graph.setBlnCanDelete(false);
             this.graph.setAlgorithmType(Graph.NOT_TYPE);
         } else if (btnNextStep.equals(source)){
             if(this.graph.getAlgorithmRunning()) {
@@ -202,6 +208,13 @@ public class App implements ActionListener {
                 this.graph.redrawImage();
                 this.txtField.setText(MAIN_INFO);
             }
+        } else if (btnDelete.equals(source)){
+            this.graph.redrawImage();
+            this.graph.clearIndexes();
+            this.graph.setBlnCanDrawPoint(false);
+            this.graph.setBlnCanConnect(false);
+            this.graph.setBlnCanDelete(true);
+            this.graph.setAlgorithmType(Graph.NOT_TYPE);
         }
 
     }
@@ -224,6 +237,7 @@ public class App implements ActionListener {
         this.btnKruskal.setVisible(cond);
         this.btnAddPoint.setVisible(cond);
         this.btnAddConnection.setVisible(cond);
+        this.btnDelete.setVisible(cond);
         this.btnNextStep.setVisible(!cond);
 
     }
