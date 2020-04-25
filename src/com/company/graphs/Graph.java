@@ -2,11 +2,13 @@ package com.company.graphs;
 
 import com.company.model.Connection;
 import com.company.model.PointPosition;
+import org.jetbrains.annotations.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -754,6 +756,7 @@ public class Graph extends JComponent {
         return ind;
     }
 
+    @NotNull
     private String watchNeighbourDij(int index, double[] dis){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
         StringBuilder message = new StringBuilder();
@@ -778,6 +781,24 @@ public class Graph extends JComponent {
         return message.toString();
     }
 
+    @NotNull
+    @Contract(pure = true)
+    private boolean[] numbersInTable(){
+        boolean[] b = new boolean[this.numberPoints];
+        Arrays.fill(b, false);
+
+        for (int x = 0; x < this.getSize().width; x++) {
+            for (int y = 0; y < getSize().height; y++) {
+                if(this.matPoint[x][y] != EMPTY){
+                    b[this.matPoint[x][y]] = true;
+                }
+            }
+        }
+
+        return b;
+    }
+
+    @NotNull
     private String getMessage(){
         StringBuilder mess = new StringBuilder();
 
@@ -789,11 +810,15 @@ public class Graph extends JComponent {
             }
         }
 
+        boolean b[] = numbersInTable();
         for (int i = 0; i < this.numberPoints; i++) {
+            if(!b[i] || i == first)
+                continue;
+
             if(this.distance[i] != INFINITY)
                 mess.append("From the ").append(first).append(" point to the ").append(i).append(" point the weight of the shortest way is ").append(this.distance[i]).append(".\n");
             else
-                mess.append("Between the ").append(first).append(" and the ").append(i).append(" points isn't way");
+                mess.append("Between the ").append(first).append(" and the ").append(i).append(" points isn't way\n");
         }
         return mess.toString();
     }
