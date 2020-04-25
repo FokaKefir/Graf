@@ -50,7 +50,6 @@ public class Graph extends JComponent {
     private ArrayList<Connection> connectionListAll;
     private Vector<ArrayList<Integer>> adjacencyList;
 
-
     private String strText;
     private boolean algorithmRunning;
     private int indexKruskal;
@@ -472,7 +471,7 @@ public class Graph extends JComponent {
         for(PointPosition point : this.pointPositionList){
             int x = point.getX();
             int y = point.getY();
-            if(this.matPoint[x][y] != EMPTY) {
+            if(this.matPoint[x][y] == point.getName()) {
                 drawCircle(x, y, Color.BLACK);
             }
         }
@@ -513,7 +512,7 @@ public class Graph extends JComponent {
 
     // region 10. Delete methods
 
-    private void deleteFromMatrix(int num){
+    private void deletePointFromMatrix(int num){
         for (int x = 0; x < this.getSize().width; x++) {
             for (int y = 0; y < getSize().height; y++) {
                 if(this.matPoint[x][y] == num){
@@ -523,23 +522,44 @@ public class Graph extends JComponent {
         }
     }
 
-    private void deleteConnectionsNumber(int num){
-        int i = 0;
-        while(i < this.connectionList.size()) {
-            int from = this.connectionList.get(i).getFromPoint();
-            int to = this.connectionList.get(i).getToPoint();
+    private void deleteConnectionFromMatrix(int ind){
+        Connection con = this.connectionListAll.get(ind);
 
-            if (from == num || to == num) {
-                deleteConnectionByIndex(i);
-            }else{
-                i++;
+        PointPosition fromPos = this.pointPositionList.get(con.getFromPoint());
+        PointPosition toPos = this.pointPositionList.get(con.getToPoint());
+
+        int xMin = Math.min(fromPos.getX(), toPos.getX());
+        int xMax = Math.max(fromPos.getX(), toPos.getX());
+        int yMin = Math.min(fromPos.getY(), toPos.getY());
+        int yMax = Math.max(fromPos.getY(), toPos.getY());
+
+        int xStart = Math.max(0, xMin - 10);
+        int xEnd = Math.min(this.getSize().width, xMax + 10);
+        int yStart = Math.max(0, yMin - 10);
+        int yEnd = Math.min(this.getSize().height, yMax + 10);
+
+        for(int x = xStart; x < xEnd; x++){
+            for (int y = yStart; y < yEnd; y++) {
+                if(this.matConnection[x][y] == ind){
+                    this.matConnection[x][y] = EMPTY;
+                }
             }
+        }
+    }
+
+    private void deleteConnectionsNumber(int num){
+        for (int i = 0; i < this.connectionListAll.size(); i++) {
+            int from = this.connectionListAll.get(i).getFromPoint();
+            int to = this.connectionListAll.get(i).getToPoint();
+
+            if (from == num || to == num)
+                deleteConnectionByIndex(i);
         }
     }
 
     private void deletePoint(int x, int y){
         int num = this.matPoint[x][y];
-        deleteFromMatrix(num);
+        deletePointFromMatrix(num);
         deleteConnectionsNumber(num);
         redrawImage();
     }
@@ -554,17 +574,11 @@ public class Graph extends JComponent {
             }
         }
 
-        for(int x = 0; x < this.getSize().width; x++){
-            for (int y = 0; y < this.getSize().height; y++) {
-                if(this.matConnection[x][y] == ind){
-                    this.matConnection[x][y] = EMPTY;
-                }
-            }
-        }
+        deleteConnectionFromMatrix(ind);
     }
 
     private void deleteConnection(int x, int y){
-        deleteConnectionByIndex(matConnection[x][y]);
+        deleteConnectionByIndex(this.matConnection[x][y]);
         redrawImage();
     }
 
