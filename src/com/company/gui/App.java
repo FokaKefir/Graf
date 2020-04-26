@@ -87,17 +87,12 @@ public class App implements ActionListener {
         this.btnNextStep.addActionListener(this);
         this.btnDelete.addActionListener(this);
 
-        setVisibleButtons(true);
+        this.btnBreadthFirstSearch.setContentAreaFilled(true);
+        this.btnDepthFirstSearch.setContentAreaFilled(true);
+        this.btnDijkstra.setContentAreaFilled(true);
+        this.btnKruskal.setContentAreaFilled(true);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(this.btnBreadthFirstSearch);
-        buttonPanel.add(this.btnDepthFirstSearch);
-        buttonPanel.add(this.btnDijkstra);
-        buttonPanel.add(this.btnKruskal);
-        buttonPanel.add(this.btnAddPoint);
-        buttonPanel.add(this.btnAddConnection);
-        buttonPanel.add(this.btnNextStep);
-        buttonPanel.add(this.btnDelete);
+        setVisibleButtons(true);
 
         this.txtField = new JTextField(5);
         this.txtField.setFont(new Font("Arial", Font.BOLD, 20));
@@ -107,16 +102,43 @@ public class App implements ActionListener {
         this.txtField.setDisabledTextColor(Color.BLACK);
         this.txtField.setHorizontalAlignment(JTextField.CENTER);
 
+        JPanel editButtonPanel = new JPanel();
+        editButtonPanel.add(this.btnAddPoint);
+        editButtonPanel.add(this.btnAddConnection);
+        editButtonPanel.add(this.btnNextStep);
+        editButtonPanel.add(this.btnDelete);
+
+        JPanel programsButtonPanel = new JPanel();
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 10;
+        gridBagConstraints.ipady = 50;
+        programsButtonPanel.setLayout(new GridBagLayout());
+        programsButtonPanel.add(this.btnBreadthFirstSearch, gridBagConstraints);
+        gridBagConstraints.gridy++;
+        programsButtonPanel.add(this.btnDepthFirstSearch, gridBagConstraints);
+        gridBagConstraints.gridy++;
+        programsButtonPanel.add(this.btnDijkstra, gridBagConstraints);
+        gridBagConstraints.gridy++;
+        programsButtonPanel.add(this.btnKruskal, gridBagConstraints);
+        gridBagConstraints.gridy++;
+
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.add(buttonPanel, BorderLayout.NORTH);
-        panel.add(Box.createVerticalStrut(15), BorderLayout.CENTER);
+        panel.add(editButtonPanel, BorderLayout.NORTH);
         panel.add(this.txtField, BorderLayout.SOUTH);
+
+        JPanel editorPanel = new JPanel();
+        editorPanel.setLayout(new BorderLayout());
+        editorPanel.add(this.graph, BorderLayout.CENTER);
+        editorPanel.add(panel, BorderLayout.NORTH);
 
         this.mainPanelGraph = new JPanel();
         this.mainPanelGraph.setLayout(new BorderLayout());
-        this.mainPanelGraph.add(this.graph, BorderLayout.CENTER);
-        this.mainPanelGraph.add(panel, BorderLayout.NORTH);
+        this.mainPanelGraph.add(editorPanel, BorderLayout.CENTER);
+        this.mainPanelGraph.add(programsButtonPanel, BorderLayout.WEST);
     }
 
     private void initBinaryTree(){
