@@ -14,6 +14,12 @@ public class App implements ActionListener {
     private static final int WIDTH = 1200;
     private static final int HEIGHT = 800;
 
+    private static final int IMAGE_WIDTH = 50;
+    private static final int IMAGE_HEIGHT = 50;
+
+    private static final int BUTTON_WEIGHT = 200;
+    private static final int BUTTON_HEIGHT = 50;
+
     private static final String MAIN_INFO = "Add the points and the connections, then choose the algorithm type!";
 
     // endregion
@@ -37,6 +43,7 @@ public class App implements ActionListener {
     private JButton btnAddConnection;
     private JButton btnNextStep;
     private JButton btnDelete;
+    private JButton btnBack;
     private Graph graph;
 
     private JPanel mainPanelBinaryTree;
@@ -69,14 +76,46 @@ public class App implements ActionListener {
     private void initGraph(){
         this.graph = new Graph();
 
-        this.btnBreadthFirstSearch = new JButton("Breadth-First Search");
-        this.btnDepthFirstSearch = new JButton("Depth-First Search");
-        this.btnDijkstra = new JButton("Dijkstra");
-        this.btnKruskal = new JButton("Kruskal");
+
         this.btnAddPoint = new JButton("Add new point");
         this.btnAddConnection = new JButton("Add new connection");
         this.btnNextStep = new JButton("Next");
         this.btnDelete = new JButton("Delete");
+
+        this.btnBreadthFirstSearch = new JButton("Breadth-First Search"){
+            {
+                setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+        this.btnDepthFirstSearch = new JButton("Depth-First Search"){
+            {
+                setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+        this.btnDijkstra = new JButton("Dijkstra") {
+            {
+                setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+        this.btnKruskal = new JButton("Kruskal") {
+            {
+                setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+        this.btnBack = new JButton(){
+            {
+                setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+
+        ImageIcon img = new ImageIcon(getClass().getResource("images/back.png"));
+        img = new ImageIcon(img.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  java.awt.Image.SCALE_SMOOTH));
+        this.btnBack.setIcon(img);
 
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
@@ -86,11 +125,7 @@ public class App implements ActionListener {
         this.btnAddConnection.addActionListener(this);
         this.btnNextStep.addActionListener(this);
         this.btnDelete.addActionListener(this);
-
-        this.btnBreadthFirstSearch.setContentAreaFilled(true);
-        this.btnDepthFirstSearch.setContentAreaFilled(true);
-        this.btnDijkstra.setContentAreaFilled(true);
-        this.btnKruskal.setContentAreaFilled(true);
+        this.btnBack.addActionListener(this);
 
         setVisibleButtons(true);
 
@@ -109,21 +144,14 @@ public class App implements ActionListener {
         editButtonPanel.add(this.btnDelete);
 
         JPanel programsButtonPanel = new JPanel();
-        GridBagConstraints gridBagConstraints = new GridBagConstraints();
-        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 10;
-        gridBagConstraints.ipady = 50;
-        programsButtonPanel.setLayout(new GridBagLayout());
-        programsButtonPanel.add(this.btnBreadthFirstSearch, gridBagConstraints);
-        gridBagConstraints.gridy++;
-        programsButtonPanel.add(this.btnDepthFirstSearch, gridBagConstraints);
-        gridBagConstraints.gridy++;
-        programsButtonPanel.add(this.btnDijkstra, gridBagConstraints);
-        gridBagConstraints.gridy++;
-        programsButtonPanel.add(this.btnKruskal, gridBagConstraints);
-        gridBagConstraints.gridy++;
+        programsButtonPanel.setLayout(new BoxLayout(programsButtonPanel, BoxLayout.Y_AXIS));
+        programsButtonPanel.add(this.btnBack);
+        programsButtonPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        programsButtonPanel.add(this.btnBreadthFirstSearch);
+        programsButtonPanel.add(this.btnDepthFirstSearch);
+        programsButtonPanel.add(this.btnDijkstra);
+        programsButtonPanel.add(this.btnKruskal);
+
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -158,6 +186,7 @@ public class App implements ActionListener {
         this.frame.setVisible(true);
 
         this.contentPane = (JPanel) this.frame.getContentPane();
+
 
     }
 
@@ -237,6 +266,8 @@ public class App implements ActionListener {
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDelete(true);
             this.graph.setAlgorithmType(Graph.NOT_TYPE);
+        } else if (btnBack.equals(source)){
+            switchPane(this.mainPanelMenu);
         }
 
     }
