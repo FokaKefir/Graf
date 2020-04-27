@@ -2,7 +2,6 @@ package com.company.graphs;
 
 import com.company.model.Connection;
 import com.company.model.PointPosition;
-import org.jetbrains.annotations.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -755,7 +754,7 @@ public class Graph extends JComponent {
         return ind;
     }
 
-    @NotNull
+
     private String watchNeighbourDij(int index, double[] dis){
         ArrayList<Integer> neighbors = adjacencyList.get(index);
         StringBuilder message = new StringBuilder();
@@ -780,8 +779,7 @@ public class Graph extends JComponent {
         return message.toString();
     }
 
-    @NotNull
-    @Contract(pure = true)
+
     private boolean[] numbersInTable(){
         boolean[] b = new boolean[this.numberPoints];
         Arrays.fill(b, false);
@@ -797,7 +795,6 @@ public class Graph extends JComponent {
         return b;
     }
 
-    @NotNull
     private String getMessage(){
         StringBuilder mess = new StringBuilder();
 
