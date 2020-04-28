@@ -27,7 +27,6 @@ public class App implements ActionListener {
     // region 1. Init Widgets
 
     private JFrame frame;
-    private JPanel contentPane;
 
     private JPanel mainPanelMenu;
     private JButton btnGraph;
@@ -185,9 +184,6 @@ public class App implements ActionListener {
         this.frame.setSize(new Dimension(WIDTH, HEIGHT));
         this.frame.setVisible(true);
 
-        this.contentPane = (JPanel) this.frame.getContentPane();
-
-
     }
 
     // endregion
@@ -277,10 +273,8 @@ public class App implements ActionListener {
     // region 5. Functions and methods
 
     private void switchPane(JPanel newPanel){
-        this.contentPane.removeAll();
-        this.contentPane.add(newPanel);
-        this.contentPane.revalidate();
-        this.contentPane.repaint();
+        this.frame.setContentPane(newPanel);
+        this.frame.validate();
     }
 
     private void setVisibleButtons(boolean cond){
