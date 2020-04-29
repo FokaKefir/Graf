@@ -1,7 +1,8 @@
 package com.company.graphs;
 
-import com.company.model.Connection;
+import com.company.model.Children;
 import com.company.model.PointPosition;
+import com.company.model.TreeNode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +19,14 @@ public class BinaryTree extends JComponent {
     private static final int EMPTY = -1;
     private static final int NOT_DEFINED = -1;
     private static final double NULL_MESSAGE = -1;
-    private static final int INFINITY = -1;
     private static final boolean IT_WAS = true;
-    private static final boolean FIND_NEW_NEIGHBOR = true;
+    private static final boolean LEFT = false;
+    private static final boolean RIGHT = true;
     private static final int RADIUS = 50;
     public static final int NOT_TYPE = 0;
-
+    public static final int PREORDER = 1;
+    public static final int INORDER = 2;
+    public static final int POSTORDER = 3;
 
     // endregion
 
@@ -41,10 +44,9 @@ public class BinaryTree extends JComponent {
     private boolean blnCanDelete;
 
     private int[][] matPoint;
-    private int[][] matConnection;
     private List<PointPosition> pointPositionList;
-    private ArrayList<Connection> connectionList;
-    private ArrayList<Connection> connectionListAll;
+    private List<Children> childrenList;
+    private TreeNode root;
 
 
     private String strText;
@@ -66,8 +68,8 @@ public class BinaryTree extends JComponent {
         this.indexToPoint = NOT_DEFINED;
 
         this.pointPositionList = new ArrayList<>();
-        this.connectionList = new ArrayList<>();
-        this.connectionListAll = new ArrayList<>();
+        this.childrenList = new ArrayList<>();
+        this.root = null;
 
 
         this.addMouseListener(new MouseAdapter() {
@@ -84,7 +86,7 @@ public class BinaryTree extends JComponent {
                     switchDelete(x, y);
                 } else if(algorithmType != NOT_TYPE && matPoint[x][y] != EMPTY) {
                     switch (algorithmType){
-
+                        // TODO write the switch
                     }
                 }
 
@@ -105,7 +107,9 @@ public class BinaryTree extends JComponent {
                         redrawImage();
                         if(matPoint[event.getX()][event.getY()] == EMPTY) {
                             drawConnection(
-                                    pointPositionList.get(indexFromPoint).getX(), pointPositionList.get(indexFromPoint).getY(), event.getX(), event.getY(), Color.GRAY
+                                    pointPositionList.get(indexFromPoint).getX(),
+                                    pointPositionList.get(indexFromPoint).getY(),
+                                    event.getX(), event.getY(), Color.GRAY
                             );
                         }else{
                             drawConnection(indexFromPoint, matPoint[event.getX()][event.getY()], Color.GRAY);
@@ -128,17 +132,15 @@ public class BinaryTree extends JComponent {
     }
 
     private void setNewConnection(int x, int y){
-        if(matPoint[x][y] != EMPTY){
-            if(this.indexFromPoint == NOT_DEFINED){
-                this.indexFromPoint = matPoint[x][y];
-            } else if(this.indexToPoint == NOT_DEFINED && matPoint[x][y] != this.indexFromPoint){
+        if(matPoint[x][y] != EMPTY) {
+            if (this.pointPositionList.get(matPoint[x][y]).getY() >= this.pointPositionList.get(this.indexFromPoint).getY()){
+                removeLastPoint();
+                this.clearIndexes();
+                this.blnCanConnect = false;
+                redrawImage();
+            }else if(this.indexToPoint == NOT_DEFINED && matPoint[x][y] != this.indexFromPoint){
                 this.indexToPoint = matPoint[x][y];
-                double weight = openWindow();
-
-                if (weight != NULL_MESSAGE) {
-                    drawAndSetConnection(weight);
-
-                }
+                drawAndSetConnection();
 
                 this.clearIndexes();
                 this.blnCanConnect = false;
@@ -151,30 +153,9 @@ public class BinaryTree extends JComponent {
         if(this.matPoint[x][y] != EMPTY){
             deletePoint(x, y);
             this.blnCanDelete = false;
-        } else if(this.matConnection[x][y] != EMPTY){
-            deleteConnection(x, y);
-            this.blnCanDelete = false;
         }
     }
 
-    private double openWindow(){
-
-        String string = JOptionPane.showInputDialog(this, "What's the weight?");
-
-        double weight;
-
-        if(string == null)
-            weight = NULL_MESSAGE;
-        else {
-            try {
-                weight = Double.parseDouble(string);
-            } catch (Exception error) {
-                weight = 0.0;
-            }
-        }
-        return weight;
-
-    }
 
     public void clearIndexes(){
         this.indexFromPoint = this.indexToPoint = NOT_DEFINED;
@@ -183,7 +164,7 @@ public class BinaryTree extends JComponent {
     public void nextStep(){
         if(this.algorithmRunning) {
             switch (algorithmType) {
-
+                // TODO write the switch
             }
         }
     }
@@ -236,6 +217,12 @@ public class BinaryTree extends JComponent {
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
             setNewElementPoint(x, y);
+            if(this.root == null){
+                this.root = new TreeNode(this.numberPoints - 1);
+            }else{
+                this.blnCanConnect = true;
+                this.indexFromPoint = this.numberPoints - 1;
+            }
             drawCircle(x, y, Color.BLACK);
         }
     }
@@ -289,10 +276,34 @@ public class BinaryTree extends JComponent {
 
     // region 7. Draw Connections
 
-    private void drawAndSetConnection(double weight){
-        drawConnection(this.indexFromPoint, this.indexToPoint, Color.CYAN);
-        setNewElementConn(weight);
-        drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK, weight);
+    private void drawAndSetConnection(){
+        Children children = this.childrenList.get(this.indexToPoint);
+
+        int father = this.indexToPoint;
+        int child = this.indexFromPoint;
+
+        if(this.pointPositionList.get(father).getX() > this.pointPositionList.get(child).getX()){
+            if(children.getLeft() == Children.NOT_DEFINED){
+                children.setLeft(child);
+
+                drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK);
+                setNewElementToNode(this.indexToPoint, this.indexFromPoint);
+            }else{
+                removeLastPoint();
+            }
+        }else if(this.pointPositionList.get(father).getX() < this.pointPositionList.get(child).getX()){
+            if(children.getRight() == Children.NOT_DEFINED){
+                children.setRight(child);
+
+                drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK);
+                setNewElementToNode(this.indexToPoint, this.indexFromPoint);
+            }else{
+                removeLastPoint();
+            }
+        }
+
+        redrawImage();
+
     }
 
     private void drawConnection(int indexFromPoint, int indexToPoint, Color color){
@@ -306,35 +317,6 @@ public class BinaryTree extends JComponent {
                 pointFrom.getX(), pointFrom.getY(), pointTo.getX(), pointTo.getY());
 
         this.graphics.setStroke(new BasicStroke(1));
-        redrawNumbers();
-
-        this.repaint();
-    }
-
-    private void drawConnection(int indexFromPoint, int indexToPoint, Color color, double weight){
-
-        PointPosition pointFrom = pointPositionList.get(indexFromPoint);
-        PointPosition pointTo = pointPositionList.get(indexToPoint);
-
-        int x1 = pointFrom.getX();
-        int y1 = pointFrom.getY();
-        int x2 = pointTo.getX();
-        int y2 = pointTo.getY();
-
-        this.graphics.setPaint(color);
-        this.graphics.setStroke(new BasicStroke(5));
-        this.graphics.drawLine(x1, y1, x2, y2);
-        this.graphics.setStroke(new BasicStroke(1));
-
-        int strX = (x1 + x2)/2;
-        int strY = (y1 + y2)/2;
-
-        if((x1 <= x2 && y1 <= y2) || (x2 <= x1 && y2 <= y1)){
-            this.graphics.drawString(String.valueOf(weight), strX + 5, strY - 6);
-        }else {
-            this.graphics.drawString(String.valueOf(weight), strX + 6, strY + 16);
-        }
-
         redrawNumbers();
 
         this.repaint();
@@ -357,11 +339,9 @@ public class BinaryTree extends JComponent {
 
     private void createMatrix(){
         this.matPoint = new int[this.getSize().width][this.getSize().height];
-        this.matConnection = new int[this.getSize().width][this.getSize().height];
         for (int x = 0; x < this.getSize().width; x++) {
             for (int y = 0; y < getSize().height; y++) {
                 matPoint[x][y] = EMPTY;
-                matConnection[x][y] = EMPTY;
             }
         }
     }
@@ -381,30 +361,11 @@ public class BinaryTree extends JComponent {
         PointPosition point = new PointPosition(numberPoints, pointX, pointY);
         this.pointPositionList.add(point);
 
+        this.childrenList.add(new Children());
+
         this.numberPoints++;
     }
 
-    private void setNewElementConn(double weight){
-        BufferedImage bufferedImage = (BufferedImage) this.image;
-
-        for(int x = 0; x < this.getSize().width; x++){
-            for (int y = 0; y < this.getSize().height; y++) {
-                int rgb = bufferedImage.getRGB(x, y);
-                if(rgb == Color.CYAN.getRGB()){
-                    this.matConnection[x][y] = this.connectionListAll.size();
-                }
-            }
-        }
-
-
-        this.connectionList.add(
-                new Connection(this.indexFromPoint, this.indexToPoint, weight)
-        );
-        this.connectionListAll.add(
-                new Connection(this.indexFromPoint, this.indexToPoint, weight)
-        );
-
-    }
 
     // endregion
 
@@ -413,12 +374,22 @@ public class BinaryTree extends JComponent {
     public void redrawImage(){
         clearImage();
         redrawPoints();
-        redrawConnections();
+        redrawConnections(this.root);
     }
 
-    private void redrawConnections() {
-        for (Connection connection : this.connectionList){
-            drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.BLACK, connection.getWeight());
+    private void redrawConnections(TreeNode root) {
+        if(root != null){
+            int from = root.getVal();
+            if (root.getLeft() != null) {
+                int to = root.getLeft().getVal();
+                drawConnection(from, to, Color.BLACK);
+            }
+            if(root.getRight() != null){
+                int to = root.getRight().getVal();
+                drawConnection(from, to, Color.BLACK);
+            }
+            redrawConnections(root.getLeft());
+            redrawConnections(root.getRight());
         }
     }
 
@@ -448,98 +419,63 @@ public class BinaryTree extends JComponent {
         }
     }
 
-    public void redrawImage(boolean[] b){
-        clearImage();
-        redrawPoints();
-        redrawConnections(b);
-    }
-
-    private void redrawConnections(boolean[] b) {
-        int index = 0;
-        for (Connection connection : this.connectionList){
-            if(b[index])
-                drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.BLACK, connection.getWeight());
-            index++;
-        }
-    }
 
     // endregion
 
     // region 10. Delete methods
 
-    private void deletePointFromMatrix(int num){
+    private void removeLastPoint(){
+        int num = this.numberPoints - 1;
+
         for (int x = 0; x < this.getSize().width; x++) {
             for (int y = 0; y < getSize().height; y++) {
-                if(this.matPoint[x][y] == num){
-                    this.matPoint[x][y] = EMPTY;
+                if(matPoint[x][y] == num) {
+                    matPoint[x][y] = EMPTY;
                 }
             }
         }
+
+        this.pointPositionList.remove(num);
+        this.numberPoints--;
     }
 
-    private void deleteConnectionFromMatrix(int ind){
-        Connection con = this.connectionListAll.get(ind);
-
-        PointPosition fromPos = this.pointPositionList.get(con.getFromPoint());
-        PointPosition toPos = this.pointPositionList.get(con.getToPoint());
-
-        int xMin = Math.min(fromPos.getX(), toPos.getX());
-        int xMax = Math.max(fromPos.getX(), toPos.getX());
-        int yMin = Math.min(fromPos.getY(), toPos.getY());
-        int yMax = Math.max(fromPos.getY(), toPos.getY());
-
-        int xStart = Math.max(0, xMin - 10);
-        int xEnd = Math.min(this.getSize().width, xMax + 10);
-        int yStart = Math.max(0, yMin - 10);
-        int yEnd = Math.min(this.getSize().height, yMax + 10);
-
-        for(int x = xStart; x < xEnd; x++){
-            for (int y = yStart; y < yEnd; y++) {
-                if(this.matConnection[x][y] == ind){
-                    this.matConnection[x][y] = EMPTY;
-                }
-            }
-        }
-    }
-
-    private void deleteConnectionsNumber(int num){
-        for (int i = 0; i < this.connectionListAll.size(); i++) {
-            int from = this.connectionListAll.get(i).getFromPoint();
-            int to = this.connectionListAll.get(i).getToPoint();
-
-            if (from == num || to == num)
-                deleteConnectionByIndex(i);
-        }
-    }
 
     private void deletePoint(int x, int y){
-        int num = this.matPoint[x][y];
-        deletePointFromMatrix(num);
-        deleteConnectionsNumber(num);
-        redrawImage();
+        // TODO write the method
     }
 
-    private void deleteConnectionByIndex(int ind){
-        Connection con = this.connectionListAll.get(ind);
 
-        for (int i = 0; i < this.connectionList.size(); i++) {
-            if(this.connectionList.get(i).equals(con)){
-                this.connectionList.remove(i);
-                break;
-            }
+    // endregion
+
+    // region 11. TreeNode methods
+
+    private void setNewElementToNode(int father, int child){
+        if(this.pointPositionList.get(father).getX() > this.pointPositionList.get(child).getX()){
+            saveToNode(this.root, father, child, LEFT);
+        }else{
+            saveToNode(this.root, father, child, RIGHT);
         }
-
-        deleteConnectionFromMatrix(ind);
     }
 
-    private void deleteConnection(int x, int y){
-        deleteConnectionByIndex(this.matConnection[x][y]);
-        redrawImage();
+    private void saveToNode(TreeNode root, int father, int child, boolean direction){
+        if(root == null)
+            return;
+
+        if(root.getVal() == father){
+            if(direction == LEFT){
+                root.setLeft(new TreeNode(child));
+            }else{
+                root.setRight(new TreeNode(child));
+            }
+        }else{
+            saveToNode(root.getLeft(), father, child, direction);
+            saveToNode(root.getRight(), father, child, direction);
+        }
     }
 
     // endregion
 
-    // region 11. Getters and Setters
+    // region 12. Getters and Setters
 
     public void setBlnCanDelete(boolean blnCanDelete) {
         this.blnCanDelete = blnCanDelete;
@@ -565,6 +501,9 @@ public class BinaryTree extends JComponent {
         return strText;
     }
 
+    public boolean getBlnCanConnect() {
+        return blnCanConnect;
+    }
 
     // endregion
 

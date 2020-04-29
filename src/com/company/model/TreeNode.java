@@ -4,9 +4,9 @@ public class TreeNode {
 
     // region 1. Init and Decl
 
-    int val;
-    TreeNode left;
-    TreeNode right;
+    private int val;
+    private TreeNode left;
+    private TreeNode right;
 
     // endregion
 
