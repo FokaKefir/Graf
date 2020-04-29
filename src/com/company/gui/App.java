@@ -376,7 +376,11 @@ public class App implements ActionListener {
             } else if (btnNextStepBT.equals(source)) {
 
             } else if (btnDeleteBT.equals(source)) {
-
+                this.binaryTree.redrawImage();
+                this.binaryTree.setBlnCanConnect(false);
+                this.binaryTree.setBlnCanDrawPoint(false);
+                this.binaryTree.setBlnCanDelete(true);
+                this.binaryTree.setAlgorithmType(BinaryTree.NOT_TYPE);
             } else if (btnBackBT.equals(source)) {
                 setNewPanel(this.mainPanelMenu);
             }

@@ -156,7 +156,6 @@ public class BinaryTree extends JComponent {
         }
     }
 
-
     public void clearIndexes(){
         this.indexFromPoint = this.indexToPoint = NOT_DEFINED;
     }
@@ -341,7 +340,7 @@ public class BinaryTree extends JComponent {
         this.matPoint = new int[this.getSize().width][this.getSize().height];
         for (int x = 0; x < this.getSize().width; x++) {
             for (int y = 0; y < getSize().height; y++) {
-                matPoint[x][y] = EMPTY;
+                this.matPoint[x][y] = EMPTY;
             }
         }
     }
@@ -409,12 +408,11 @@ public class BinaryTree extends JComponent {
             int x = point.getX();
             int y = point.getY();
 
-            if(this.matPoint[x][y] == EMPTY){
-                continue;
-            }
+            if(this.matPoint[x][y] != EMPTY && point.getName() == matPoint[x][y]) {
 
-            this.graphics.setPaint(Color.WHITE);
-            this.graphics.drawString(String.valueOf(matPoint[x][y]), x - 5, y + 7);
+                this.graphics.setPaint(Color.WHITE);
+                this.graphics.drawString(String.valueOf(matPoint[x][y]), x - 5, y + 7);
+            }
 
         }
     }
@@ -439,11 +437,56 @@ public class BinaryTree extends JComponent {
         this.numberPoints--;
     }
 
+    private void deleteNode(TreeNode root, int num, boolean[] b){
+        if(root != null){
+            if(root.getVal() == num){
+                b[root.getVal()] = true;
+                this.childrenList.set(num, new Children());
 
-    private void deletePoint(int x, int y){
-        // TODO write the method
+                if(root.getLeft() != null)
+                    deleteNode(root.getLeft(), root.getLeft().getVal(), b);
+                if(root.getRight() != null)
+                    deleteNode(root.getRight(), root.getRight().getVal(), b);
+
+            }else{
+                deleteNode(root.getLeft(), num, b);
+                deleteNode(root.getRight(), num, b);
+                Children children = this.childrenList.get(root.getVal());
+
+                if(root.getLeft() != null && root.getLeft().getVal() == num) {
+                    root.setLeft(null);
+                    children.setLeft(Children.NOT_DEFINED);
+                }
+
+                if(root.getRight() != null && root.getRight().getVal() == num) {
+                    root.setRight(null);
+                    children.setRight(Children.NOT_DEFINED);
+                }
+            }
+        }
     }
 
+    private void deletePoint(int x1, int y1){
+
+        int num = this.matPoint[x1][y1];
+        boolean[] b = new boolean[this.numberPoints];
+
+        deleteNode(this.root, num, b);
+
+        if(this.root.getVal() == num)
+            this.root = null;
+
+        for (int x = 0; x < this.getSize().width; x++) {
+            for (int y = 0; y < getSize().height; y++) {
+                if(this.matPoint[x][y] != EMPTY && (b[this.matPoint[x][y]] || this.matPoint[x][y] == num)) {
+                    this.matPoint[x][y] = EMPTY;
+                }
+            }
+        }
+
+        redrawImage();
+
+    }
 
     // endregion
 
