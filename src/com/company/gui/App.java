@@ -203,30 +203,34 @@ public class App implements ActionListener {
         Object source = event.getSource();
 
         if (btnGraph.equals(source)){
-            switchPane(this.mainPanelGraph);
+            setNewPanel(this.mainPanelGraph);
         }else if(btnBinaryTree.equals(source)){
-            switchPane(this.mainPanelBinaryTree);
+            setNewPanel(this.mainPanelBinaryTree);
         }
 
         if(btnBreadthFirstSearch.equals(source)){
+            this.graph.redrawImage();
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.BREADTH_FIRST_SEARCH);
             this.txtField.setText("Choose the first point!");
             setVisibleButtons(false);
         }else if(btnDepthFirstSearch.equals(source)){
+            this.graph.redrawImage();
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.DEPTH_FIRST_SEARCH);
             this.txtField.setText("Choose the first point!");
             setVisibleButtons(false);
         }else if(btnDijkstra.equals(source)){
+            this.graph.redrawImage();
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.DIJKSTRA);
             this.txtField.setText("Choose the first point!");
             setVisibleButtons(false);
         }else if(btnKruskal.equals(source)){
+            this.graph.redrawImage();
             this.graph.setBlnCanConnect(false);
             this.graph.setBlnCanDrawPoint(false);
             this.graph.setAlgorithmType(Graph.KRUSKAL);
@@ -263,7 +267,7 @@ public class App implements ActionListener {
             this.graph.setBlnCanDelete(true);
             this.graph.setAlgorithmType(Graph.NOT_TYPE);
         } else if (btnBack.equals(source)){
-            switchPane(this.mainPanelMenu);
+            setNewPanel(this.mainPanelMenu);
         }
 
     }
@@ -272,16 +276,12 @@ public class App implements ActionListener {
 
     // region 5. Functions and methods
 
-    private void switchPane(JPanel newPanel){
+    private void setNewPanel(JPanel newPanel){
         this.frame.setContentPane(newPanel);
         this.frame.validate();
     }
 
     private void setVisibleButtons(boolean cond){
-        this.btnBreadthFirstSearch.setVisible(cond);
-        this.btnDepthFirstSearch.setVisible(cond);
-        this.btnDijkstra.setVisible(cond);
-        this.btnKruskal.setVisible(cond);
         this.btnAddPoint.setVisible(cond);
         this.btnAddConnection.setVisible(cond);
         this.btnDelete.setVisible(cond);
