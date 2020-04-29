@@ -1,5 +1,6 @@
 package com.company.gui;
 
+import com.company.graphs.BinaryTree;
 import com.company.graphs.Graph;
 
 import javax.swing.*;
@@ -33,19 +34,30 @@ public class App implements ActionListener {
     private JButton btnBinaryTree;
 
     private JPanel mainPanelGraph;
-    private JTextField txtField;
+    private JTextField txtFieldGraph;
     private JButton btnBreadthFirstSearch;
     private JButton btnDepthFirstSearch;
     private JButton btnDijkstra;
     private JButton btnKruskal;
-    private JButton btnAddPoint;
-    private JButton btnAddConnection;
-    private JButton btnNextStep;
-    private JButton btnDelete;
-    private JButton btnBack;
+    private JButton btnAddPointGraph;
+    private JButton btnAddConnectionGraph;
+    private JButton btnNextStepGraph;
+    private JButton btnDeleteGraph;
+    private JButton btnBackGraph;
     private Graph graph;
 
     private JPanel mainPanelBinaryTree;
+    private JTextField txtFieldBT;
+    private JButton btnPreorder;
+    private JButton btnInorder;
+    private JButton btnPostOrder;
+    private JButton btnAddPointBT;
+    private JButton btnNextStepBT;
+    private JButton btnDeleteBT;
+    private JButton btnBackBT;
+    private BinaryTree binaryTree;
+
+    private ImageIcon img;
 
     // endregion
 
@@ -75,12 +87,10 @@ public class App implements ActionListener {
     private void initGraph(){
         this.graph = new Graph();
 
-
-        this.btnAddPoint = new JButton("Add new point");
-        this.btnAddConnection = new JButton("Add new connection");
-        this.btnNextStep = new JButton("Next");
-        this.btnDelete = new JButton("Delete");
-
+        this.btnAddPointGraph = new JButton("Add new point");
+        this.btnAddConnectionGraph = new JButton("Add new connection");
+        this.btnNextStepGraph = new JButton("Next");
+        this.btnDeleteGraph = new JButton("Delete");
         this.btnBreadthFirstSearch = new JButton("Breadth-First Search"){
             {
                 setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
@@ -105,46 +115,42 @@ public class App implements ActionListener {
                 setMaximumSize(getSize());
             }
         };
-        this.btnBack = new JButton(){
+        this.btnBackGraph = new JButton(){
             {
                 setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
                 setMaximumSize(getSize());
             }
         };
 
-        ImageIcon img = new ImageIcon(getClass().getResource("images/back.png"));
-        img = new ImageIcon(img.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  java.awt.Image.SCALE_SMOOTH));
-        this.btnBack.setIcon(img);
+        this.btnBackGraph.setIcon(this.img);
 
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
         this.btnDijkstra.addActionListener(this);
         this.btnKruskal.addActionListener(this);
-        this.btnAddPoint.addActionListener(this);
-        this.btnAddConnection.addActionListener(this);
-        this.btnNextStep.addActionListener(this);
-        this.btnDelete.addActionListener(this);
-        this.btnBack.addActionListener(this);
+        this.btnAddPointGraph.addActionListener(this);
+        this.btnAddConnectionGraph.addActionListener(this);
+        this.btnNextStepGraph.addActionListener(this);
+        this.btnDeleteGraph.addActionListener(this);
+        this.btnBackGraph.addActionListener(this);
 
-        setVisibleButtons(true);
-
-        this.txtField = new JTextField(5);
-        this.txtField.setFont(new Font("Arial", Font.BOLD, 20));
-        this.txtField.setText(MAIN_INFO);
-        this.txtField.setEnabled(false);
-        this.txtField.setBorder(new LineBorder(Color.WHITE));
-        this.txtField.setDisabledTextColor(Color.BLACK);
-        this.txtField.setHorizontalAlignment(JTextField.CENTER);
+        this.txtFieldGraph = new JTextField(5);
+        this.txtFieldGraph.setFont(new Font("Arial", Font.BOLD, 20));
+        this.txtFieldGraph.setText(MAIN_INFO);
+        this.txtFieldGraph.setEnabled(false);
+        this.txtFieldGraph.setBorder(new LineBorder(Color.WHITE));
+        this.txtFieldGraph.setDisabledTextColor(Color.BLACK);
+        this.txtFieldGraph.setHorizontalAlignment(JTextField.CENTER);
 
         JPanel editButtonPanel = new JPanel();
-        editButtonPanel.add(this.btnAddPoint);
-        editButtonPanel.add(this.btnAddConnection);
-        editButtonPanel.add(this.btnNextStep);
-        editButtonPanel.add(this.btnDelete);
+        editButtonPanel.add(this.btnAddPointGraph);
+        editButtonPanel.add(this.btnAddConnectionGraph);
+        editButtonPanel.add(this.btnNextStepGraph);
+        editButtonPanel.add(this.btnDeleteGraph);
 
         JPanel programsButtonPanel = new JPanel();
         programsButtonPanel.setLayout(new BoxLayout(programsButtonPanel, BoxLayout.Y_AXIS));
-        programsButtonPanel.add(this.btnBack);
+        programsButtonPanel.add(this.btnBackGraph);
         programsButtonPanel.add(Box.createRigidArea(new Dimension(0, 50)));
         programsButtonPanel.add(this.btnBreadthFirstSearch);
         programsButtonPanel.add(this.btnDepthFirstSearch);
@@ -155,7 +161,7 @@ public class App implements ActionListener {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(editButtonPanel, BorderLayout.NORTH);
-        panel.add(this.txtField, BorderLayout.SOUTH);
+        panel.add(this.txtFieldGraph, BorderLayout.SOUTH);
 
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
@@ -169,13 +175,93 @@ public class App implements ActionListener {
     }
 
     private void initBinaryTree(){
+        this.binaryTree = new BinaryTree();
 
+        this.btnAddPointBT = new JButton("Add new point");
+        this.btnNextStepBT = new JButton("Next");
+        this.btnDeleteBT = new JButton("Delete");
+        this.btnPreorder = new JButton("Breadth-First Search"){
+            {
+                setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+        this.btnInorder = new JButton("Depth-First Search"){
+            {
+                setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+        this.btnPostOrder = new JButton("Dijkstra") {
+            {
+                setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+        this.btnBackBT = new JButton(){
+            {
+                setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+                setMaximumSize(getSize());
+            }
+        };
+
+        this.btnBackBT.setIcon(this.img);
+
+        this.btnPreorder.addActionListener(this);
+        this.btnInorder.addActionListener(this);
+        this.btnPostOrder.addActionListener(this);
+        this.btnAddPointBT.addActionListener(this);
+
+        this.btnNextStepBT.addActionListener(this);
+        this.btnDeleteBT.addActionListener(this);
+        this.btnBackBT.addActionListener(this);
+
+        this.txtFieldBT = new JTextField(5);
+        this.txtFieldBT.setFont(new Font("Arial", Font.BOLD, 20));
+        this.txtFieldBT.setText(MAIN_INFO);
+        this.txtFieldBT.setEnabled(false);
+        this.txtFieldBT.setBorder(new LineBorder(Color.WHITE));
+        this.txtFieldBT.setDisabledTextColor(Color.BLACK);
+        this.txtFieldBT.setHorizontalAlignment(JTextField.CENTER);
+
+        JPanel editButtonPanel = new JPanel();
+        editButtonPanel.add(this.btnAddPointBT);
+        editButtonPanel.add(this.btnNextStepBT);
+        editButtonPanel.add(this.btnDeleteBT);
+
+        JPanel programsButtonPanel = new JPanel();
+        programsButtonPanel.setLayout(new BoxLayout(programsButtonPanel, BoxLayout.Y_AXIS));
+        programsButtonPanel.add(this.btnBackBT);
+        programsButtonPanel.add(Box.createRigidArea(new Dimension(0, 50)));
+        programsButtonPanel.add(this.btnPreorder);
+        programsButtonPanel.add(this.btnInorder);
+        programsButtonPanel.add(this.btnPostOrder);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(editButtonPanel, BorderLayout.NORTH);
+        panel.add(this.txtFieldBT, BorderLayout.SOUTH);
+
+        JPanel editorPanel = new JPanel();
+        editorPanel.setLayout(new BorderLayout());
+        editorPanel.add(this.binaryTree, BorderLayout.CENTER);
+        editorPanel.add(panel, BorderLayout.NORTH);
+
+        this.mainPanelBinaryTree = new JPanel();
+        this.mainPanelBinaryTree.setLayout(new BorderLayout());
+        this.mainPanelBinaryTree.add(editorPanel, BorderLayout.CENTER);
+        this.mainPanelBinaryTree.add(programsButtonPanel, BorderLayout.WEST);
     }
 
     public App() {
+        this.img = new ImageIcon(getClass().getResource("images/back.png"));
+        this.img = new ImageIcon(this.img.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  java.awt.Image.SCALE_SMOOTH));
+
         initMenu();
         initGraph();
         initBinaryTree();
+
+        setVisibleButtons(true);
 
         this.frame = new JFrame("App");
         this.frame.setContentPane(this.mainPanelMenu);
@@ -202,72 +288,94 @@ public class App implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
 
-        if (btnGraph.equals(source)){
-            setNewPanel(this.mainPanelGraph);
-        }else if(btnBinaryTree.equals(source)){
-            setNewPanel(this.mainPanelBinaryTree);
+        if(this.frame.getContentPane().equals(this.mainPanelMenu)) {
+            if (btnGraph.equals(source)) {
+                setNewPanel(this.mainPanelGraph);
+            } else if (btnBinaryTree.equals(source)) {
+                setNewPanel(this.mainPanelBinaryTree);
+            }
         }
 
-        if(btnBreadthFirstSearch.equals(source)){
-            this.graph.redrawImage();
-            this.graph.setBlnCanConnect(false);
-            this.graph.setBlnCanDrawPoint(false);
-            this.graph.setAlgorithmType(Graph.BREADTH_FIRST_SEARCH);
-            this.txtField.setText("Choose the first point!");
-            setVisibleButtons(false);
-        }else if(btnDepthFirstSearch.equals(source)){
-            this.graph.redrawImage();
-            this.graph.setBlnCanConnect(false);
-            this.graph.setBlnCanDrawPoint(false);
-            this.graph.setAlgorithmType(Graph.DEPTH_FIRST_SEARCH);
-            this.txtField.setText("Choose the first point!");
-            setVisibleButtons(false);
-        }else if(btnDijkstra.equals(source)){
-            this.graph.redrawImage();
-            this.graph.setBlnCanConnect(false);
-            this.graph.setBlnCanDrawPoint(false);
-            this.graph.setAlgorithmType(Graph.DIJKSTRA);
-            this.txtField.setText("Choose the first point!");
-            setVisibleButtons(false);
-        }else if(btnKruskal.equals(source)){
-            this.graph.redrawImage();
-            this.graph.setBlnCanConnect(false);
-            this.graph.setBlnCanDrawPoint(false);
-            this.graph.setAlgorithmType(Graph.KRUSKAL);
-            this.graph.kruskal();
-            this.txtField.setText("Sorting the connection list!");
-            setVisibleButtons(false);
-        }else if (btnAddPoint.equals(source)) {
-            this.graph.redrawImage();
-            this.graph.setBlnCanConnect(false);
-            this.graph.setBlnCanDrawPoint(true);
-            this.graph.setBlnCanDelete(false);
-            this.graph.setAlgorithmType(Graph.NOT_TYPE);
-        } else if (btnAddConnection.equals(source)) {
-            this.graph.redrawImage();
-            this.graph.clearIndexes();
-            this.graph.setBlnCanDrawPoint(false);
-            this.graph.setBlnCanConnect(true);
-            this.graph.setBlnCanDelete(false);
-            this.graph.setAlgorithmType(Graph.NOT_TYPE);
-        } else if (btnNextStep.equals(source)){
-            if(this.graph.getAlgorithmRunning()) {
-                this.graph.nextStep();
-                this.txtField.setText(this.graph.getStrText());
-            } else {
-                setVisibleButtons(true);
+        if(this.frame.getContentPane().equals(this.mainPanelGraph)) {
+            if (btnBreadthFirstSearch.equals(source)) {
                 this.graph.redrawImage();
-                this.txtField.setText(MAIN_INFO);
+                this.graph.setBlnCanConnect(false);
+                this.graph.setBlnCanDrawPoint(false);
+                this.graph.setAlgorithmType(Graph.BREADTH_FIRST_SEARCH);
+                this.txtFieldGraph.setText("Choose the first point!");
+                setVisibleButtons(false);
+            } else if (btnDepthFirstSearch.equals(source)) {
+                this.graph.redrawImage();
+                this.graph.setBlnCanConnect(false);
+                this.graph.setBlnCanDrawPoint(false);
+                this.graph.setAlgorithmType(Graph.DEPTH_FIRST_SEARCH);
+                this.txtFieldGraph.setText("Choose the first point!");
+                setVisibleButtons(false);
+            } else if (btnDijkstra.equals(source)) {
+                this.graph.redrawImage();
+                this.graph.setBlnCanConnect(false);
+                this.graph.setBlnCanDrawPoint(false);
+                this.graph.setAlgorithmType(Graph.DIJKSTRA);
+                this.txtFieldGraph.setText("Choose the first point!");
+                setVisibleButtons(false);
+            } else if (btnKruskal.equals(source)) {
+                this.graph.redrawImage();
+                this.graph.setBlnCanConnect(false);
+                this.graph.setBlnCanDrawPoint(false);
+                this.graph.setAlgorithmType(Graph.KRUSKAL);
+                this.graph.kruskal();
+                this.txtFieldGraph.setText("Sorting the connection list!");
+                setVisibleButtons(false);
+            } else if (btnAddPointGraph.equals(source)) {
+                this.graph.redrawImage();
+                this.graph.setBlnCanConnect(false);
+                this.graph.setBlnCanDrawPoint(true);
+                this.graph.setBlnCanDelete(false);
+                this.graph.setAlgorithmType(Graph.NOT_TYPE);
+            } else if (btnAddConnectionGraph.equals(source)) {
+                this.graph.redrawImage();
+                this.graph.clearIndexes();
+                this.graph.setBlnCanDrawPoint(false);
+                this.graph.setBlnCanConnect(true);
+                this.graph.setBlnCanDelete(false);
+                this.graph.setAlgorithmType(Graph.NOT_TYPE);
+            } else if (btnNextStepGraph.equals(source)) {
+                if (this.graph.getAlgorithmRunning()) {
+                    this.graph.nextStep();
+                    this.txtFieldGraph.setText(this.graph.getStrText());
+                } else {
+                    setVisibleButtons(true);
+                    this.graph.redrawImage();
+                    this.txtFieldGraph.setText(MAIN_INFO);
+                }
+            } else if (btnDeleteGraph.equals(source)) {
+                this.graph.redrawImage();
+                this.graph.clearIndexes();
+                this.graph.setBlnCanDrawPoint(false);
+                this.graph.setBlnCanConnect(false);
+                this.graph.setBlnCanDelete(true);
+                this.graph.setAlgorithmType(Graph.NOT_TYPE);
+            } else if (btnBackGraph.equals(source)) {
+                setNewPanel(this.mainPanelMenu);
             }
-        } else if (btnDelete.equals(source)){
-            this.graph.redrawImage();
-            this.graph.clearIndexes();
-            this.graph.setBlnCanDrawPoint(false);
-            this.graph.setBlnCanConnect(false);
-            this.graph.setBlnCanDelete(true);
-            this.graph.setAlgorithmType(Graph.NOT_TYPE);
-        } else if (btnBack.equals(source)){
-            setNewPanel(this.mainPanelMenu);
+        }
+
+        if(this.frame.getContentPane().equals(this.mainPanelBinaryTree)) {
+            if (btnPreorder.equals(source)) {
+
+            } else if (btnInorder.equals(source)) {
+
+            } else if (btnPostOrder.equals(source)) {
+
+            } else if (btnAddPointBT.equals(source)) {
+
+            } else if (btnNextStepBT.equals(source)) {
+
+            } else if (btnDeleteBT.equals(source)) {
+
+            } else if (btnBackBT.equals(source)) {
+                setNewPanel(this.mainPanelMenu);
+            }
         }
 
     }
@@ -282,10 +390,14 @@ public class App implements ActionListener {
     }
 
     private void setVisibleButtons(boolean cond){
-        this.btnAddPoint.setVisible(cond);
-        this.btnAddConnection.setVisible(cond);
-        this.btnDelete.setVisible(cond);
-        this.btnNextStep.setVisible(!cond);
+        this.btnAddPointGraph.setVisible(cond);
+        this.btnAddConnectionGraph.setVisible(cond);
+        this.btnDeleteGraph.setVisible(cond);
+        this.btnNextStepGraph.setVisible(!cond);
+
+        this.btnAddPointBT.setVisible(cond);
+        this.btnDeleteBT.setVisible(cond);
+        this.btnNextStepBT.setVisible(!cond);
 
     }
 
