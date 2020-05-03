@@ -180,19 +180,19 @@ public class App implements ActionListener {
         this.btnAddPointBT = new JButton("Add new point");
         this.btnNextStepBT = new JButton("Next");
         this.btnDeleteBT = new JButton("Delete");
-        this.btnPreorder = new JButton("Breadth-First Search"){
+        this.btnPreorder = new JButton("Preorder"){
             {
                 setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
                 setMaximumSize(getSize());
             }
         };
-        this.btnInorder = new JButton("Depth-First Search"){
+        this.btnInorder = new JButton("Inorder"){
             {
                 setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
                 setMaximumSize(getSize());
             }
         };
-        this.btnPostOrder = new JButton("Dijkstra") {
+        this.btnPostOrder = new JButton("Postorder") {
             {
                 setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
                 setMaximumSize(getSize());
@@ -362,23 +362,42 @@ public class App implements ActionListener {
 
         if(this.frame.getContentPane().equals(this.mainPanelBinaryTree)) {
             if (btnPreorder.equals(source)) {
-
+                this.binaryTree.redrawImage();
+                this.binaryTree.setBlnCanDrawPoint(false);
+                this.binaryTree.setBlnCanConnect(false);
+                this.binaryTree.setAlgorithmType(BinaryTree.PREORDER);
+                this.binaryTree.preorder();
             } else if (btnInorder.equals(source)) {
-
+                this.binaryTree.redrawImage();
+                this.binaryTree.setBlnCanDrawPoint(false);
+                this.binaryTree.setBlnCanConnect(false);
+                this.binaryTree.setAlgorithmType(BinaryTree.INORDER);
+                this.binaryTree.inorder();
             } else if (btnPostOrder.equals(source)) {
-
+                this.binaryTree.redrawImage();
+                this.binaryTree.setBlnCanDrawPoint(false);
+                this.binaryTree.setBlnCanConnect(false);
+                this.binaryTree.setAlgorithmType(BinaryTree.POSTORDER);
+                this.binaryTree.postorder();
             } else if (btnAddPointBT.equals(source) && !this.binaryTree.getBlnCanConnect()) {
                 this.binaryTree.redrawImage();
-                this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setBlnCanDrawPoint(true);
+                this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setBlnCanDelete(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.NOT_TYPE);
             } else if (btnNextStepBT.equals(source)) {
-
+                if (this.binaryTree.getAlgorithmRunning()) {
+                    this.binaryTree.nextStep();
+                    this.txtFieldGraph.setText(this.binaryTree.getStrText());
+                } else {
+                    setVisibleButtons(true);
+                    this.binaryTree.redrawImage();
+                    this.txtFieldGraph.setText(MAIN_INFO);
+                }
             } else if (btnDeleteBT.equals(source)) {
                 this.binaryTree.redrawImage();
-                this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setBlnCanDrawPoint(false);
+                this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setBlnCanDelete(true);
                 this.binaryTree.setAlgorithmType(BinaryTree.NOT_TYPE);
             } else if (btnBackBT.equals(source)) {

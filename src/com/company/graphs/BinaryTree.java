@@ -51,6 +51,7 @@ public class BinaryTree extends JComponent {
 
     private String strText;
     private boolean algorithmRunning;
+    private Vector<Integer> fatherList;
 
 
     // endregion
@@ -71,6 +72,7 @@ public class BinaryTree extends JComponent {
         this.childrenList = new ArrayList<>();
         this.root = null;
 
+        this.fatherList = new Vector<>();
 
         this.addMouseListener(new MouseAdapter() {
             @Override
@@ -84,10 +86,6 @@ public class BinaryTree extends JComponent {
                     setNewConnection(x, y);
                 } else if(blnCanDelete) {
                     switchDelete(x, y);
-                } else if(algorithmType != NOT_TYPE && matPoint[x][y] != EMPTY) {
-                    switch (algorithmType){
-                        // TODO write the switch
-                    }
                 }
 
             }
@@ -163,7 +161,18 @@ public class BinaryTree extends JComponent {
     public void nextStep(){
         if(this.algorithmRunning) {
             switch (algorithmType) {
-                // TODO write the switch
+                case PREORDER:
+                    preorderNext();
+                    break;
+
+                case INORDER:
+                    inorderNext();
+                    break;
+
+                case POSTORDER:
+                    postorderNext();
+                    break;
+
             }
         }
     }
@@ -533,6 +542,11 @@ public class BinaryTree extends JComponent {
     }
 
     public void setBlnCanDrawPoint(boolean blnCanDrawPoint) {
+        if(this.blnCanConnect){
+            removeLastPoint();
+            redrawImage();
+        }
+
         this.blnCanDrawPoint = blnCanDrawPoint;
     }
 
@@ -546,6 +560,70 @@ public class BinaryTree extends JComponent {
 
     public boolean getBlnCanConnect() {
         return blnCanConnect;
+    }
+
+    // endregion
+
+    // region 13. Father List
+
+    private void createFatherList(){
+        this.fatherList.clear();
+        this.fatherList.setSize(this.numberPoints);
+
+        for (int father = 0; father < this.childrenList.size(); father++) {
+            int left = this.childrenList.get(father).getLeft();
+            int right = this.childrenList.get(father).getRight();
+
+            if(left != Children.NOT_DEFINED)
+                this.fatherList.set(left, father);
+
+            if(right != Children.NOT_DEFINED)
+                this.fatherList.set(right, father);
+
+        }
+
+    }
+
+    // endregion
+
+    // region 14. Preorder
+
+    private void preorderNext(){
+
+    }
+
+    public void preorder(){
+        createFatherList();
+
+        this.algorithmRunning = true;
+    }
+
+    // endregion
+
+    // region 15. Inorder
+
+    private void inorderNext(){
+
+    }
+
+    public void inorder(){
+        createFatherList();
+
+        this.algorithmRunning = true;
+    }
+
+    // endregion
+
+    // region 16. Postorder
+
+    private void postorderNext(){
+
+    }
+
+    public void postorder(){
+        createFatherList();
+
+        this.algorithmRunning = true;
     }
 
     // endregion

@@ -48,7 +48,7 @@ public class Graph extends JComponent {
     private List<PointPosition> pointPositionList;
     private ArrayList<Connection> connectionList;
     private ArrayList<Connection> connectionListAll;
-    private Vector<ArrayList<Integer>> adjacencyList;
+
 
     private String strText;
     private boolean algorithmRunning;
@@ -59,6 +59,7 @@ public class Graph extends JComponent {
     private Queue<Integer> queue;
     private Deque<Integer> stack;
     private Vector<ArrayList<Integer>> wayFromInitialPoint;
+    private Vector<ArrayList<Integer>> adjacencyList;
 
     // endregion
 
