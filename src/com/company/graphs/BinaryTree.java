@@ -661,9 +661,14 @@ public class BinaryTree extends JComponent {
     private void preorderNext(){
         int num = this.tmpNode.getVal();
 
+        if(this.directionForNumber[num] == GO_LEFT && !this.output.contains(num)){
+            this.output.add(num);
+            this.strText = " Print: " + num + "!";
+            return;
+        }
+
         switch (this.directionForNumber[num]){
             case GO_LEFT:
-                this.output.add(num);
                 TreeNode leftNode = this.tmpNode.getLeft();
                 if(leftNode != null){
                     saveToNode(this.tmpRoot, num, leftNode.getVal(), LEFT);
@@ -671,9 +676,9 @@ public class BinaryTree extends JComponent {
                     redrawImage(this.tmpRoot, Color.RED);
                     this.tmpNode = leftNode;
 
-                    this.strText = "";
+                    this.strText = "The path continues on the left side.";
                 }else{
-                    // TODO write the string
+                    this.strText = "The path can't continue on the left side.";
                 }
                 break;
 
@@ -684,8 +689,10 @@ public class BinaryTree extends JComponent {
                     redrawImage();
                     redrawImage(this.tmpRoot, Color.RED);
                     this.tmpNode = rightNode;
+
+                    this.strText = "The path continues on the right side.";
                 }else{
-                    // TODO write the string
+                    this.strText = "The path can't continue on the right side.";
                 }
                 break;
 
@@ -701,11 +708,14 @@ public class BinaryTree extends JComponent {
                     redrawImage();
                     redrawImage(this.tmpRoot, Color.RED);
                     this.tmpNode = fatherNode;
+
+                    this.strText = "Returning to the root.";
                 }else{
                     redrawImage();
                     JOptionPane.showMessageDialog(this, getMessage());
+
+                    this.strText = "End of the algorithm.";
                     this.algorithmRunning = false;
-                    // TODO write the string
                 }
                 break;
         }
@@ -730,11 +740,77 @@ public class BinaryTree extends JComponent {
     // region 15. Inorder
 
     private void inorderNext(){
+        int num = this.tmpNode.getVal();
 
+        if(this.directionForNumber[num] == GO_RIGHT && !this.output.contains(num)){
+            this.output.add(num);
+            this.strText = " Print: " + num + "!";
+            return;
+        }
+
+        switch (this.directionForNumber[num]){
+            case GO_LEFT:
+                TreeNode leftNode = this.tmpNode.getLeft();
+                if(leftNode != null){
+                    saveToNode(this.tmpRoot, num, leftNode.getVal(), LEFT);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
+                    this.tmpNode = leftNode;
+
+                    this.strText = "The path continues on the left side.";
+                }else{
+                    this.strText = "The path can't continue on the left side.";
+                }
+                break;
+
+            case GO_RIGHT:
+                TreeNode rightNode = this.tmpNode.getRight();
+                if(rightNode != null){
+                    saveToNode(this.tmpRoot, num, rightNode.getVal(), RIGHT);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
+                    this.tmpNode = rightNode;
+
+                    this.strText = "The path continues on the right side.";
+                }else{
+                    this.strText = "The path can't continue on the right side.";
+                }
+                break;
+
+            case GO_FATHER:
+                TreeNode fatherNode;
+                if(this.fatherList.get(num) == null)
+                    fatherNode = null;
+                else
+                    fatherNode = findRootByIndex(this.root, this.fatherList.get(num));
+
+                if(fatherNode != null){
+                    deleteNode(this.tmpRoot, fatherNode.getVal(), num);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
+                    this.tmpNode = fatherNode;
+
+                    this.strText = "Returning to the root.";
+                }else{
+                    redrawImage();
+                    JOptionPane.showMessageDialog(this, getMessage());
+
+                    this.strText = "End of the algorithm.";
+                    this.algorithmRunning = false;
+                }
+                break;
+        }
+
+        this.directionForNumber[num]++;
     }
 
     public void inorder(){
         createFatherList();
+        this.directionForNumber = new int[this.numberPoints];
+        this.output = new ArrayList<>();
+        this.tmpNode = this.root;
+        this.tmpRoot = new TreeNode(this.root.getVal());
+        redrawImage(this.tmpRoot, Color.RED);
 
         this.algorithmRunning = true;
     }
@@ -744,11 +820,77 @@ public class BinaryTree extends JComponent {
     // region 16. Postorder
 
     private void postorderNext(){
+        int num = this.tmpNode.getVal();
 
+        if(this.directionForNumber[num] == GO_FATHER && !this.output.contains(num)){
+            this.output.add(num);
+            this.strText = " Print: " + num + "!";
+            return;
+        }
+
+        switch (this.directionForNumber[num]){
+            case GO_LEFT:
+                TreeNode leftNode = this.tmpNode.getLeft();
+                if(leftNode != null){
+                    saveToNode(this.tmpRoot, num, leftNode.getVal(), LEFT);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
+                    this.tmpNode = leftNode;
+
+                    this.strText = "The path continues on the left side.";
+                }else{
+                    this.strText = "The path can't continue on the left side.";
+                }
+                break;
+
+            case GO_RIGHT:
+                TreeNode rightNode = this.tmpNode.getRight();
+                if(rightNode != null){
+                    saveToNode(this.tmpRoot, num, rightNode.getVal(), RIGHT);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
+                    this.tmpNode = rightNode;
+
+                    this.strText = "The path continues on the right side.";
+                }else{
+                    this.strText = "The path can't continue on the right side.";
+                }
+                break;
+
+            case GO_FATHER:
+                TreeNode fatherNode;
+                if(this.fatherList.get(num) == null)
+                    fatherNode = null;
+                else
+                    fatherNode = findRootByIndex(this.root, this.fatherList.get(num));
+
+                if(fatherNode != null){
+                    deleteNode(this.tmpRoot, fatherNode.getVal(), num);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
+                    this.tmpNode = fatherNode;
+
+                    this.strText = "Returning to the root.";
+                }else{
+                    redrawImage();
+                    JOptionPane.showMessageDialog(this, getMessage());
+
+                    this.strText = "End of the algorithm.";
+                    this.algorithmRunning = false;
+                }
+                break;
+        }
+
+        this.directionForNumber[num]++;
     }
 
     public void postorder(){
         createFatherList();
+        this.directionForNumber = new int[this.numberPoints];
+        this.output = new ArrayList<>();
+        this.tmpNode = this.root;
+        this.tmpRoot = new TreeNode(this.root.getVal());
+        redrawImage(this.tmpRoot, Color.RED);
 
         this.algorithmRunning = true;
     }

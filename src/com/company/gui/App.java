@@ -50,7 +50,7 @@ public class App implements ActionListener {
     private JTextField txtFieldBT;
     private JButton btnPreorder;
     private JButton btnInorder;
-    private JButton btnPostOrder;
+    private JButton btnPostorder;
     private JButton btnAddPointBT;
     private JButton btnNextStepBT;
     private JButton btnDeleteBT;
@@ -194,7 +194,7 @@ public class App implements ActionListener {
                 setMaximumSize(getSize());
             }
         };
-        this.btnPostOrder = new JButton("Postorder") {
+        this.btnPostorder = new JButton("Postorder") {
             {
                 setSize(BUTTON_WEIGHT, BUTTON_HEIGHT);
                 setMaximumSize(getSize());
@@ -211,7 +211,7 @@ public class App implements ActionListener {
 
         this.btnPreorder.addActionListener(this);
         this.btnInorder.addActionListener(this);
-        this.btnPostOrder.addActionListener(this);
+        this.btnPostorder.addActionListener(this);
         this.btnAddPointBT.addActionListener(this);
 
         this.btnNextStepBT.addActionListener(this);
@@ -239,7 +239,7 @@ public class App implements ActionListener {
         programsButtonPanel.add(Box.createRigidArea(new Dimension(0, 50)));
         programsButtonPanel.add(this.btnPreorder);
         programsButtonPanel.add(this.btnInorder);
-        programsButtonPanel.add(this.btnPostOrder);
+        programsButtonPanel.add(this.btnPostorder);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -370,6 +370,7 @@ public class App implements ActionListener {
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.PREORDER);
                 this.binaryTree.preorder();
+                this.txtFieldBT.setText("The algorithm is beginning from the root.");
                 setVisibleButtonsBT(false);
             } else if (btnInorder.equals(source)) {
                 this.binaryTree.redrawImage();
@@ -377,13 +378,15 @@ public class App implements ActionListener {
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.INORDER);
                 this.binaryTree.inorder();
+                this.txtFieldBT.setText("The algorithm is beginning from the root.");
                 setVisibleButtonsBT(false);
-            } else if (btnPostOrder.equals(source)) {
+            } else if (btnPostorder.equals(source)) {
                 this.binaryTree.redrawImage();
                 this.binaryTree.setBlnCanDrawPoint(false);
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.POSTORDER);
                 this.binaryTree.postorder();
+                this.txtFieldBT.setText("The algorithm is beginning from the root.");
                 setVisibleButtonsBT(false);
             } else if (btnAddPointBT.equals(source) && !this.binaryTree.getBlnCanConnect()) {
                 this.binaryTree.redrawImage();
@@ -394,11 +397,11 @@ public class App implements ActionListener {
             } else if (btnNextStepBT.equals(source)) {
                 if (this.binaryTree.getAlgorithmRunning()) {
                     this.binaryTree.nextStep();
-                    this.txtFieldGraph.setText(this.binaryTree.getStrText());
+                    this.txtFieldBT.setText(this.binaryTree.getStrText());
                 } else {
                     setVisibleButtonsBT(true);
                     this.binaryTree.redrawImage();
-                    this.txtFieldGraph.setText(MAIN_INFO);
+                    this.txtFieldBT.setText(MAIN_INFO);
                 }
             } else if (btnDeleteBT.equals(source)) {
                 this.binaryTree.redrawImage();
