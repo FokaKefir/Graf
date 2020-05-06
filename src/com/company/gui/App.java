@@ -72,8 +72,8 @@ public class App implements ActionListener {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.add(this.btnGraph);
         buttonPanel.add(this.btnBinaryTree);
+        buttonPanel.add(this.btnGraph);
 
         ImageIcon image = new ImageIcon(getClass().getResource("images/graph.png"));
 
@@ -133,6 +133,8 @@ public class App implements ActionListener {
         this.btnNextStepGraph.addActionListener(this);
         this.btnDeleteGraph.addActionListener(this);
         this.btnBackGraph.addActionListener(this);
+
+        setVisibleButtonsGraph(true);
 
         this.txtFieldGraph = new JTextField(5);
         this.txtFieldGraph.setFont(new Font("Arial", Font.BOLD, 20));
@@ -216,6 +218,8 @@ public class App implements ActionListener {
         this.btnDeleteBT.addActionListener(this);
         this.btnBackBT.addActionListener(this);
 
+        setVisibleButtonsBT(true);
+
         this.txtFieldBT = new JTextField(5);
         this.txtFieldBT.setFont(new Font("Arial", Font.BOLD, 20));
         this.txtFieldBT.setText(MAIN_INFO);
@@ -261,7 +265,6 @@ public class App implements ActionListener {
         initGraph();
         initBinaryTree();
 
-        setVisibleButtons(true);
 
         this.frame = new JFrame("App");
         this.frame.setContentPane(this.mainPanelMenu);
@@ -303,21 +306,21 @@ public class App implements ActionListener {
                 this.graph.setBlnCanDrawPoint(false);
                 this.graph.setAlgorithmType(Graph.BREADTH_FIRST_SEARCH);
                 this.txtFieldGraph.setText("Choose the first point!");
-                setVisibleButtons(false);
+                setVisibleButtonsGraph(false);
             } else if (btnDepthFirstSearch.equals(source)) {
                 this.graph.redrawImage();
                 this.graph.setBlnCanConnect(false);
                 this.graph.setBlnCanDrawPoint(false);
                 this.graph.setAlgorithmType(Graph.DEPTH_FIRST_SEARCH);
                 this.txtFieldGraph.setText("Choose the first point!");
-                setVisibleButtons(false);
+                setVisibleButtonsGraph(false);
             } else if (btnDijkstra.equals(source)) {
                 this.graph.redrawImage();
                 this.graph.setBlnCanConnect(false);
                 this.graph.setBlnCanDrawPoint(false);
                 this.graph.setAlgorithmType(Graph.DIJKSTRA);
                 this.txtFieldGraph.setText("Choose the first point!");
-                setVisibleButtons(false);
+                setVisibleButtonsGraph(false);
             } else if (btnKruskal.equals(source)) {
                 this.graph.redrawImage();
                 this.graph.setBlnCanConnect(false);
@@ -325,7 +328,7 @@ public class App implements ActionListener {
                 this.graph.setAlgorithmType(Graph.KRUSKAL);
                 this.graph.kruskal();
                 this.txtFieldGraph.setText("Sorting the connection list!");
-                setVisibleButtons(false);
+                setVisibleButtonsGraph(false);
             } else if (btnAddPointGraph.equals(source)) {
                 this.graph.redrawImage();
                 this.graph.setBlnCanConnect(false);
@@ -344,7 +347,7 @@ public class App implements ActionListener {
                     this.graph.nextStep();
                     this.txtFieldGraph.setText(this.graph.getStrText());
                 } else {
-                    setVisibleButtons(true);
+                    setVisibleButtonsGraph(true);
                     this.graph.redrawImage();
                     this.txtFieldGraph.setText(MAIN_INFO);
                 }
@@ -367,18 +370,21 @@ public class App implements ActionListener {
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.PREORDER);
                 this.binaryTree.preorder();
+                setVisibleButtonsBT(false);
             } else if (btnInorder.equals(source)) {
                 this.binaryTree.redrawImage();
                 this.binaryTree.setBlnCanDrawPoint(false);
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.INORDER);
                 this.binaryTree.inorder();
+                setVisibleButtonsBT(false);
             } else if (btnPostOrder.equals(source)) {
                 this.binaryTree.redrawImage();
                 this.binaryTree.setBlnCanDrawPoint(false);
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.POSTORDER);
                 this.binaryTree.postorder();
+                setVisibleButtonsBT(false);
             } else if (btnAddPointBT.equals(source) && !this.binaryTree.getBlnCanConnect()) {
                 this.binaryTree.redrawImage();
                 this.binaryTree.setBlnCanDrawPoint(true);
@@ -390,7 +396,7 @@ public class App implements ActionListener {
                     this.binaryTree.nextStep();
                     this.txtFieldGraph.setText(this.binaryTree.getStrText());
                 } else {
-                    setVisibleButtons(true);
+                    setVisibleButtonsBT(true);
                     this.binaryTree.redrawImage();
                     this.txtFieldGraph.setText(MAIN_INFO);
                 }
@@ -416,16 +422,17 @@ public class App implements ActionListener {
         this.frame.validate();
     }
 
-    private void setVisibleButtons(boolean cond){
+    private void setVisibleButtonsGraph(boolean cond){
         this.btnAddPointGraph.setVisible(cond);
         this.btnAddConnectionGraph.setVisible(cond);
         this.btnDeleteGraph.setVisible(cond);
         this.btnNextStepGraph.setVisible(!cond);
+    }
 
+    private void setVisibleButtonsBT(boolean cond){
         this.btnAddPointBT.setVisible(cond);
         this.btnDeleteBT.setVisible(cond);
         this.btnNextStepBT.setVisible(!cond);
-
     }
 
     // endregion

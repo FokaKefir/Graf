@@ -18,8 +18,6 @@ public class BinaryTree extends JComponent {
 
     private static final int EMPTY = -1;
     private static final int NOT_DEFINED = -1;
-    private static final double NULL_MESSAGE = -1;
-    private static final boolean IT_WAS = true;
     private static final boolean LEFT = false;
     private static final boolean RIGHT = true;
     private static final int RADIUS = 50;
@@ -27,6 +25,9 @@ public class BinaryTree extends JComponent {
     public static final int PREORDER = 1;
     public static final int INORDER = 2;
     public static final int POSTORDER = 3;
+    private static final int GO_LEFT = 0;
+    private static final int GO_RIGHT = 1;
+    private static final int GO_FATHER = 2;
 
     // endregion
 
@@ -51,8 +52,10 @@ public class BinaryTree extends JComponent {
 
     private String strText;
     private boolean algorithmRunning;
+    private TreeNode tmpNode;
     private Vector<Integer> fatherList;
-
+    private List<Integer> output;
+    private int[] directionForNumber;
 
     // endregion
 
@@ -525,6 +528,29 @@ public class BinaryTree extends JComponent {
         }
     }
 
+    private TreeNode findRootByIndex(TreeNode root, int index){
+        if(root == null){
+            return null;
+        }else {
+
+            if (root.getVal() == index) {
+                return root;
+            } else {
+                TreeNode findLeft = findRootByIndex(root.getLeft(), index);
+                if(findLeft != null){
+                    return findLeft;
+                }
+
+                TreeNode findRight = findRootByIndex(root.getRight(), index);
+                if(findRight != null){
+                    return findRight;
+                }
+            }
+        }
+
+        return null;
+    }
+
     // endregion
 
     // region 12. Getters and Setters
@@ -562,6 +588,14 @@ public class BinaryTree extends JComponent {
         return blnCanConnect;
     }
 
+    private String getMessage() {
+        StringBuilder mess = new StringBuilder("Output: ");
+        for (Integer num : this.output){
+            mess.append(num).append(" ");
+        }
+        return String.valueOf(mess);
+    }
+
     // endregion
 
     // region 13. Father List
@@ -589,11 +623,54 @@ public class BinaryTree extends JComponent {
     // region 14. Preorder
 
     private void preorderNext(){
+        int num = this.tmpNode.getVal();
+
+        switch (this.directionForNumber[num]){
+            case GO_LEFT:
+                this.output.add(num);
+                TreeNode leftNode = this.tmpNode.getLeft();
+                if(leftNode != null){
+                    this.tmpNode = leftNode;
+                }else{
+                    // TODO write the string
+                }
+                break;
+
+            case GO_RIGHT:
+                TreeNode rightNode = this.tmpNode.getRight();
+                if(rightNode != null){
+                    this.tmpNode = rightNode;
+                }else{
+                    // TODO write the string
+                }
+                break;
+
+            case GO_FATHER:
+                TreeNode fatherNode;
+                if(this.fatherList.get(num) == null)
+                    fatherNode = null;
+                else
+                    fatherNode = findRootByIndex(this.root, this.fatherList.get(num));
+
+                if(fatherNode != null){
+                    this.tmpNode = fatherNode;
+                }else{
+                    JOptionPane.showMessageDialog(this, getMessage());
+                    this.algorithmRunning = false;
+                    // TODO write the string
+                }
+                break;
+        }
+
+        this.directionForNumber[num]++;
 
     }
 
     public void preorder(){
         createFatherList();
+        this.directionForNumber = new int[this.numberPoints];
+        this.output = new ArrayList<>();
+        this.tmpNode = this.root;
 
         this.algorithmRunning = true;
     }
