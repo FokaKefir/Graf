@@ -53,6 +53,7 @@ public class BinaryTree extends JComponent {
     private String strText;
     private boolean algorithmRunning;
     private TreeNode tmpNode;
+    private TreeNode tmpRoot;
     private Vector<Integer> fatherList;
     private List<Integer> output;
     private int[] directionForNumber;
@@ -382,25 +383,45 @@ public class BinaryTree extends JComponent {
 
     // region 9. Redraw functions
 
+    public void redrawImage(TreeNode root, Color color){
+        redrawPoints(root, color);
+        redrawConnections(root, color);
+    }
+
     public void redrawImage(){
         clearImage();
         redrawPoints();
-        redrawConnections(this.root);
+        redrawConnections(this.root, Color.BLACK);
     }
 
-    private void redrawConnections(TreeNode root) {
+    private void redrawConnections(TreeNode root, Color color) {
         if(root != null){
             int from = root.getVal();
             if (root.getLeft() != null) {
                 int to = root.getLeft().getVal();
-                drawConnection(from, to, Color.BLACK);
+                drawConnection(from, to, color);
             }
             if(root.getRight() != null){
                 int to = root.getRight().getVal();
-                drawConnection(from, to, Color.BLACK);
+                drawConnection(from, to, color);
             }
-            redrawConnections(root.getLeft());
-            redrawConnections(root.getRight());
+            redrawConnections(root.getLeft(), color);
+            redrawConnections(root.getRight(), color);
+        }
+    }
+
+    private void redrawPoints(TreeNode root, Color color){
+        if(root != null){
+            int num = root.getVal();
+            PointPosition point = this.pointPositionList.get(num);
+            int x = point.getX();
+            int y = point.getY();
+            if(this.matPoint[x][y] == point.getName()) {
+                drawCircle(x, y, color);
+            }
+
+            redrawPoints(root.getLeft(), color);
+            redrawPoints(root.getRight(), color);
         }
     }
 
@@ -447,35 +468,6 @@ public class BinaryTree extends JComponent {
 
         this.pointPositionList.remove(num);
         this.numberPoints--;
-    }
-
-    private void deleteNode(TreeNode root, int num, boolean[] b){
-        if(root != null){
-            if(root.getVal() == num){
-                b[root.getVal()] = true;
-                this.childrenList.set(num, new Children());
-
-                if(root.getLeft() != null)
-                    deleteNode(root.getLeft(), root.getLeft().getVal(), b);
-                if(root.getRight() != null)
-                    deleteNode(root.getRight(), root.getRight().getVal(), b);
-
-            }else{
-                deleteNode(root.getLeft(), num, b);
-                deleteNode(root.getRight(), num, b);
-                Children children = this.childrenList.get(root.getVal());
-
-                if(root.getLeft() != null && root.getLeft().getVal() == num) {
-                    root.setLeft(null);
-                    children.setLeft(Children.NOT_DEFINED);
-                }
-
-                if(root.getRight() != null && root.getRight().getVal() == num) {
-                    root.setRight(null);
-                    children.setRight(Children.NOT_DEFINED);
-                }
-            }
-        }
     }
 
     private void deletePoint(int x1, int y1){
@@ -549,6 +541,50 @@ public class BinaryTree extends JComponent {
         }
 
         return null;
+    }
+
+    private void deleteNode(TreeNode root, int num, boolean[] b){
+        if(root != null){
+            if(root.getVal() == num){
+                b[root.getVal()] = true;
+                this.childrenList.set(num, new Children());
+
+                if(root.getLeft() != null)
+                    deleteNode(root.getLeft(), root.getLeft().getVal(), b);
+                if(root.getRight() != null)
+                    deleteNode(root.getRight(), root.getRight().getVal(), b);
+
+            }else{
+                deleteNode(root.getLeft(), num, b);
+                deleteNode(root.getRight(), num, b);
+                Children children = this.childrenList.get(root.getVal());
+
+                if(root.getLeft() != null && root.getLeft().getVal() == num) {
+                    root.setLeft(null);
+                    children.setLeft(Children.NOT_DEFINED);
+                }
+
+                if(root.getRight() != null && root.getRight().getVal() == num) {
+                    root.setRight(null);
+                    children.setRight(Children.NOT_DEFINED);
+                }
+            }
+        }
+    }
+
+    private void deleteNode(TreeNode root, int father, int child){
+        if(root != null){
+            if(root.getVal() == father){
+                if(root.getLeft() != null && root.getLeft().getVal() == child){
+                    root.setLeft(null);
+                }else if(root.getRight() != null && root.getRight().getVal() == child){
+                    root.setRight(null);
+                }
+            }else{
+                deleteNode(root.getLeft(), father, child);
+                deleteNode(root.getRight(), father, child);
+            }
+        }
     }
 
     // endregion
@@ -630,7 +666,12 @@ public class BinaryTree extends JComponent {
                 this.output.add(num);
                 TreeNode leftNode = this.tmpNode.getLeft();
                 if(leftNode != null){
+                    saveToNode(this.tmpRoot, num, leftNode.getVal(), LEFT);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
                     this.tmpNode = leftNode;
+
+                    this.strText = "";
                 }else{
                     // TODO write the string
                 }
@@ -639,6 +680,9 @@ public class BinaryTree extends JComponent {
             case GO_RIGHT:
                 TreeNode rightNode = this.tmpNode.getRight();
                 if(rightNode != null){
+                    saveToNode(this.tmpRoot, num, rightNode.getVal(), RIGHT);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
                     this.tmpNode = rightNode;
                 }else{
                     // TODO write the string
@@ -653,8 +697,12 @@ public class BinaryTree extends JComponent {
                     fatherNode = findRootByIndex(this.root, this.fatherList.get(num));
 
                 if(fatherNode != null){
+                    deleteNode(this.tmpRoot, fatherNode.getVal(), num);
+                    redrawImage();
+                    redrawImage(this.tmpRoot, Color.RED);
                     this.tmpNode = fatherNode;
                 }else{
+                    redrawImage();
                     JOptionPane.showMessageDialog(this, getMessage());
                     this.algorithmRunning = false;
                     // TODO write the string
@@ -671,6 +719,8 @@ public class BinaryTree extends JComponent {
         this.directionForNumber = new int[this.numberPoints];
         this.output = new ArrayList<>();
         this.tmpNode = this.root;
+        this.tmpRoot = new TreeNode(this.root.getVal());
+        redrawImage(this.tmpRoot, Color.RED);
 
         this.algorithmRunning = true;
     }
