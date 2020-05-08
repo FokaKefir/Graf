@@ -84,7 +84,7 @@ public class BinaryTree extends JComponent {
                 int x = event.getX();
                 int y = event.getY();
 
-                if(blnCanDrawPoint) {
+                if(blnCanDrawPoint && matPoint[x][y] == EMPTY) {
                     setNewPoint(x, y);
                 } else if(blnCanConnect) {
                     setNewConnection(x, y);
@@ -129,7 +129,8 @@ public class BinaryTree extends JComponent {
 
     private void setNewPoint(int x, int y){
         drawAndSetPoint(x, y);
-        this.blnCanDrawPoint = false;
+        if(this.pointPositionList.size() != 1)
+            this.blnCanDrawPoint = false;
         redrawPoints();
     }
 
@@ -146,6 +147,7 @@ public class BinaryTree extends JComponent {
 
                 this.clearIndexes();
                 this.blnCanConnect = false;
+                this.blnCanDrawPoint = true;
                 redrawImage();
             }
         }
@@ -154,7 +156,7 @@ public class BinaryTree extends JComponent {
     private void switchDelete(int x, int y){
         if(this.matPoint[x][y] != EMPTY){
             deletePoint(x, y);
-            this.blnCanDelete = false;
+            //this.blnCanDelete = false;
         }
     }
 
@@ -607,9 +609,10 @@ public class BinaryTree extends JComponent {
         if(this.blnCanConnect){
             removeLastPoint();
             redrawImage();
+            this.blnCanDrawPoint = false;
+        }else {
+            this.blnCanDrawPoint = blnCanDrawPoint;
         }
-
-        this.blnCanDrawPoint = blnCanDrawPoint;
     }
 
     public boolean getAlgorithmRunning() {
@@ -622,6 +625,14 @@ public class BinaryTree extends JComponent {
 
     public boolean getBlnCanConnect() {
         return blnCanConnect;
+    }
+
+    public boolean getBlnCanDrawPoint() {
+        return blnCanDrawPoint;
+    }
+
+    public boolean getBlnCanDelete() {
+        return blnCanDelete;
     }
 
     private String getMessage() {

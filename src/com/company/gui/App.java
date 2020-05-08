@@ -332,14 +332,14 @@ public class App implements ActionListener {
             } else if (btnAddPointGraph.equals(source)) {
                 this.graph.redrawImage();
                 this.graph.setBlnCanConnect(false);
-                this.graph.setBlnCanDrawPoint(true);
+                this.graph.setBlnCanDrawPoint(!this.graph.getBlnCanDrawPoint());
                 this.graph.setBlnCanDelete(false);
                 this.graph.setAlgorithmType(Graph.NOT_TYPE);
             } else if (btnAddConnectionGraph.equals(source)) {
                 this.graph.redrawImage();
                 this.graph.clearIndexes();
                 this.graph.setBlnCanDrawPoint(false);
-                this.graph.setBlnCanConnect(true);
+                this.graph.setBlnCanConnect(!this.graph.getBlnCanConnect());
                 this.graph.setBlnCanDelete(false);
                 this.graph.setAlgorithmType(Graph.NOT_TYPE);
             } else if (btnNextStepGraph.equals(source)) {
@@ -356,7 +356,7 @@ public class App implements ActionListener {
                 this.graph.clearIndexes();
                 this.graph.setBlnCanDrawPoint(false);
                 this.graph.setBlnCanConnect(false);
-                this.graph.setBlnCanDelete(true);
+                this.graph.setBlnCanDelete(!this.graph.getBlnCanDelete());
                 this.graph.setAlgorithmType(Graph.NOT_TYPE);
             } else if (btnBackGraph.equals(source)) {
                 setNewPanel(this.mainPanelMenu);
@@ -388,9 +388,9 @@ public class App implements ActionListener {
                 this.binaryTree.postorder();
                 this.txtFieldBT.setText("The algorithm is beginning from the root.");
                 setVisibleButtonsBT(false);
-            } else if (btnAddPointBT.equals(source) && !this.binaryTree.getBlnCanConnect()) {
+            } else if (btnAddPointBT.equals(source)) {
                 this.binaryTree.redrawImage();
-                this.binaryTree.setBlnCanDrawPoint(true);
+                this.binaryTree.setBlnCanDrawPoint(!this.binaryTree.getBlnCanDrawPoint());
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setBlnCanDelete(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.NOT_TYPE);
@@ -407,7 +407,7 @@ public class App implements ActionListener {
                 this.binaryTree.redrawImage();
                 this.binaryTree.setBlnCanDrawPoint(false);
                 this.binaryTree.setBlnCanConnect(false);
-                this.binaryTree.setBlnCanDelete(true);
+                this.binaryTree.setBlnCanDelete(!this.binaryTree.getBlnCanDelete());
                 this.binaryTree.setAlgorithmType(BinaryTree.NOT_TYPE);
             } else if (btnBackBT.equals(source)) {
                 setNewPanel(this.mainPanelMenu);

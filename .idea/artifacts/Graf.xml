@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Graf">
+    <output-path>$PROJECT_DIR$/out/artifacts/Graf</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="G:\Adatok\Minden ami info\Java\Graf\src\com\company\gui\App.java" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="nativeBundle" value="all" />
+        <option name="title" value="App" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Graf.jar">
+        <element id="module-output" name="Graf" />
+      </element>
+    </root>
+  </artifact>
+</component>

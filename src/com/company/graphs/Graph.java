@@ -86,7 +86,7 @@ public class Graph extends JComponent {
                 int x = event.getX();
                 int y = event.getY();
 
-                if(blnCanDrawPoint) {
+                if(blnCanDrawPoint && matPoint[x][y] == EMPTY) {
                     setNewPoint(x, y);
                 } else if(blnCanConnect) {
                     setNewConnection(x, y);
@@ -143,7 +143,7 @@ public class Graph extends JComponent {
 
     private void setNewPoint(int x, int y){
         drawAndSetPoint(x, y);
-        this.blnCanDrawPoint = false;
+        //this.blnCanDrawPoint = false;
         redrawPoints();
     }
 
@@ -161,7 +161,7 @@ public class Graph extends JComponent {
                 }
 
                 this.clearIndexes();
-                this.blnCanConnect = false;
+                //this.blnCanConnect = false;
                 redrawImage();
             }
         }
@@ -170,10 +170,10 @@ public class Graph extends JComponent {
     private void switchDelete(int x, int y){
         if(this.matPoint[x][y] != EMPTY){
             deletePoint(x, y);
-            this.blnCanDelete = false;
+            //this.blnCanDelete = false;
         } else if(this.matConnection[x][y] != EMPTY){
             deleteConnection(x, y);
-            this.blnCanDelete = false;
+            //this.blnCanDelete = false;
         }
     }
 
@@ -617,6 +617,18 @@ public class Graph extends JComponent {
                 return connection.getWeight();
         }
         return 0.0;
+    }
+
+    public boolean getBlnCanDrawPoint() {
+        return blnCanDrawPoint;
+    }
+
+    public boolean getBlnCanConnect() {
+        return blnCanConnect;
+    }
+
+    public boolean getBlnCanDelete() {
+        return blnCanDelete;
     }
 
     // endregion
