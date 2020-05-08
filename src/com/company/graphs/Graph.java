@@ -683,7 +683,7 @@ public class Graph extends JComponent {
             int index = queue.remove();
             drawCircle(pointPositionList.get(index).getX(), pointPositionList.get(index).getY(), Color.RED);
             int number = watchNeighborBFS(index, b, queue);
-            this.strText = "Watching the neighbor(s) of the " + String.valueOf(index) + " point and finding " + number + " new neighbor(s).";
+            this.strText = "Watching the neighbor(s) of the point " + String.valueOf(index) + "  and finding " + number + " new neighbor(s).";
         }
         if(queue.isEmpty()){
             this.algorithmRunning = false;
@@ -717,7 +717,7 @@ public class Graph extends JComponent {
                 drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
                 drawConnection(index, neighbor, Color.RED, this.getWeightFromConnectionList(index, neighbor));
 
-                this.strText = "Watching the neighbor(s) of the " + index + " point and finding the " + neighbor + " point.";
+                this.strText = "Watching the neighbor(s) of the point " + index + " and finding the " + neighbor + " point.";
                 return FIND_NEW_NEIGHBOR;
             }
         }
@@ -732,7 +732,7 @@ public class Graph extends JComponent {
             drawCircle(pointPositionList.get(index), Color.RED);
             if(cond != FIND_NEW_NEIGHBOR){
                 stack.pop();
-                this.strText = "Watching the neighbor(s) of the " + index + " point and there is no neighbor.";
+                this.strText = "Watching the neighbor(s) of the point " + index + " and there is no neighbor.";
             }
         }
         if(stack.isEmpty()){
@@ -825,9 +825,9 @@ public class Graph extends JComponent {
                 continue;
 
             if(this.distance[i] != INFINITY)
-                mess.append("From the ").append(first).append(" point to the ").append(i).append(" point the weight of the shortest way is ").append(this.distance[i]).append(".\n");
+                mess.append("From the point ").append(first).append(" to the point ").append(i).append(" the weight of the shortest way is ").append(this.distance[i]).append(".\n");
             else
-                mess.append("Between the ").append(first).append(" and the ").append(i).append(" points isn't way\n");
+                mess.append("Between the points ").append(first).append(" and ").append(i).append(" there isn't any way\n");
         }
         return mess.toString();
     }
@@ -839,14 +839,20 @@ public class Graph extends JComponent {
             String message = watchNeighbourDij(ind, this.distance);
             this.b[ind] = IT_WAS;
             if(!message.equals("")) {
-                this.strText = "From the " + ind + " to " + message + " point(s) the actual shortest way(s).";
+                this.strText = "From the point" + ind + " to " + message + " the actual shortest way(s).";
                 drawWay(ind);
             }else{
-                this.strText = "From the " + ind + " point doesn't exist more way.";
+                this.strText = "From the point " + ind + " there is no more way.";
             }
         }
         if(ind == -1){
-            JOptionPane.showMessageDialog(this, getMessage());
+            JOptionPane pane = new JOptionPane();
+            JDialog dialog = pane.createDialog(this,"Output");
+            pane.setMessage(getMessage());
+            dialog.setSize(new Dimension(500,300));
+            dialog.show();
+            //JOptionPane.showMessageDialog(this, getMessage());
+
             this.algorithmRunning = false;
         }
     }
@@ -916,9 +922,9 @@ public class Graph extends JComponent {
                 drawCircle(pointPositionList.get(to), Color.RED);
                 drawConnection(from, to, Color.RED, weight);
 
-                this.strText = "Watching the " + String.valueOf(from) + " and the " + String.valueOf(to) + " points and connect them.";
+                this.strText = "Watching the point " + String.valueOf(from) + " and  " + String.valueOf(to) + " and connect them.";
             } else{
-                this.strText = "Watching the " + String.valueOf(from) + " and the " + String.valueOf(to) + " points and don't connect them.";
+                this.strText = "Watching the point" + String.valueOf(from) + " and the " + String.valueOf(to) + "  and don't connect them.";
             }
 
             this.indexKruskal++;

@@ -21,7 +21,7 @@ public class App implements ActionListener {
     private static final int BUTTON_WEIGHT = 200;
     private static final int BUTTON_HEIGHT = 50;
 
-    private static final String MAIN_INFO = "Add the points and the connections, then choose the algorithm type!";
+    private static final String MAIN_INFO = "Add new points and connections, then choose the algorithm type!";
 
     // endregion
 
@@ -82,6 +82,8 @@ public class App implements ActionListener {
         this.mainPanelMenu.setBackground(Color.WHITE);
         this.mainPanelMenu.add(new JLabel(image), BorderLayout.CENTER);
         this.mainPanelMenu.add(buttonPanel, BorderLayout.SOUTH);
+
+
     }
 
     private void initGraph(){
@@ -370,7 +372,7 @@ public class App implements ActionListener {
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.PREORDER);
                 this.binaryTree.preorder();
-                this.txtFieldBT.setText("The algorithm is beginning from the root.");
+                this.txtFieldBT.setText("The algorithm starts from the root.");
                 setVisibleButtonsBT(false);
             } else if (btnInorder.equals(source)) {
                 this.binaryTree.redrawImage();
@@ -378,7 +380,7 @@ public class App implements ActionListener {
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.INORDER);
                 this.binaryTree.inorder();
-                this.txtFieldBT.setText("The algorithm is beginning from the root.");
+                this.txtFieldBT.setText("The algorithm begins from the root.");
                 setVisibleButtonsBT(false);
             } else if (btnPostorder.equals(source)) {
                 this.binaryTree.redrawImage();
@@ -386,7 +388,7 @@ public class App implements ActionListener {
                 this.binaryTree.setBlnCanConnect(false);
                 this.binaryTree.setAlgorithmType(BinaryTree.POSTORDER);
                 this.binaryTree.postorder();
-                this.txtFieldBT.setText("The algorithm is beginning from the root.");
+                this.txtFieldBT.setText("The algorithm begins from the root.");
                 setVisibleButtonsBT(false);
             } else if (btnAddPointBT.equals(source)) {
                 this.binaryTree.redrawImage();
