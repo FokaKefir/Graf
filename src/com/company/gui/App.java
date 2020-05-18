@@ -129,6 +129,8 @@ public class App implements ActionListener {
 
         this.btnBackGraph.setIcon(this.img);
 
+        //TODO Write tool tip
+
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
         this.btnDijkstra.addActionListener(this);
@@ -213,6 +215,8 @@ public class App implements ActionListener {
         };
 
         this.btnBackBT.setIcon(this.img);
+
+        // TODO Write tool tip
 
         this.btnPreorder.addActionListener(this);
         this.btnInorder.addActionListener(this);
