@@ -67,6 +67,9 @@ public class App implements ActionListener {
         this.btnGraph = new JButton("Graph");
         this.btnBinaryTree = new JButton("Binary Tree");
 
+        this.btnGraph.setToolTipText("Graph");
+        this.btnBinaryTree.setToolTipText("Binary tree");
+
         this.btnGraph.addActionListener(this);
         this.btnBinaryTree.addActionListener(this);
 
