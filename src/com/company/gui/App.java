@@ -92,8 +92,8 @@ public class App implements ActionListener {
     private void initGraph(){
         this.graph = new Graph();
 
-        this.btnAddPointGraph = new JButton("Add new point");
-        this.btnAddConnectionGraph = new JButton("Add new connection");
+        this.btnAddPointGraph = new JButton("Add new points");
+        this.btnAddConnectionGraph = new JButton("Add new edge");
         this.btnNextStepGraph = new JButton("Next");
         this.btnDeleteGraph = new JButton("Delete");
         this.btnBreadthFirstSearch = new JButton("Breadth-First Search"){
@@ -128,8 +128,11 @@ public class App implements ActionListener {
         };
 
         this.btnBackGraph.setIcon(this.img);
-
-        //TODO Write tool tip
+        this.btnBreadthFirstSearch.setToolTipText("<html>" + "Breadth-First Search is a traversing algorithm"+ "<br>" + " where you should start traversing from a selected point" + "<br>"  + "and traverse the graph layerwise thus exploring the neighbour points." + "</html>");
+        this.btnDepthFirstSearch.setToolTipText("<html>" + "Depth-First Search explores all the points" + "<br>" + "by going forward if possible or uses backtracking." + "</html>");
+        this.btnDijkstra.setToolTipText("<html>"+ "Dijkstra's algorithm is an algorithm for finding"+ "<br>" +  "the shortest paths between points in a graph."+ "</html>");
+        this.btnKruskal.setToolTipText("<html>" + "Kruskal's algorithm is a minimum-spanning-tree algorithm" + "<br>" + "which finds an edge of the least possible weight that connects any two trees in the graph." + "</html>");
+        this.btnDeleteGraph.setToolTipText("Delete points and edges");
 
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
@@ -216,7 +219,12 @@ public class App implements ActionListener {
 
         this.btnBackBT.setIcon(this.img);
 
-        // TODO Write tool tip
+
+        this.btnDeleteBT.setToolTipText( "<html>" + "Delete nodes" + "</html>" );
+        this.btnPreorder.setToolTipText("<html>" + "In this traversal method, the root node is visited first,"+ "<br>"+ "then the left subtree and finally the right subtree." +"</html>");
+        this.btnInorder.setToolTipText("<html>" + "In this traversal method, the left subtree is visited first," + "<br>" + "then the root and later the right sub-tree." + "</html>" );
+        this.btnPostorder.setToolTipText("<html>"+  "First we traverse the left subtree,"+"<br>"+"then the right subtree and finally the root node." + "</html>");
+
 
         this.btnPreorder.addActionListener(this);
         this.btnInorder.addActionListener(this);
@@ -268,10 +276,11 @@ public class App implements ActionListener {
 
     public App() {
         this.img = new ImageIcon(getClass().getResource("images/back.png"));
-        this.img = new ImageIcon(this.img.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  java.awt.Image.SCALE_SMOOTH));
-        UIManager.put("ToolTip.background", Color.BLUE);
+        this.img = new ImageIcon(this.img.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  Image.SCALE_SMOOTH));
+        UIManager.put("ToolTip.background", Color.WHITE);
         UIManager.put("ToolTip.foreground", Color.BLACK);
         UIManager.put("ToolTip.font",new Font("Arial", Font.BOLD, 14));
+        ToolTipManager.sharedInstance().setDismissDelay(60000);
         initMenu();
         initGraph();
         initBinaryTree();
