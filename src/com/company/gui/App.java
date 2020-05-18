@@ -269,7 +269,9 @@ public class App implements ActionListener {
     public App() {
         this.img = new ImageIcon(getClass().getResource("images/back.png"));
         this.img = new ImageIcon(this.img.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  java.awt.Image.SCALE_SMOOTH));
-
+        UIManager.put("ToolTip.background", Color.BLUE);
+        UIManager.put("ToolTip.foreground", Color.BLACK);
+        UIManager.put("ToolTip.font",new Font("Arial", Font.BOLD, 14));
         initMenu();
         initGraph();
         initBinaryTree();
