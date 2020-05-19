@@ -18,7 +18,7 @@ public class App implements ActionListener {
     private static final int BUTTON_WEIGHT = 200;
     private static final int BUTTON_HEIGHT = 50;
 
-    private static final String MAIN_INFO = "Add new points and connections, then choose the algorithm type!";
+    private static final String MAIN_INFO = "Add new points and edges, then choose the algorithm type!";
 
     // endregion
 
@@ -349,7 +349,7 @@ public class App implements ActionListener {
                 this.graph.setBlnCanDrawPoint(false);
                 this.graph.setAlgorithmType(Graph.KRUSKAL);
                 this.graph.kruskal();
-                this.txtFieldGraph.setText("Sorting the connection list!");
+                this.txtFieldGraph.setText("Sorting the edges list!");
                 setVisibleButtonsGraph(false);
             } else if (btnAddPointGraph.equals(source)) {
                 this.graph.redrawImage();
