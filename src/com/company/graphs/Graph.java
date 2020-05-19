@@ -151,13 +151,12 @@ public class Graph extends JComponent {
         if(matPoint[x][y] != EMPTY){
             if(this.indexFromPoint == NOT_DEFINED){
                 this.indexFromPoint = matPoint[x][y];
-            } else if(this.indexToPoint == NOT_DEFINED && matPoint[x][y] != this.indexFromPoint){
+            } else if(this.indexToPoint == NOT_DEFINED && matPoint[x][y] != this.indexFromPoint && getWeightFromConnectionList(this.indexFromPoint, this.matPoint[x][y]) == -1){
                 this.indexToPoint = matPoint[x][y];
                 double weight = openWindow();
 
-                if (weight != NULL_MESSAGE) {
+                if (weight != NULL_MESSAGE && weight >= 0) {
                     drawAndSetConnection(weight);
-
                 }
 
                 this.clearIndexes();
@@ -616,7 +615,7 @@ public class Graph extends JComponent {
             if((connection.getFromPoint() == a && connection.getToPoint() == b) || (connection.getFromPoint() == b && connection.getToPoint() == a))
                 return connection.getWeight();
         }
-        return 0.0;
+        return -1.0;
     }
 
     public boolean getBlnCanDrawPoint() {
@@ -629,6 +628,15 @@ public class Graph extends JComponent {
 
     public boolean getBlnCanDelete() {
         return blnCanDelete;
+    }
+
+    public String getStrConnectionList(){
+        StringBuilder strConList = new StringBuilder();
+
+        for(Connection connection : this.connectionList){
+            strConList.append(connection.getFromPoint()).append(" - ").append(connection.getToPoint()).append("\n");
+        }
+        return strConList.toString();
     }
 
     // endregion

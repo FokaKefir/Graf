@@ -1,6 +1,7 @@
 package com.company.graphs;
 
 import com.company.model.Children;
+import com.company.model.Connection;
 import com.company.model.PointPosition;
 import com.company.model.TreeNode;
 
@@ -641,6 +642,19 @@ public class BinaryTree extends JComponent {
             mess.append(num).append(" ");
         }
         return String.valueOf(mess);
+    }
+
+    public String getStrFatherList(){
+        StringBuilder strFatherList = new StringBuilder();
+
+        createFatherList();
+        for (int i = 0; i < this.fatherList.size(); i++) {
+            if(this.fatherList.get(i) != null){
+                strFatherList.append(i).append(" => ").append(this.fatherList.get(i)).append("\n");
+            }
+        }
+
+        return String.valueOf(strFatherList);
     }
 
     // endregion

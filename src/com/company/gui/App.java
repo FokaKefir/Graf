@@ -8,7 +8,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
-public class App implements ActionListener {
+public class App extends MouseAdapter implements ActionListener {
 
     // region 0. Constants
 
@@ -32,6 +32,7 @@ public class App implements ActionListener {
 
     private JPanel mainPanelGraph;
     private JTextField txtFieldGraph;
+    private JTextArea txtListGraph;
     private JButton btnBreadthFirstSearch;
     private JButton btnDepthFirstSearch;
     private JButton btnDijkstra;
@@ -45,6 +46,7 @@ public class App implements ActionListener {
 
     private JPanel mainPanelBinaryTree;
     private JTextField txtFieldBT;
+    private JTextArea txtListBT;
     private JButton btnPreorder;
     private JButton btnInorder;
     private JButton btnPostorder;
@@ -88,6 +90,7 @@ public class App implements ActionListener {
 
     private void initGraph(){
         this.graph = new Graph();
+        this.graph.addMouseListener(this);
 
         this.btnAddPointGraph = new JButton("Add new points");
         this.btnAddConnectionGraph = new JButton("Add new edge");
@@ -125,6 +128,7 @@ public class App implements ActionListener {
         };
 
         this.btnBackGraph.setIcon(this.img);
+
         this.btnBreadthFirstSearch.setToolTipText("<html>" + "Breadth-First Search is a traversing algorithm"+ "<br>" + " where you should start traversing from a selected point" + "<br>"  + "and traverse the graph layerwise thus exploring the neighbour points." + "</html>");
         this.btnDepthFirstSearch.setToolTipText("<html>" + "Depth-First Search explores all the points" + "<br>" + "by going forward if possible or uses backtracking." + "</html>");
         this.btnDijkstra.setToolTipText("<html>"+ "Dijkstra's algorithm is an algorithm for finding"+ "<br>" +  "the shortest paths between points in a graph."+ "</html>");
@@ -144,12 +148,17 @@ public class App implements ActionListener {
         setVisibleButtonsGraph(true);
 
         this.txtFieldGraph = new JTextField(5);
-        this.txtFieldGraph.setFont(new Font("Arial", Font.BOLD, 20));
+        this.txtFieldGraph.setFont(new Font("Calibri", Font.BOLD, 22));
         this.txtFieldGraph.setText(MAIN_INFO);
         this.txtFieldGraph.setEnabled(false);
         this.txtFieldGraph.setBorder(new LineBorder(Color.WHITE));
         this.txtFieldGraph.setDisabledTextColor(Color.BLACK);
         this.txtFieldGraph.setHorizontalAlignment(JTextField.CENTER);
+
+        this.txtListGraph = new JTextArea(100, 16);
+        this.txtListGraph.setFont(new Font("Calibri", Font.BOLD, 18));
+        this.txtListGraph.setText("Edge list:");
+        this.txtListGraph.setMaximumSize(this.txtListGraph.getSize());
 
         JPanel editButtonPanel = new JPanel();
         editButtonPanel.add(this.btnAddPointGraph);
@@ -166,7 +175,6 @@ public class App implements ActionListener {
         programsButtonPanel.add(this.btnDijkstra);
         programsButtonPanel.add(this.btnKruskal);
 
-
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
         panel.add(editButtonPanel, BorderLayout.NORTH);
@@ -176,6 +184,7 @@ public class App implements ActionListener {
         editorPanel.setLayout(new BorderLayout());
         editorPanel.add(this.graph, BorderLayout.CENTER);
         editorPanel.add(panel, BorderLayout.NORTH);
+        editorPanel.add(this.txtListGraph, BorderLayout.EAST);
 
         this.mainPanelGraph = new JPanel();
         this.mainPanelGraph.setLayout(new BorderLayout());
@@ -185,6 +194,7 @@ public class App implements ActionListener {
 
     private void initBinaryTree(){
         this.binaryTree = new BinaryTree();
+        this.binaryTree.addMouseListener(this);
 
         this.btnAddPointBT = new JButton("Add new point");
         this.btnNextStepBT = new JButton("Next");
@@ -216,12 +226,10 @@ public class App implements ActionListener {
 
         this.btnBackBT.setIcon(this.img);
 
-
         this.btnDeleteBT.setToolTipText( "<html>" + "Delete nodes" + "</html>" );
         this.btnPreorder.setToolTipText("<html>" + "In this traversal method, the root node is visited first,"+ "<br>"+ "then the left subtree and finally the right subtree." +"</html>");
         this.btnInorder.setToolTipText("<html>" + "In this traversal method, the left subtree is visited first," + "<br>" + "then the root and later the right sub-tree." + "</html>" );
         this.btnPostorder.setToolTipText("<html>"+  "First we traverse the left subtree,"+"<br>"+"then the right subtree and finally the root node." + "</html>");
-
 
         this.btnPreorder.addActionListener(this);
         this.btnInorder.addActionListener(this);
@@ -235,12 +243,17 @@ public class App implements ActionListener {
         setVisibleButtonsBT(true);
 
         this.txtFieldBT = new JTextField(5);
-        this.txtFieldBT.setFont(new Font("Arial", Font.BOLD, 20));
+        this.txtFieldBT.setFont(new Font("Calibri", Font.BOLD, 22));
         this.txtFieldBT.setText(MAIN_INFO);
         this.txtFieldBT.setEnabled(false);
         this.txtFieldBT.setBorder(new LineBorder(Color.WHITE));
         this.txtFieldBT.setDisabledTextColor(Color.BLACK);
         this.txtFieldBT.setHorizontalAlignment(JTextField.CENTER);
+
+        this.txtListBT = new JTextArea(100, 16);
+        this.txtListBT.setFont(new Font("Calibri", Font.BOLD, 18));
+        this.txtListBT.setText("Father list:");
+        this.txtListBT.setMaximumSize(this.txtListBT.getSize());
 
         JPanel editButtonPanel = new JPanel();
         editButtonPanel.add(this.btnAddPointBT);
@@ -264,6 +277,7 @@ public class App implements ActionListener {
         editorPanel.setLayout(new BorderLayout());
         editorPanel.add(this.binaryTree, BorderLayout.CENTER);
         editorPanel.add(panel, BorderLayout.NORTH);
+        editorPanel.add(this.txtListBT, BorderLayout.EAST);
 
         this.mainPanelBinaryTree = new JPanel();
         this.mainPanelBinaryTree.setLayout(new BorderLayout());
@@ -435,6 +449,19 @@ public class App implements ActionListener {
                 setNewPanel(this.mainPanelMenu);
             }
         }
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent event) {
+        if(this.frame.getContentPane().equals(this.mainPanelGraph)){
+            this.txtListGraph.setText("Edge list:\n" + this.graph.getStrConnectionList());
+        }
+
+        if(this.frame.getContentPane().equals(this.mainPanelBinaryTree)){
+            this.txtListBT.setText("Father list:\n" + this.binaryTree.getStrFatherList());
+        }
+
 
     }
 
