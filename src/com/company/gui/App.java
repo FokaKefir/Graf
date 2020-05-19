@@ -12,9 +12,6 @@ public class App implements ActionListener {
 
     // region 0. Constants
 
-    private static final int WIDTH = 1200;
-    private static final int HEIGHT = 800;
-
     private static final int IMAGE_WIDTH = 50;
     private static final int IMAGE_HEIGHT = 50;
 
@@ -277,10 +274,12 @@ public class App implements ActionListener {
     public App() {
         this.img = new ImageIcon(getClass().getResource("images/back.png"));
         this.img = new ImageIcon(this.img.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  Image.SCALE_SMOOTH));
+
         UIManager.put("ToolTip.background", Color.WHITE);
         UIManager.put("ToolTip.foreground", Color.BLACK);
         UIManager.put("ToolTip.font",new Font("Arial", Font.BOLD, 14));
         ToolTipManager.sharedInstance().setDismissDelay(60000);
+
         initMenu();
         initGraph();
         initBinaryTree();
@@ -290,7 +289,10 @@ public class App implements ActionListener {
         this.frame.setContentPane(this.mainPanelMenu);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setResizable(false);
-        this.frame.setSize(new Dimension(WIDTH, HEIGHT));
+        this.frame.setSize(
+                new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 1.2),
+                              (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 1.2))
+        );
         this.frame.setVisible(true);
 
     }
