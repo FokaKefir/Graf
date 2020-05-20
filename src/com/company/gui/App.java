@@ -56,7 +56,8 @@ public class App extends MouseAdapter implements ActionListener {
     private JButton btnBackBT;
     private BinaryTree binaryTree;
 
-    private ImageIcon img;
+    private ImageIcon imgBack;
+    private ImageIcon imgIcon;
 
     // endregion
 
@@ -127,7 +128,7 @@ public class App extends MouseAdapter implements ActionListener {
             }
         };
 
-        this.btnBackGraph.setIcon(this.img);
+        this.btnBackGraph.setIcon(this.imgBack);
 
         this.btnBreadthFirstSearch.setToolTipText("<html>" + "Breadth-First Search is a traversing algorithm"+ "<br>" + " where you should start traversing from a selected point" + "<br>"  + "and traverse the graph layerwise thus exploring the neighbour points." + "</html>");
         this.btnDepthFirstSearch.setToolTipText("<html>" + "Depth-First Search explores all the points" + "<br>" + "by going forward if possible or uses backtracking." + "</html>");
@@ -224,7 +225,7 @@ public class App extends MouseAdapter implements ActionListener {
             }
         };
 
-        this.btnBackBT.setIcon(this.img);
+        this.btnBackBT.setIcon(this.imgBack);
 
         this.btnDeleteBT.setToolTipText( "<html>" + "Delete nodes" + "</html>" );
         this.btnPreorder.setToolTipText("<html>" + "In this traversal method, the root node is visited first,"+ "<br>"+ "then the left subtree and finally the right subtree." +"</html>");
@@ -286,20 +287,24 @@ public class App extends MouseAdapter implements ActionListener {
     }
 
     public App() {
-        this.img = new ImageIcon(getClass().getResource("images/back.png"));
-        this.img = new ImageIcon(this.img.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  Image.SCALE_SMOOTH));
+        this.imgBack = new ImageIcon(getClass().getResource("images/back.png"));
+        this.imgBack = new ImageIcon(this.imgBack.getImage().getScaledInstance(IMAGE_WIDTH, IMAGE_HEIGHT,  Image.SCALE_SMOOTH));
+
+        this.imgIcon = new ImageIcon(getClass().getResource("images/icon.png"));
 
         UIManager.put("ToolTip.background", Color.WHITE);
         UIManager.put("ToolTip.foreground", Color.BLACK);
         UIManager.put("ToolTip.font",new Font("Arial", Font.BOLD, 14));
         ToolTipManager.sharedInstance().setDismissDelay(60000);
+        ToolTipManager.sharedInstance().setInitialDelay(200);
 
         initMenu();
         initGraph();
         initBinaryTree();
 
 
-        this.frame = new JFrame("App");
+        this.frame = new JFrame("Graph application!");
+        this.frame.setIconImage(this.imgIcon.getImage());
         this.frame.setContentPane(this.mainPanelMenu);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setResizable(false);

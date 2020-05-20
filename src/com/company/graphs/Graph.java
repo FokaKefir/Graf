@@ -634,7 +634,7 @@ public class Graph extends JComponent {
         StringBuilder strConList = new StringBuilder();
 
         for(Connection connection : this.connectionList){
-            strConList.append(connection.getFromPoint()).append(" - ").append(connection.getToPoint()).append("\n");
+            strConList.append(connection.getFromPoint()).append(" - ").append(connection.getToPoint()).append("     |  ").append(connection.getWeight()).append("\n");
         }
         return strConList.toString();
     }
