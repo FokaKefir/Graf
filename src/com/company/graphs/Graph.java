@@ -119,13 +119,13 @@ public class Graph extends JComponent {
             public void mouseMoved(MouseEvent event) {
                 if(blnCanDrawPoint){
                     redrawImage();
-                    drawCircle(event.getX(), event.getY(), Color.GRAY);
+                    drawCircle(event.getX(), event.getY(), Color.PINK);
                 } else if(blnCanConnect) {
                     if(indexFromPoint != NOT_DEFINED && indexToPoint == NOT_DEFINED){
                         redrawImage();
                         if(matPoint[event.getX()][event.getY()] == EMPTY) {
                             drawConnection(
-                                    pointPositionList.get(indexFromPoint).getX(), pointPositionList.get(indexFromPoint).getY(), event.getX(), event.getY(), Color.GRAY
+                                    pointPositionList.get(indexFromPoint).getX(), pointPositionList.get(indexFromPoint).getY(), event.getX(), event.getY(), Color.PINK
                             );
                         }else{
                             drawConnection(indexFromPoint, matPoint[event.getX()][event.getY()], Color.GRAY);
@@ -253,7 +253,7 @@ public class Graph extends JComponent {
         this.graphics.fillRect(0, 0, getSize().width, getSize().height);
         this.graphics.setPaint(getForeground());
 
-        this.graphics.setPaint(Color.black);
+        this.graphics.setPaint(Color.MAGENTA);
 
         this.repaint();
 
@@ -269,7 +269,7 @@ public class Graph extends JComponent {
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
             setNewElementPoint(x, y);
-            drawCircle(x, y, Color.BLACK);
+            drawCircle(x, y, Color.MAGENTA);
         }
     }
 
@@ -299,7 +299,7 @@ public class Graph extends JComponent {
             this.graphics.setPaint(color);
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
-            if(color != Color.GRAY) {
+            if(color != Color.PINK) {
                 this.graphics.setPaint(Color.WHITE);
                 this.graphics.drawString(String.valueOf(matPoint[x][y]), x - 5, y + 7);
             }
@@ -325,7 +325,7 @@ public class Graph extends JComponent {
     private void drawAndSetConnection(double weight){
         drawConnection(this.indexFromPoint, this.indexToPoint, Color.CYAN);
         setNewElementConn(weight);
-        drawConnection(this.indexFromPoint, this.indexToPoint, Color.BLACK, weight);
+        drawConnection(this.indexFromPoint, this.indexToPoint, Color.MAGENTA, weight);
     }
 
     private void drawConnection(int indexFromPoint, int indexToPoint, Color color){
@@ -463,7 +463,7 @@ public class Graph extends JComponent {
 
     private void redrawConnections() {
         for (Connection connection : this.connectionList){
-            drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.BLACK, connection.getWeight());
+            drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.MAGENTA, connection.getWeight());
         }
     }
 
@@ -472,7 +472,7 @@ public class Graph extends JComponent {
             int x = point.getX();
             int y = point.getY();
             if(this.matPoint[x][y] == point.getName()) {
-                drawCircle(x, y, Color.BLACK);
+                drawCircle(x, y, Color.MAGENTA);
             }
         }
     }
@@ -503,7 +503,7 @@ public class Graph extends JComponent {
         int index = 0;
         for (Connection connection : this.connectionList){
             if(b[index])
-                drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.BLACK, connection.getWeight());
+                drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.MAGENTA, connection.getWeight());
             index++;
         }
     }

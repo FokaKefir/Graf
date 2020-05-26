@@ -2,8 +2,6 @@ package com.company.gui;
 
 import com.company.graphs.BinaryTree;
 import com.company.graphs.Graph;
-import com.company.model.RoundedBorder;
-import javafx.scene.layout.Border;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -21,6 +19,12 @@ public class App extends MouseAdapter implements ActionListener {
     private static final int BUTTON_HEIGHT = 50;
 
     private static final String MAIN_INFO = "Add new points and edges, then choose the algorithm type!";
+
+
+    private static final Color COLOR_GREEN_BACK = new Color(203,250,178);
+    private static final Color COLOR_GREEN_BORDER = new Color(137,188,73);
+    private static final Color COLOR_RED_BACK = new Color(180,20,20);
+    private static final Color COLOR_RED_BORDER = new Color(180,20,20);
 
     // endregion
 
@@ -93,6 +97,7 @@ public class App extends MouseAdapter implements ActionListener {
 
     private void initGraph(){
         this.graph = new Graph();
+        this.graph.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(5), Color.PINK));
         this.graph.addMouseListener(this);
 
         this.btnAddPointGraph = new JButton("Add new points");
@@ -138,51 +143,15 @@ public class App extends MouseAdapter implements ActionListener {
         this.btnKruskal.setToolTipText("<html>" + "Kruskal's algorithm is a minimum-spanning-tree algorithm" + "<br>" + "which finds an edge of the least possible weight that connects any two trees in the graph." + "</html>");
         this.btnDeleteGraph.setToolTipText("Delete points and edges");
 
-        this.btnBreadthFirstSearch.setBackground(new Color(203,250,178));
-        this.btnBreadthFirstSearch.setOpaque(true);
-        //this.btnBreadthFirstSearch.setBorderPainted(false);
-        this.btnBreadthFirstSearch.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
-        this.btnBreadthFirstSearch.setBorder(new RoundedBorder(15, new Color(137,188,73)));
-        //this.btnBreadthFirstSearch.setContentAreaFilled(false);
-
-
-        this.btnDepthFirstSearch.setBackground(new Color(200,250,178));
-        this.btnDepthFirstSearch.setOpaque(true);
-        //this.btnDepthFirstSearch.setBorderPainted(false);
-        this.btnDepthFirstSearch.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
-        this.btnDepthFirstSearch.setBorder(new RoundedBorder(15, new Color(137,188,73)));
-
-        this.btnDijkstra.setBackground(new Color(203,250,178));
-        this.btnDijkstra.setOpaque(true);
-       // this.btnDijkstra.setBorderPainted(false);
-        this.btnDijkstra.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
-        this.btnDijkstra.setBorder(new RoundedBorder(15, new Color(137,188,73)));
-
-        this.btnKruskal.setBackground(new Color(203,250,178));
-        this.btnKruskal.setOpaque(true);
-        //this.btnKruskal.setBorderPainted(false);
-        this.btnKruskal.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
-        this.btnKruskal.setBorder(new RoundedBorder(15, new Color(137,188,73)));
-
-
-        this.btnDeleteGraph.setBackground(new Color(180,50,30));
-        this.btnDeleteGraph.setOpaque(true);
-        this.btnKruskal.setBorderPainted(false);
-        this.btnDeleteGraph.setBorder(BorderFactory.createLineBorder(new Color(180,20,20)));
-        this.btnDeleteGraph.setBorder(new RoundedBorder(15, new Color(170,20,20)));
-
-       /* this.btnDeleteGraph.setBackground(new Color(170,20,20));
-        this.btnDeleteGraph.setOpaque(true);
-        //this.btnKruskal.setBorderPainted(false);
-        this.btnDeleteGraph.setBorder(BorderFactory.createLineBorder(new Color(170,20,20)));
-        this.btnDeleteGraph.setBorder(new RoundedBorder(15, new Color(170,20,20)));
-
-        this.btnDeleteGraph.setBackground(new Color(170,20,20));
-        this.btnDeleteGraph.setOpaque(true);
-        //this.btnKruskal.setBorderPainted(false);
-        this.btnDeleteGraph.setBorder(BorderFactory.createLineBorder(new Color(170,20,20)));
-        this.btnDeleteGraph.setBorder(new RoundedBorder(15, new Color(170,20,20)));
-        */
+        this.btnBreadthFirstSearch.setBackground(Color.PINK);
+        this.btnDepthFirstSearch.setBackground(Color.PINK);
+        this.btnDijkstra.setBackground(Color.PINK);
+        this.btnKruskal.setBackground(Color.PINK);
+        this.btnAddPointGraph.setBackground(Color.PINK);
+        this.btnAddConnectionGraph.setBackground(Color.PINK);
+        this.btnNextStepGraph.setBackground(Color.PINK);
+        this.btnDeleteGraph.setBackground(Color.PINK);
+        this.btnBackGraph.setBackground(Color.PINK);
 
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
@@ -210,18 +179,24 @@ public class App extends MouseAdapter implements ActionListener {
         this.txtListGraph.setMaximumSize(this.txtListGraph.getSize());
 
         JPanel editButtonPanel = new JPanel();
+        editButtonPanel.setBackground(Color.WHITE);
         editButtonPanel.add(this.btnAddPointGraph);
         editButtonPanel.add(this.btnAddConnectionGraph);
         editButtonPanel.add(this.btnNextStepGraph);
+        editButtonPanel.add(Box.createRigidArea(new Dimension(60, 0)));
         editButtonPanel.add(this.btnDeleteGraph);
 
         JPanel programsButtonPanel = new JPanel();
         programsButtonPanel.setLayout(new BoxLayout(programsButtonPanel, BoxLayout.Y_AXIS));
+        programsButtonPanel.setBackground(Color.WHITE);
         programsButtonPanel.add(this.btnBackGraph);
         programsButtonPanel.add(Box.createRigidArea(new Dimension(0, 50)));
         programsButtonPanel.add(this.btnBreadthFirstSearch);
+        programsButtonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         programsButtonPanel.add(this.btnDepthFirstSearch);
+        programsButtonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         programsButtonPanel.add(this.btnDijkstra);
+        programsButtonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         programsButtonPanel.add(this.btnKruskal);
 
         JPanel panel = new JPanel();
@@ -234,6 +209,7 @@ public class App extends MouseAdapter implements ActionListener {
         editorPanel.add(this.graph, BorderLayout.CENTER);
         editorPanel.add(panel, BorderLayout.NORTH);
         editorPanel.add(this.txtListGraph, BorderLayout.EAST);
+        editorPanel.setBackground(Color.WHITE);
 
         this.mainPanelGraph = new JPanel();
         this.mainPanelGraph.setLayout(new BorderLayout());
