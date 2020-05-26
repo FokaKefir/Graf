@@ -636,6 +636,10 @@ public class BinaryTree extends JComponent {
         return blnCanDelete;
     }
 
+    public boolean getBlnCanRunAlgorithm(){
+        return (this.root != null);
+    }
+
     private String getMessage() {
         StringBuilder mess = new StringBuilder("Output: ");
         for (Integer num : this.output){

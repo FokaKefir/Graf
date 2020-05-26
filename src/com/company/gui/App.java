@@ -405,7 +405,7 @@ public class App extends MouseAdapter implements ActionListener {
         }
 
         if(this.frame.getContentPane().equals(this.mainPanelBinaryTree)) {
-            if (btnPreorder.equals(source)) {
+            if (btnPreorder.equals(source) && this.binaryTree.getBlnCanRunAlgorithm()) {
                 this.binaryTree.redrawImage();
                 this.binaryTree.setBlnCanDrawPoint(false);
                 this.binaryTree.setBlnCanConnect(false);
@@ -413,7 +413,7 @@ public class App extends MouseAdapter implements ActionListener {
                 this.binaryTree.preorder();
                 this.txtFieldBT.setText("The algorithm starts from the root.");
                 setVisibleButtonsBT(false);
-            } else if (btnInorder.equals(source)) {
+            } else if (btnInorder.equals(source) && this.binaryTree.getBlnCanRunAlgorithm()) {
                 this.binaryTree.redrawImage();
                 this.binaryTree.setBlnCanDrawPoint(false);
                 this.binaryTree.setBlnCanConnect(false);
@@ -421,7 +421,7 @@ public class App extends MouseAdapter implements ActionListener {
                 this.binaryTree.inorder();
                 this.txtFieldBT.setText("The algorithm begins from the root.");
                 setVisibleButtonsBT(false);
-            } else if (btnPostorder.equals(source)) {
+            } else if (btnPostorder.equals(source) && this.binaryTree.getBlnCanRunAlgorithm()) {
                 this.binaryTree.redrawImage();
                 this.binaryTree.setBlnCanDrawPoint(false);
                 this.binaryTree.setBlnCanConnect(false);
