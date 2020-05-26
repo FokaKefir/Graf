@@ -130,7 +130,7 @@ public class BinaryTree extends JComponent {
 
     private void setNewPoint(int x, int y){
         drawAndSetPoint(x, y);
-        if(this.pointPositionList.size() != 1)
+        if(this.blnCanConnect)
             this.blnCanDrawPoint = false;
         redrawPoints();
     }
