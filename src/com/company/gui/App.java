@@ -138,31 +138,51 @@ public class App extends MouseAdapter implements ActionListener {
         this.btnKruskal.setToolTipText("<html>" + "Kruskal's algorithm is a minimum-spanning-tree algorithm" + "<br>" + "which finds an edge of the least possible weight that connects any two trees in the graph." + "</html>");
         this.btnDeleteGraph.setToolTipText("Delete points and edges");
 
-        this.btnBreadthFirstSearch.setBackground(new Color(203,214,178));
+        this.btnBreadthFirstSearch.setBackground(new Color(203,250,178));
         this.btnBreadthFirstSearch.setOpaque(true);
         //this.btnBreadthFirstSearch.setBorderPainted(false);
-        //this.btnBreadthFirstSearch.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
-        this.btnBreadthFirstSearch.setBorder(new RoundedBorder(10));
+        this.btnBreadthFirstSearch.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
+        this.btnBreadthFirstSearch.setBorder(new RoundedBorder(15, new Color(137,188,73)));
+        //this.btnBreadthFirstSearch.setContentAreaFilled(false);
 
-        this.btnDepthFirstSearch.setBackground(new Color(203,214,178));
+
+        this.btnDepthFirstSearch.setBackground(new Color(200,250,178));
         this.btnDepthFirstSearch.setOpaque(true);
         //this.btnDepthFirstSearch.setBorderPainted(false);
         this.btnDepthFirstSearch.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
+        this.btnDepthFirstSearch.setBorder(new RoundedBorder(15, new Color(137,188,73)));
 
-        this.btnDijkstra.setBackground(new Color(203,214,178));
+        this.btnDijkstra.setBackground(new Color(203,250,178));
         this.btnDijkstra.setOpaque(true);
        // this.btnDijkstra.setBorderPainted(false);
         this.btnDijkstra.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
+        this.btnDijkstra.setBorder(new RoundedBorder(15, new Color(137,188,73)));
 
-        this.btnKruskal.setBackground(new Color(203,214,178));
+        this.btnKruskal.setBackground(new Color(203,250,178));
         this.btnKruskal.setOpaque(true);
         //this.btnKruskal.setBorderPainted(false);
         this.btnKruskal.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
+        this.btnKruskal.setBorder(new RoundedBorder(15, new Color(137,188,73)));
 
 
+        this.btnDeleteGraph.setBackground(new Color(180,50,30));
+        this.btnDeleteGraph.setOpaque(true);
+        this.btnKruskal.setBorderPainted(false);
+        this.btnDeleteGraph.setBorder(BorderFactory.createLineBorder(new Color(180,20,20)));
+        this.btnDeleteGraph.setBorder(new RoundedBorder(15, new Color(170,20,20)));
 
+       /* this.btnDeleteGraph.setBackground(new Color(170,20,20));
+        this.btnDeleteGraph.setOpaque(true);
+        //this.btnKruskal.setBorderPainted(false);
+        this.btnDeleteGraph.setBorder(BorderFactory.createLineBorder(new Color(170,20,20)));
+        this.btnDeleteGraph.setBorder(new RoundedBorder(15, new Color(170,20,20)));
 
-
+        this.btnDeleteGraph.setBackground(new Color(170,20,20));
+        this.btnDeleteGraph.setOpaque(true);
+        //this.btnKruskal.setBorderPainted(false);
+        this.btnDeleteGraph.setBorder(BorderFactory.createLineBorder(new Color(170,20,20)));
+        this.btnDeleteGraph.setBorder(new RoundedBorder(15, new Color(170,20,20)));
+        */
 
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
