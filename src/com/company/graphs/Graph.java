@@ -128,7 +128,7 @@ public class Graph extends JComponent {
                                     pointPositionList.get(indexFromPoint).getX(), pointPositionList.get(indexFromPoint).getY(), event.getX(), event.getY(), Color.PINK
                             );
                         }else{
-                            drawConnection(indexFromPoint, matPoint[event.getX()][event.getY()], Color.GRAY);
+                            drawConnection(indexFromPoint, matPoint[event.getX()][event.getY()], Color.PINK);
                         }
                     }
                 }
