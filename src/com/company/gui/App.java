@@ -2,6 +2,8 @@ package com.company.gui;
 
 import com.company.graphs.BinaryTree;
 import com.company.graphs.Graph;
+import com.company.model.RoundedBorder;
+import javafx.scene.layout.Border;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -135,6 +137,32 @@ public class App extends MouseAdapter implements ActionListener {
         this.btnDijkstra.setToolTipText("<html>"+ "Dijkstra's algorithm is an algorithm for finding"+ "<br>" +  "the shortest paths between points in a graph."+ "</html>");
         this.btnKruskal.setToolTipText("<html>" + "Kruskal's algorithm is a minimum-spanning-tree algorithm" + "<br>" + "which finds an edge of the least possible weight that connects any two trees in the graph." + "</html>");
         this.btnDeleteGraph.setToolTipText("Delete points and edges");
+
+        this.btnBreadthFirstSearch.setBackground(new Color(203,214,178));
+        this.btnBreadthFirstSearch.setOpaque(true);
+        //this.btnBreadthFirstSearch.setBorderPainted(false);
+        //this.btnBreadthFirstSearch.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
+        this.btnBreadthFirstSearch.setBorder(new RoundedBorder(10));
+
+        this.btnDepthFirstSearch.setBackground(new Color(203,214,178));
+        this.btnDepthFirstSearch.setOpaque(true);
+        //this.btnDepthFirstSearch.setBorderPainted(false);
+        this.btnDepthFirstSearch.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
+
+        this.btnDijkstra.setBackground(new Color(203,214,178));
+        this.btnDijkstra.setOpaque(true);
+       // this.btnDijkstra.setBorderPainted(false);
+        this.btnDijkstra.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
+
+        this.btnKruskal.setBackground(new Color(203,214,178));
+        this.btnKruskal.setOpaque(true);
+        //this.btnKruskal.setBorderPainted(false);
+        this.btnKruskal.setBorder(BorderFactory.createLineBorder(new Color(137,188,73)));
+
+
+
+
+
 
         this.btnBreadthFirstSearch.addActionListener(this);
         this.btnDepthFirstSearch.addActionListener(this);
