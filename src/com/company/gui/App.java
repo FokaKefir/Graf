@@ -30,8 +30,11 @@ public class App extends MouseAdapter implements ActionListener {
     private static final Color COLOR_4= new Color(250,200,65);
     private static final Color COLOR_5= new Color(240,90,90);
     private static final Color COLOR_6= new Color(0,0,0);
+    private static final Color COLOR_7= new Color(248,250,190);
 
-    private static final Color COLOR_BACK= Color.WHITE;
+
+    private static final Color COLOR_BACK= COLOR_7;
+    
             //Color(180,250,210);
 
     /*private static final Color COLOR_GREEN_2= new Color(180,245,100);
@@ -90,7 +93,7 @@ public class App extends MouseAdapter implements ActionListener {
         this.btnBinaryTree.setToolTipText("Binary tree");
 
         // TODO adding new color
-        this.btnGraph.setBackground(Color.BLACK);
+       // this.btnGraph.setBackground(Color.GRAY);
 
         this.btnGraph.setUI(new StyledButtonUI());
         this.btnBinaryTree.setUI(new StyledButtonUI());
@@ -163,9 +166,9 @@ public class App extends MouseAdapter implements ActionListener {
         this.btnDeleteGraph.setToolTipText("Delete points and edges");
 
         //TODO adding new colors
-        this.btnBreadthFirstSearch.setBackground(COLOR_1);
-        this.btnDepthFirstSearch.setBackground(COLOR_2);
-        this.btnDijkstra.setBackground(COLOR_3);
+        this.btnBreadthFirstSearch.setBackground(COLOR_4);
+        this.btnDepthFirstSearch.setBackground(COLOR_4);
+        this.btnDijkstra.setBackground(COLOR_4);
         this.btnKruskal.setBackground(COLOR_4);
 
         this.btnAddPointGraph.setBackground(COLOR_1);
@@ -304,13 +307,13 @@ public class App extends MouseAdapter implements ActionListener {
 
         //TODO adding colors for buttons
 
-        this.btnAddPointBT.setBackground(Color.RED);
-        this.btnNextStepBT.setBackground(Color.RED);
-        this.btnDeleteBT.setBackground(Color.RED);
-        this.btnPreorder .setBackground(Color.RED);
-        this.btnInorder.setBackground(Color.RED);
-        this.btnPostorder.setBackground(Color.RED);
-        this.btnBackBT.setBackground(Color.RED);
+        this.btnAddPointBT.setBackground(COLOR_1);
+        this.btnNextStepBT.setBackground(COLOR_1);
+        this.btnDeleteBT.setBackground(COLOR_5);
+        this.btnPreorder .setBackground(COLOR_4);
+        this.btnInorder.setBackground(COLOR_4);
+        this.btnPostorder.setBackground(COLOR_4);
+        this.btnBackBT.setBackground(Color.WHITE);
 
         this.btnAddPointBT.setUI(new StyledButtonUI());
         this.btnNextStepBT.setUI(new StyledButtonUI());
@@ -334,19 +337,22 @@ public class App extends MouseAdapter implements ActionListener {
         this.txtFieldBT.setFont(new Font("Calibri", Font.BOLD, 22));
         this.txtFieldBT.setText(MAIN_INFO);
         this.txtFieldBT.setEnabled(false);
-        this.txtFieldBT.setBorder(new LineBorder(Color.WHITE));
+        this.txtFieldBT.setBorder(new LineBorder(COLOR_BACK));
         this.txtFieldBT.setDisabledTextColor(Color.BLACK);
         this.txtFieldBT.setHorizontalAlignment(JTextField.CENTER);
+        this.txtFieldBT.setBackground(COLOR_BACK);
 
         this.txtListBT = new JTextArea(100, 16);
         this.txtListBT.setFont(new Font("Calibri", Font.BOLD, 18));
         this.txtListBT.setText("Father list:");
         this.txtListBT.setMaximumSize(this.txtListBT.getSize());
+        this.txtListBT.setBackground(COLOR_BACK);
 
         JPanel editButtonPanel = new JPanel();
         editButtonPanel.add(this.btnAddPointBT);
         editButtonPanel.add(this.btnNextStepBT);
         editButtonPanel.add(this.btnDeleteBT);
+        editButtonPanel.setBackground(COLOR_BACK);
 
         JPanel programsButtonPanel = new JPanel();
         programsButtonPanel.setLayout(new BoxLayout(programsButtonPanel, BoxLayout.Y_AXIS));
@@ -355,6 +361,7 @@ public class App extends MouseAdapter implements ActionListener {
         programsButtonPanel.add(this.btnPreorder);
         programsButtonPanel.add(this.btnInorder);
         programsButtonPanel.add(this.btnPostorder);
+        programsButtonPanel.setBackground(COLOR_BACK);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
@@ -366,12 +373,15 @@ public class App extends MouseAdapter implements ActionListener {
         editorPanel.add(this.binaryTree, BorderLayout.CENTER);
         editorPanel.add(panel, BorderLayout.NORTH);
         editorPanel.add(this.txtListBT, BorderLayout.EAST);
+        editorPanel.setBackground(COLOR_BACK);
 
         this.mainPanelBinaryTree = new JPanel();
         this.mainPanelBinaryTree.setLayout(new BorderLayout());
         this.mainPanelBinaryTree.add(editorPanel, BorderLayout.CENTER);
         this.mainPanelBinaryTree.add(programsButtonPanel, BorderLayout.WEST);
     }
+
+
 
     public App() {
         this.imgBack = new ImageIcon(getClass().getResource("images/back.png"));
