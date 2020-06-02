@@ -27,6 +27,9 @@ public class Graph extends JComponent {
     public static final int DEPTH_FIRST_SEARCH = 2;
     public static final int DIJKSTRA = 3;
     public static final int KRUSKAL = 4;
+    private static final Color COLOR_TMP = Color.GRAY;
+    private static final Color COLOR_MAIN = Color.BLACK;
+    private static final Color COLOR_ALG = Color.RED;
 
     // endregion
 
@@ -119,16 +122,16 @@ public class Graph extends JComponent {
             public void mouseMoved(MouseEvent event) {
                 if(blnCanDrawPoint){
                     redrawImage();
-                    drawCircle(event.getX(), event.getY(), Color.PINK);
+                    drawCircle(event.getX(), event.getY(), COLOR_TMP);
                 } else if(blnCanConnect) {
                     if(indexFromPoint != NOT_DEFINED && indexToPoint == NOT_DEFINED){
                         redrawImage();
                         if(matPoint[event.getX()][event.getY()] == EMPTY) {
                             drawConnection(
-                                    pointPositionList.get(indexFromPoint).getX(), pointPositionList.get(indexFromPoint).getY(), event.getX(), event.getY(), Color.PINK
+                                    pointPositionList.get(indexFromPoint).getX(), pointPositionList.get(indexFromPoint).getY(), event.getX(), event.getY(), COLOR_TMP
                             );
                         }else{
-                            drawConnection(indexFromPoint, matPoint[event.getX()][event.getY()], Color.PINK);
+                            drawConnection(indexFromPoint, matPoint[event.getX()][event.getY()], COLOR_TMP);
                         }
                     }
                 }
@@ -253,7 +256,7 @@ public class Graph extends JComponent {
         this.graphics.fillRect(0, 0, getSize().width, getSize().height);
         this.graphics.setPaint(getForeground());
 
-        this.graphics.setPaint(Color.MAGENTA);
+        this.graphics.setPaint(COLOR_MAIN);
 
         this.repaint();
 
@@ -269,7 +272,7 @@ public class Graph extends JComponent {
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
             setNewElementPoint(x, y);
-            drawCircle(x, y, Color.MAGENTA);
+            drawCircle(x, y, COLOR_MAIN);
         }
     }
 
@@ -299,7 +302,7 @@ public class Graph extends JComponent {
             this.graphics.setPaint(color);
             this.graphics.fillOval(x - RADIUS /2, y - RADIUS /2, RADIUS, RADIUS);
 
-            if(color != Color.PINK) {
+            if(color != COLOR_TMP) {
                 this.graphics.setPaint(Color.WHITE);
                 this.graphics.drawString(String.valueOf(matPoint[x][y]), x - 5, y + 7);
             }
@@ -325,7 +328,7 @@ public class Graph extends JComponent {
     private void drawAndSetConnection(double weight){
         drawConnection(this.indexFromPoint, this.indexToPoint, Color.CYAN);
         setNewElementConn(weight);
-        drawConnection(this.indexFromPoint, this.indexToPoint, Color.MAGENTA, weight);
+        drawConnection(this.indexFromPoint, this.indexToPoint, COLOR_MAIN, weight);
     }
 
     private void drawConnection(int indexFromPoint, int indexToPoint, Color color){
@@ -389,11 +392,11 @@ public class Graph extends JComponent {
         for (int i = 0; i < way.size() - 1; i++) {
             int from = way.get(i);
             int to = way.get(i+1);
-            drawCircle(this.pointPositionList.get(from), Color.RED);
-            drawCircle(this.pointPositionList.get(to), Color.RED);
-            drawConnection(from, to, Color.RED, getWeightFromConnectionList(from, to));
+            drawCircle(this.pointPositionList.get(from), COLOR_ALG);
+            drawCircle(this.pointPositionList.get(to), COLOR_ALG);
+            drawConnection(from, to, COLOR_ALG, getWeightFromConnectionList(from, to));
         }
-        drawCircle(this.pointPositionList.get(way.get(0)), Color.RED);
+        drawCircle(this.pointPositionList.get(way.get(0)), COLOR_ALG);
     }
 
     // endregion
@@ -463,7 +466,7 @@ public class Graph extends JComponent {
 
     private void redrawConnections() {
         for (Connection connection : this.connectionList){
-            drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.MAGENTA, connection.getWeight());
+            drawConnection(connection.getFromPoint(), connection.getToPoint(), COLOR_MAIN, connection.getWeight());
         }
     }
 
@@ -472,7 +475,7 @@ public class Graph extends JComponent {
             int x = point.getX();
             int y = point.getY();
             if(this.matPoint[x][y] == point.getName()) {
-                drawCircle(x, y, Color.MAGENTA);
+                drawCircle(x, y, COLOR_MAIN);
             }
         }
     }
@@ -503,7 +506,7 @@ public class Graph extends JComponent {
         int index = 0;
         for (Connection connection : this.connectionList){
             if(b[index])
-                drawConnection(connection.getFromPoint(), connection.getToPoint(), Color.MAGENTA, connection.getWeight());
+                drawConnection(connection.getFromPoint(), connection.getToPoint(), COLOR_MAIN, connection.getWeight());
             index++;
         }
     }
@@ -676,8 +679,8 @@ public class Graph extends JComponent {
 
         for(Integer neighbor : neighbors){
             if(b[neighbor] != IT_WAS){
-                drawConnection(index, neighbor, Color.RED, this.getWeightFromConnectionList(index, neighbor));
-                drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
+                drawConnection(index, neighbor, COLOR_ALG, this.getWeightFromConnectionList(index, neighbor));
+                drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), COLOR_ALG);
                 queue.add(neighbor);
                 b[neighbor] = IT_WAS;
                 numberOfNeighbours++;
@@ -689,7 +692,7 @@ public class Graph extends JComponent {
     private void breadthFirstSearchNext(){
         if(!queue.isEmpty()){
             int index = queue.remove();
-            drawCircle(pointPositionList.get(index).getX(), pointPositionList.get(index).getY(), Color.RED);
+            drawCircle(pointPositionList.get(index).getX(), pointPositionList.get(index).getY(), COLOR_ALG);
             int number = watchNeighborBFS(index, b, queue);
             this.strText = "Watching the neighbor(s) of the point " + String.valueOf(index) + "  and finding " + number + " new neighbor(s).";
         }
@@ -707,7 +710,7 @@ public class Graph extends JComponent {
         this.b[first] = IT_WAS;
         this.algorithmRunning = true;
         redrawImage();
-        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), Color.RED);
+        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), COLOR_ALG);
     }
 
     // endregion
@@ -722,8 +725,8 @@ public class Graph extends JComponent {
                 stack.push(neighbor);
                 b[neighbor] = IT_WAS;
 
-                drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), Color.RED);
-                drawConnection(index, neighbor, Color.RED, this.getWeightFromConnectionList(index, neighbor));
+                drawRing(pointPositionList.get(neighbor).getX(), pointPositionList.get(neighbor).getY(), COLOR_ALG);
+                drawConnection(index, neighbor, COLOR_ALG, this.getWeightFromConnectionList(index, neighbor));
 
                 this.strText = "Watching the neighbor(s) of the point " + index + " and finding the " + neighbor + " point.";
                 return FIND_NEW_NEIGHBOR;
@@ -737,7 +740,7 @@ public class Graph extends JComponent {
         if(!stack.isEmpty()){
             int index = this.stack.getFirst();
             boolean cond = watchNeighborDFS(index, this.b, this.stack);
-            drawCircle(pointPositionList.get(index), Color.RED);
+            drawCircle(pointPositionList.get(index), COLOR_ALG);
             if(cond != FIND_NEW_NEIGHBOR){
                 stack.pop();
                 this.strText = "Watching the neighbor(s) of the point " + index + " and there is no neighbor.";
@@ -756,7 +759,7 @@ public class Graph extends JComponent {
         this.b[first] = IT_WAS;
         this.algorithmRunning = true;
         redrawImage();
-        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), Color.RED);
+        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), COLOR_ALG);
     }
 
     // endregion
@@ -792,8 +795,8 @@ public class Graph extends JComponent {
                 }else {
                     message.append(", ").append(neighbor);
                 }
-                drawConnection(index, neighbor, Color.RED);
-                drawCircle(this.pointPositionList.get(neighbor), Color.RED);
+                drawConnection(index, neighbor, COLOR_ALG);
+                drawCircle(this.pointPositionList.get(neighbor), COLOR_ALG);
 
             }
         }
@@ -881,7 +884,7 @@ public class Graph extends JComponent {
         this.distance[first] = 0;
         this.algorithmRunning = true;
         redrawImage();
-        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), Color.RED);
+        drawRing(pointPositionList.get(first).getX(), pointPositionList.get(first).getY(), COLOR_ALG);
     }
 
     // endregion
@@ -926,9 +929,9 @@ public class Graph extends JComponent {
                 this.b[this.indexKruskal] = true;
                 connectTwoComponent(from, to);
 
-                drawCircle(pointPositionList.get(from), Color.RED);
-                drawCircle(pointPositionList.get(to), Color.RED);
-                drawConnection(from, to, Color.RED, weight);
+                drawCircle(pointPositionList.get(from), COLOR_ALG);
+                drawCircle(pointPositionList.get(to), COLOR_ALG);
+                drawConnection(from, to, COLOR_ALG, weight);
 
                 this.strText = "Watching the point " + String.valueOf(from) + " and  " + String.valueOf(to) + " and connect them.";
             } else{
