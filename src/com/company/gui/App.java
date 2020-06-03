@@ -96,6 +96,7 @@ public class App extends MouseAdapter implements ActionListener {
 
         this.txtInfo = new JTextPane();
         this.txtInfo.setFont(new Font("Calibri", Font.BOLD, 18));
+        // TODO set text
         this.txtInfo.setText("test text");
         StyledDocument doc = this.txtInfo.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
