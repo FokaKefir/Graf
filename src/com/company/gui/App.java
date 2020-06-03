@@ -95,9 +95,10 @@ public class App extends MouseAdapter implements ActionListener {
         ImageIcon image = new ImageIcon(getClass().getResource("images/graph.png"));
 
         this.txtInfo = new JTextPane();
-        this.txtInfo.setFont(new Font("Calibri", Font.BOLD, 18));
+        this.txtInfo.setFont(new Font("Calibri", Font.BOLD, 22));
         // TODO set text
-        this.txtInfo.setText("test text");
+        this.txtInfo.setText("The whole universe is based on the concept of graph theory where love is an edge,\n " +
+                "that is connecting two vertices or people either directly or indirectly.");
         StyledDocument doc = this.txtInfo.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
